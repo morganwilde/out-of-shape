@@ -45,3 +45,10 @@ Arena.prototype.getRootObject = function()
 {
    return this.rootObject;
 };
+
+// Methods
+
+Arena.prototype.addNode = function(node)
+{
+	this.rootObject.add(node);
+};

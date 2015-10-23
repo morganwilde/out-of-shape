@@ -18,7 +18,14 @@
 
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);
-
+	  
+	  var geometry = new THREE.BoxGeometry(100,100,100);
+	  var material = new THREE.MeshBasicMaterial({color: 0x0000ff});
+	  var cube = new THREE.Mesh (geometry, material);
+	  
+	  gameEngine.arena.addNode(cube); 
+		
+		
       window.gameEngine.render();
     </script>
   </body>

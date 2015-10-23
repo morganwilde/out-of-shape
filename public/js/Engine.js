@@ -6,6 +6,7 @@ function Engine() {
   this.scene;
   this.camera;
   this.renderer;
+  this.arena;
 }
 
 // Initialisers
@@ -19,6 +20,7 @@ Engine.prototype.initEmpty = function()
   this.scene = null;
   this.camera = null;
   this.renderer = null;
+  this.arena = null;
 
   return this;
 };
@@ -45,7 +47,11 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.renderer.setClearColor(0xffffff);
   this.renderer.setSize(this.width, this.height);
   document.body.appendChild(this.renderer.domElement);
-
+  
+  // User actions
+  window.addEventListener('keydown', this.keyDown, false);
+  window.addEventListener('keyup', this.keyUp, false);
+  
   return this;
 };
 
@@ -59,8 +65,19 @@ Engine.prototype.render = function()
   this.renderer.render(this.scene, this.camera);
 };
 
+Engine.prototype.keyDown = function(event)
+{
+	console.log(event);
+};
+
+Engine.prototype.keyUp = function(event)
+{
+	console.log(event);
+};
+
 Engine.prototype.addArena = function(arena)
 {
+  this.arena = arena;
   this.scene.add(arena.getRootObject());
  // this.camera.lookAt(arena.getRootObject().position);
 };
