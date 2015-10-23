@@ -25,11 +25,16 @@ Arena.prototype.initWithEngine = function(engine)
 {
    this.width = engine.width;
    this.height = engine.height;
-
-   var geometry = new THREE.PlaneGeometry(5, 20, 32);
-   var material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
+   
+   var xScale = .9;
+   var yScale = .9;
+   
+   var geometry = new THREE.PlaneGeometry(this.width*xScale, this.height*yScale);
+   var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
 
    this.rootObject = new THREE.Mesh(geometry, material);
+   this.rootObject.position.y -= 300;
+   this.rootObject.rotation.x -= 30;
 
    return this;
 };

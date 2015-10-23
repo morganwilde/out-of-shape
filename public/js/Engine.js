@@ -36,7 +36,9 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   
   // Camera
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
-  this.camera.position.z = 1500;
+  this.camera.position.z = 1000;
+  this.camera.position.y += 100;
+ // this.camera.rotation.x = Math.PI/;
 
   // Rendered
   this.renderer = new THREE.WebGLRenderer();
@@ -60,4 +62,5 @@ Engine.prototype.render = function()
 Engine.prototype.addArena = function(arena)
 {
   this.scene.add(arena.getRootObject());
+ // this.camera.lookAt(arena.getRootObject().position);
 };
