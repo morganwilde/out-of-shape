@@ -48,7 +48,10 @@ Arena.prototype.getRootObject = function()
 
 // Methods
 
-Arena.prototype.addNode = function(node)
+Arena.prototype.addPlayerCharacter = function(playerCharacter)
 {
-	this.rootObject.add(node);
+  var playerCharacterNode = playerCharacter.getNode();
+  var shiftYBy = playerCharacter.depth / 2;
+  playerCharacterNode.position.z -= shiftYBy;
+  this.rootObject.add(playerCharacterNode);
 };

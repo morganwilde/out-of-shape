@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
     <script src="js/Engine.js"></script>
     <script src="js/Arena.js"></script>
+    <script src="js/PlayerCharacter.js"></script>
   </head>
   <body>
     <script>
@@ -18,13 +19,8 @@
 
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);
-	  
-	  var geometry = new THREE.BoxGeometry(100,100,100);
-	  var material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-	  var cube = new THREE.Mesh (geometry, material);
-	  
-	  gameEngine.arena.addNode(cube); 
-		
+      
+      gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 200, 100));
 		
       window.gameEngine.render();
     </script>
