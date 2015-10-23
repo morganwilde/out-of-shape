@@ -9,7 +9,8 @@
         overflow: hidden;
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>\
+    <script src=""></script>
   </head>
   <body>
     <script>
@@ -59,6 +60,18 @@
         var jumpspeed = 30;
         var yvelocity = 0;
         var gravity = 2;
+
+        if (true) {
+          var something = 1;
+        } else {
+          var something = 2;
+        }
+
+        for (var i = 0; i < 10; i++) {
+
+        }
+
+        console.log(something);
         
         this.update = function()
         {
@@ -288,6 +301,11 @@
       function animate()
       {
         player1.update();
+        var player1Attacked = player1.attack();
+        if (player1Attacked) {
+          var score = player2.defend(player1Attacked);
+          player1.assignScore(score);
+        }
         player2.update();
         requestAnimationFrame( animate );
         renderer.render( scene, camera );
