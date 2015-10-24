@@ -41,7 +41,8 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   // Camera
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
   this.camera.position.z = 1000;
-  this.camera.position.y += 100;
+  this.camera.position.y = 800;
+  this.camera.rotation.x = 0;
 
   // Rendered
   this.renderer = new THREE.WebGLRenderer();
@@ -73,7 +74,8 @@ Engine.prototype.render = function()
 
 Engine.prototype.keyDown = function(event)
 {
-	console.log(event);
+	console.log(event.keyCode);
+	return event.key;
 };
 
 Engine.prototype.keyUp = function(event)

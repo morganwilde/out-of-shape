@@ -25,16 +25,16 @@ Arena.prototype.initWithEngine = function(engine)
 {
    this.width = engine.width;
    this.height = engine.height;
+   this.depth = 1000;
    
-   var xScale = .9;
-   var yScale = .9;
+   var xScale = 1.1;
+   var yScale = 1.1;
+   var zScale = .9;
    
-   var geometry = new THREE.PlaneGeometry(this.width*xScale, this.height*yScale);
+   var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
    var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
 
    this.rootObject = new THREE.Mesh(geometry, material);
-   this.rootObject.position.y -= 300;
-   this.rootObject.rotation.x -= 30;
 
    return this;
 };
@@ -51,7 +51,10 @@ Arena.prototype.getRootObject = function()
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
 {
   var playerCharacterNode = playerCharacter.getNode();
-  var shiftYBy = playerCharacter.depth / 2;
-  playerCharacterNode.position.z -= shiftYBy;
+  var shiftYBy = playerCharacter.height/2;
+  playerCharacterNode.position.y = 400;
+  
   this.rootObject.add(playerCharacterNode);
+  
+  return playerCharacter;
 };
