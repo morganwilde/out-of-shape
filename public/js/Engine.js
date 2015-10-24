@@ -6,6 +6,7 @@ function Engine() {
   this.scene;
   this.camera;
   this.renderer;
+  this.lights;
   this.arena;
 }
 
@@ -20,6 +21,7 @@ Engine.prototype.initEmpty = function()
   this.scene = null;
   this.camera = null;
   this.renderer = null;
+  this.lights = null;
   this.arena = null;
 
   return this;
@@ -40,13 +42,17 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
   this.camera.position.z = 1000;
   this.camera.position.y += 100;
- // this.camera.rotation.x = Math.PI/;
 
   // Rendered
   this.renderer = new THREE.WebGLRenderer();
   this.renderer.setClearColor(0xffffff);
   this.renderer.setSize(this.width, this.height);
   document.body.appendChild(this.renderer.domElement);
+
+  // Lights
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  directionalLight.position.set( 0, 1, 0 );
+  this.scene.add( directionalLight );
   
   // User actions
   window.addEventListener('keydown', this.keyDown, false);
@@ -79,5 +85,4 @@ Engine.prototype.addArena = function(arena)
 {
   this.arena = arena;
   this.scene.add(arena.getRootObject());
- // this.camera.lookAt(arena.getRootObject().position);
 };
