@@ -20,9 +20,9 @@
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);
 
-      var player1 = gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100));
+      gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100));
 	  
-	  player1.getNode().position.x+=game;
+	  //player1.getNode().position.x+=game;
 
       window.gameEngine.render();
     </script>
