@@ -23,20 +23,32 @@ Arena.prototype.initEmpty = function()
 
 Arena.prototype.initWithEngine = function(engine)
 {
-   this.width = engine.width;
-   this.height = engine.height;
-   this.depth = 1000;
-   
-   var xScale = 1.1;
-   var yScale = 1.1;
-   var zScale = .9;
-   
-   var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
-   var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
+  this.width = 500;
+  this.height = 50;
+  this.depth = 500;
 
-   this.rootObject = new THREE.Mesh(geometry, material);
+  var geometry = new THREE.CubeGeometry(this.width, this.height, this.depth);
+  var material = new THREE.MeshPhongMaterial({
+    color: 0xff0000, 
+    side: THREE.DoubleSide, 
+    wireframe: false,
+    specular: 0xee0000, 
+    shininess: 30, 
+    shading: THREE.FlatShading
+  });
 
-   return this;
+  var cube = new THREE.Mesh(geometry, material);
+
+  // cube.position.setY(500);
+
+  var light = new THREE.PointLight(0xffffff, 1, 0);
+  light.position.set(0, 500, 500);
+
+  cube.add(light);
+
+  this.rootObject = cube;
+
+  return this;
 };
 
 // Getters

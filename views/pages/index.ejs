@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style type="text/css">
-      body {
-        margin: 0px;
-        background-color: #000000;
-        overflow: hidden;
-      }
-    </style>
+    <!-- External stylesheets -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+    <!-- Main -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
+    <!-- Console -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/console.css" />
+    <!-- External libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+    <script src="js/console/react.js"></script>
+    <script src="js/console/react-dom.js"></script>
+    <!-- Console -->
+    <script src="js/console/Console.js"></script>
+    <script src="js/console/ConsoleAttribute.js"></script>
+    <!-- Game -->
     <script src="js/Engine.js"></script>
     <script src="js/Arena.js"></script>
     <script src="js/PlayerCharacter.js"></script>
   </head>
   <body>
     <script>
-      window.gameEngine = new Engine().initWithCanvasSize(window.innerWidth, window.innerHeight);
+      window.onload = function() {
+        // Console
+        ReactDOM.render(React.createElement(Console), document.querySelector('#console-container'));
 
-      var arena = new Arena().initWithEngine(gameEngine);
-      gameEngine.addArena(arena);
-
-      var player1 = gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100));
-	  
-	  player1.getNode().position.x+=game;
-
-      window.gameEngine.render();
+        // Game
+        var engine = new Engine().initWithCanvasContainerId('canvas-container');
+        var arena = new Arena().initWithEngine(engine);
+        engine.addArena(arena);
+        engine.render();
+        engine.mode = Engine.modeDebug;
+      };
     </script>
+    <div class="page">
+      <div id="console-container">a</div>
+      <div id="canvas-container"></div>
+    </div>
   </body>
 </html>
