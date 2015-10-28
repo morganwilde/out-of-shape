@@ -5,6 +5,9 @@ function Arena() {
   this.depth;
   // Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
   this.rootObject;
+  //Player characters
+  this.player1;
+  this.player2;
 }
 
 // Initialisers
@@ -17,6 +20,9 @@ Arena.prototype.initEmpty = function()
   this.depth = null;
   // Root
   this.rootNode = null;
+  //Player characters
+  this.player1 = null;
+  this.player2 = null;
 
   return this;
 };
@@ -35,7 +41,9 @@ Arena.prototype.initWithEngine = function(engine)
    var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
 
    this.rootObject = new THREE.Mesh(geometry, material);
-
+   
+   this.rootObject.name = "q";
+   
    return this;
 };
 
@@ -46,15 +54,47 @@ Arena.prototype.getRootObject = function()
    return this.rootObject;
 };
 
+// Setters
+
+Arena.prototype.setKeyPress = function(keycode)
+{
+	this.player1.setKeyPress(keycode);
+	this.player2.setKeyPress(keycode);
+}
+
+Arena.prototype.setKeyRelease = function(keycode)
+{
+	this.player1.setKeyRelease(keycode);
+	this.player2.setKeyRelease(keycode);
+}
+
 // Methods
 
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
 {
-  var playerCharacterNode = playerCharacter.getNode();
-  var shiftYBy = playerCharacter.height/2;
-  playerCharacterNode.position.y = 400;
-  
-  this.rootObject.add(playerCharacterNode);
-  
-  return playerCharacter;
+	var playerCharacterNode = playerCharacter.getNode();
+	
+	if(this.player1 == undefined)
+	{
+		this.player1 = playerCharacter;
+		playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2;
+		playerCharacterNode.position.x = -this.getRootObject().geometry.parameters.width/4;		
+	}
+	else
+	{
+		this.player2 = playerCharacter;
+		playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2;
+		playerCharacterNode.position.x = this.getRootObject().geometry.parameters.width/4;
+		
+		this.player1.setEnemy(this.player2);
+		this.player2.setEnemy(this.player1);
+	}
+
+	this.rootObject.add(playerCharacterNode);
 };
+
+Arena.prototype.update = function()
+{
+	this.player1.update();
+	this.player2.update();
+}

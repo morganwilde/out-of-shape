@@ -12,6 +12,8 @@
     <script src="js/Engine.js"></script>
     <script src="js/Arena.js"></script>
     <script src="js/PlayerCharacter.js"></script>
+	<script src="js/HitBox.js"></script>
+	
   </head>
   <body>
     <script>
@@ -20,10 +22,12 @@
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);
 
-      gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100));
+      gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100, "SuperStar"));
+	  gameEngine.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
 	  
-	  //player1.getNode().position.x+=game;
-
+	  gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100, "SuperStar"));
+	  gameEngine.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
+	  
       window.gameEngine.render();
     </script>
   </body>

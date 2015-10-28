@@ -40,17 +40,17 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
   this.camera.position.z = 1000;
   this.camera.position.y = 800;
-  this.camera.rotation.x = 0;
 
   // Rendered
   this.renderer = new THREE.WebGLRenderer();
   this.renderer.setClearColor(0xffffff);
   this.renderer.setSize(this.width, this.height);
   document.body.appendChild(this.renderer.domElement);
-  
+    
   // User actions
   window.addEventListener('keydown', this.keyDown, false);
   window.addEventListener('keyup', this.keyUp, false);
+  
   
   return this;
 };
@@ -63,22 +63,26 @@ Engine.prototype.render = function()
     this.render();
   }.bind(this));
   this.renderer.render(this.scene, this.camera);
+  
+  this.arena.update();
+    
 };
 
 Engine.prototype.keyDown = function(event)
 {
-	console.log(event.keyCode);
-	return event.key;
+	event.preventDefault();
+	this.arena.setKeyPress(event.keyCode);
+	
 };
 
 Engine.prototype.keyUp = function(event)
 {
-	console.log(event);
+	event.preventDefault();
+	this.arena.setKeyRelease(event.keyCode);
 };
 
 Engine.prototype.addArena = function(arena)
 {
   this.arena = arena;
   this.scene.add(arena.getRootObject());
- // this.camera.lookAt(arena.getRootObject().position);
 };
