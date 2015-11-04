@@ -1,57 +1,69 @@
 function Arena() {
-  // Size
-  this.width;
-  this.height;
-  this.depth;
-  // Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
-  this.rootObject;
-  //Player characters
-  this.player1;
-  this.player2;
+	// Size
+	this.width;
+	this.height;
+	this.depth;
+	// Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
+	this.rootObject;
+	//Player characters
+	this.player1;
+	this.player2;
 }
 
 // Initialisers
 
 Arena.prototype.initEmpty = function()
 {
-  // Canvas size
-  this.width = null;
-  this.height = null;
-  this.depth = null;
-  // Root
-  this.rootNode = null;
-  //Player characters
-  this.player1 = null;
-  this.player2 = null;
+	// Canvas size
+	this.width = null;
+	this.height = null;
+	this.depth = null;
+	// Root
+	this.rootNode = null;
+	//Player characters
+	this.player1 = null;
+	this.player2 = null;
 
-  return this;
+	return this;
 };
 
 Arena.prototype.initWithEngine = function(engine)
 {
-   this.width = engine.width;
-   this.height = engine.height;
-   this.depth = 1000;
-   
-   var xScale = 1.1;
-   var yScale = 1.1;
-   var zScale = .9;
-   
-   var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
-   var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
+	this.width = engine.width;
+	this.height = engine.height;
+	this.depth = 1000;
 
-   this.rootObject = new THREE.Mesh(geometry, material);
-   
-   this.rootObject.name = "q";
-   
-   return this;
+	var xScale = 1.1;
+	var yScale = 1.1;
+	var zScale = .9;
+
+	var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
+	var material = new THREE.MeshPhongMaterial({
+		color: 0xff0000, 
+		//side: THREE.DoubleSide, 
+		wireframe: false,
+		specular: 0x000000, 
+		shininess: 30, 
+		shading: THREE.FlatShading
+	}); 
+
+	this.rootObject = new THREE.Mesh(geometry, material);
+
+	var light = new THREE.PointLight(0xffffff, 3, 0, 0);
+	light.position.set(0, 500, 500);
+	
+	this.rootObject.add(light);
+
+	this.rootObject.name = "q";
+
+	return this;
 };
 
 // Getters
 
 Arena.prototype.getRootObject = function()
 {
-   return this.rootObject;
+	return this.rootObject;
 };
 
 // Setters
@@ -85,7 +97,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 		this.player2 = playerCharacter;
 		playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2;
 		playerCharacterNode.position.x = this.getRootObject().geometry.parameters.width/4;
-		
+
 		this.player1.setEnemy(this.player2);
 		this.player2.setEnemy(this.player1);
 	}

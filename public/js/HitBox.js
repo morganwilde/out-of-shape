@@ -22,6 +22,11 @@ function HitBox()
 
 	// Owner of this hitbox
 	this.owner;
+	this.isProjectile;
+	
+	this.damage;
+	
+	this.active;
 }
 
 // Initialisers
@@ -47,6 +52,11 @@ HitBox.prototype.initEmpty = function()
 	
 	// Owner of this hitbox
 	this.owner = null;
+	this.isProjectile = null;
+	
+	this.damage = null;
+	
+	this.active = null;
 
   return this;
 };
@@ -61,8 +71,11 @@ HitBox.prototype.initWithDimensions = function(width, height, depth)
 
 	// Starting shape
 	var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
-	var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+	var material = new THREE.MeshBasicMaterial({color: 0xff0000});
 	this.node = new THREE.Mesh(geometry, material);
+	
+	this.active = false;
+	this.isProjectile = false;
 
 	return this;
 };
@@ -78,6 +91,11 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 		this.initStarStorm(character);
 	}
 	
+	if(command == "star shot")
+	{
+		this.initStarShot(character);
+	}
+	
 	if(command == "super kick")
 	{
 		this.superKick();
@@ -87,14 +105,47 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 HitBox.prototype.initStarStorm = function(character)
 {	
 	this.initWithDimensions(50,50,50);
-	
+
+	character.setActionFrames(95);
+
+	character.setXVelocity(0);
+
 	this.owner = character;
 	
 	this.owner.getNode().add(this.node);
 	
 	this.node.position.x+= 100;
 
+	this.beginTime = 15;
+
 	this.endTime = 65;
+	
+	this.damage = 3;
+}
+
+HitBox.prototype.initStarShot = function(character)
+{	
+	this.initWithDimensions(50,50,50);
+
+	character.setActionFrames(35);
+	
+	character.setXVelocity(0);
+
+	this.owner = character;
+	
+	gameEngine.arena.getRootObject().add(this.node);
+	this.isProjectile = true;
+	
+	this.node.position.x = character.getNode().position.x + 100;
+	this.node.position.y = character.getNode().position.y;
+	
+	this.xVelocity = 10;
+
+	this.beginTime = 15;
+
+	this.endTime = 95;
+	
+	this.damage = 2;
 }
 
 // Getters
@@ -108,17 +159,45 @@ HitBox.prototype.getNode = function()
 
 HitBox.prototype.update = function()
 {
-	if(this.checkCollision())
+	if(this.checkCollision() && this.active)
 	{
-		this.owner.deleteHitBox(this);
+		this.active = false;
+		this.node.material.color.setHex (0xaf00ff); // deactivated attacks (either due to collision or time) are purple
+
+		var worldPosition = new THREE.Vector3();
+		worldPosition.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
+
+		this.enemy.takeDamage(this.damage, worldPosition);
+		
+		if(this.isProjectile == true)
+		{
+			this.time = this.endTime - 3; // show the projectile for 3 frames after collision
+		}
 	}
 
 	this.node.position.x += this.xVelocity;
 	this.node.position.y += this.yVelocity;
-	
-	this.time += 1;
+
+	if(this.time == this.beginTime)
+	{
+		this.node.material.color.setHex (0x00ff00); // attacks become green when they become active
+		this.active = true;
+	}
 
 	if(this.time == this.endTime)
+	{
+		this.active = false;
+		this.node.material.color.setHex (0xaf00ff); // deactivated attacks (either due to collision or time) are purple
+		
+		if(this.isProjectile)
+		{
+			this.owner.deleteHitBox(this);
+		}
+	}
+	
+	this.time += 1;
+	
+	if(this.owner.getActionFrames() == 0 && this.isProjectile == false)
 	{
 		this.owner.deleteHitBox(this);
 	}
@@ -126,88 +205,37 @@ HitBox.prototype.update = function()
 
 HitBox.prototype.checkCollision = function()
 {
-	return( this.checkContain() || this.checkEdgeHit());
+	return( this.checkVertexHit() || this.checkContain());
 };
 
-HitBox.prototype.checkEdgeHit = function()
+// *** modified from https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Collision-Detection.html
+HitBox.prototype.checkVertexHit = function()
 {
-	var calcPosition, calcDirection;
+	var originPoint = new THREE.Vector3();
+	originPoint.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
 	
-	
-	// top left corner of the HitBox
-	calcPosition = new THREE.Vector3(this.node.position.x + this.node.parent.position.x - this.width/2, this.node.position.y + this.node.parent.position.y + this.height/2,0);
-
-	calcDirection = this.getDirection( new THREE.Vector3(1, 0, 0 ) );	// raycast from the top left corner to the right
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	calcDirection = this.getDirection( new THREE.Vector3(0, -1, 0 ) );	// raycast from the top left corner to the bottom
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-	
-	// bottom left corner of the HitBox
-	calcPosition = new THREE.Vector3(this.node.position.x + this.node.parent.position.x - this.width/2, this.node.position.y + this.node.parent.position.y - this.height/2,0);
-	
-	calcDirection = this.getDirection( new THREE.Vector3(1, 0, 0 ) );	// raycast from the bottom left corner to the right
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	calcDirection = this.getDirection( new THREE.Vector3(0, 1, 0 ) );	// raycast from the bottom left corner to the top
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	// top right corner of the HitBox
-	calcPosition = new THREE.Vector3(this.node.position.x + this.node.parent.position.x + this.width/2, this.node.position.y + this.node.parent.position.y + this.height/2,0);
-	
-	calcDirection = this.getDirection( new THREE.Vector3(-1, 0, 0 ) );	// raycast from the top right corner to the left
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	calcDirection = this.getDirection( new THREE.Vector3(0, -1, 0 ) );	// raycast from the top right corner to the bottom
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	// bottom right corner of the HitBox
-	calcPosition = new THREE.Vector3(this.node.position.x + this.node.parent.position.x + this.width/2, this.node.position.y + this.node.parent.position.y - this.height/2,0);
-
-	calcDirection = this.getDirection( new THREE.Vector3(-1, 0, 0 ) );	// raycast from the bottom right corner to the left
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
-
-	calcDirection = this.getDirection( new THREE.Vector3(0, 1, 0 ) );	// raycast from the bottom right corner to the top
-	if(this.checkRay(calcPosition, calcDirection))
-	return true;
+	for (var vertexIndex = 0; vertexIndex < this.node.geometry.vertices.length; vertexIndex++)
+	{
+		var localVertex = this.node.geometry.vertices[vertexIndex].clone();
+		var globalVertex = localVertex.applyMatrix4( this.node.matrix );
+		var directionVector = globalVertex.sub( this.node.position );
+		
+		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+		var collisionResults = ray.intersectObject( this.enemy.node , true);
+		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
+		{
+			return true;
+		}
+	}
 
 	return false;
 };
-
-HitBox.prototype.getDirection = function(direction)
-{
-	var matrix = new THREE.Matrix4();
-	matrix.extractRotation( this.node.matrix );
-
-	return direction.applyMatrix4( matrix );
-};
-
-HitBox.prototype.checkRay = function(position, direction) // check the ray at the pre-calculated position and direction
-{
-	var raycaster = new THREE.Raycaster();
-	
-	raycaster.set(position, direction);
-	var intersects = raycaster.intersectObject( this.enemy.getNode(), true );
-
-	return (intersects.length>0 && intersects[0].distance<this.width); // this presumes that all hit boxes have equal wifth and height
-};
+// ***
 
 HitBox.prototype.checkContain = function() // checks if the center of the node is within the bounds of the enemy node, raycasts can't detect this kind of collision
 {
-	var worldX = this.node.parent.position.x + this.node.position.x;
-	var enemyInner = this.enemy.getNode().position.x - this.enemy.getWidth()/2;
-	var enemyOuter = this.enemy.getNode().position.x + this.enemy.getWidth()/2;
-	
-	var worldY = this.node.parent.position.y + this.node.position.y;
-	var enemyUpper = this.enemy.getNode().position.y + this.enemy.getHeight()/2;
-	var enemyLower = this.enemy.getNode().position.y - this.enemy.getHeight()/2;
-	
-	return (worldX>enemyInner && worldX<enemyOuter && worldY<enemyUpper && worldY>enemyLower);
+	var worldPosition = new THREE.Vector3();
+	worldPosition.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
+		
+	return (Math.abs( worldPosition.x - this.enemy.getNode().position.x)<this.width && Math.abs( worldPosition.y - this.enemy.getNode().position.y)<this.height && Math.abs( worldPosition.z - this.enemy.getNode().position.z)<this.depth);
 };
