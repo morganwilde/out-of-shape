@@ -84,22 +84,37 @@ Arena.prototype.setKeyRelease = function(keycode)
 
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
 {
-	var playerCharacterNode = playerCharacter.getNode();
+	var playerCharacterNode = playerCharacter.getCollider().getNode();
+
+	playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2 + playerCharacter.getCollider().getHeight()/2;
+
+	var healthY = this.getRootObject().geometry.parameters.height/2+ 800;
 	
 	if(this.player1 == undefined)
 	{
 		this.player1 = playerCharacter;
-		playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2;
-		playerCharacterNode.position.x = -this.getRootObject().geometry.parameters.width/4;		
+		playerCharacterNode.position.x = -this.getRootObject().geometry.parameters.width/4;
+
+		var healthX = -this.getRootObject().geometry.parameters.width/2.5;
+
+		var healthBar1 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100, 0x00ff0f, 0xff0000);
+
+		this.player1.setHealthBar(healthBar1);
+		this.rootObject.add(healthBar1.getNode());
 	}
 	else
 	{
 		this.player2 = playerCharacter;
-		playerCharacterNode.position.y = this.getRootObject().geometry.parameters.height/2;
 		playerCharacterNode.position.x = this.getRootObject().geometry.parameters.width/4;
-
 		this.player1.setEnemy(this.player2);
 		this.player2.setEnemy(this.player1);
+
+		var healthX = this.getRootObject().geometry.parameters.width/2.5;
+
+		var healthBar2 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 347, 0x00ff0f, 0xff0000);
+
+		this.player2.setHealthBar(healthBar2);
+		this.rootObject.add(healthBar2.getNode());
 	}
 
 	this.rootObject.add(playerCharacterNode);

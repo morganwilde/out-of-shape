@@ -1,10 +1,5 @@
 function PlayerCharacter()
 {
-	// Size
-	this.width;
-	this.height;
-	this.depth;
-
 	// Key codes
 	this.keyvalues;
 
@@ -15,8 +10,8 @@ function PlayerCharacter()
 	this.keybuffers;
 	this.buffertime;
 
-	// Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
-	this.node;
+	// Collision Box
+	this.collider;
 	
 	// Opposing player character
 	this.enemy;
@@ -31,16 +26,12 @@ function PlayerCharacter()
 	this.actionFrames;
 
 	// Health
-	this.hp;
-	this.maxHp;
+	this.healthBar;
 
 	// Character attributes
 	this.walkSpeed;
 	this.dashSpeed;
 	this.jumpSpeed;
-	this.xVelocity;
-	this.yVelocity;
-	this.gravity;
 	this.characterState;
 }
 
@@ -48,11 +39,6 @@ function PlayerCharacter()
 
 PlayerCharacter.prototype.initEmpty = function()
 {
-	// Size
-	this.width = null;
-	this.height = null;
-	this.depth = null;
-
 	// Key codes
 	this.keyvalues = {};
 
@@ -63,8 +49,8 @@ PlayerCharacter.prototype.initEmpty = function()
 	this.keybuffers = {};
 	this.buffertime = null;
 
-	// Root
-	this.node = null;
+	// Collision Box
+	this.collider = null;
 
 	// Opposing player character
 	this.enemy;
@@ -79,54 +65,57 @@ PlayerCharacter.prototype.initEmpty = function()
 	this.actionFrames = null;
 	
 	// Health
-	this.hp = null;
-	this.maxHp = null;
+	this.healthBar = null;
 
 	// Character attributes
-	this.walkSpeed = 0;
-	this.dashSpeed  = 0;
-	this.jumpSpeed  = 0;
-	this.xVelocity  = 0;
-	this.yVelocity  = 0;
-	this.gravity  = 0;
-	this.characterState  = "";
+	this.walkSpeed = null;
+	this.dashSpeed  = null;
+	this.jumpSpeed  = null;
+	this.characterState  = null;
 
   return this;
 };
 
-PlayerCharacter.prototype.initWithDimensions = function(width, height, depth, character)
+PlayerCharacter.prototype.initWithSettings = function(width, height, depth, character)
 {
 	this.initEmpty();
 
-	this.width = width;
-	this.height = height;
-	this.depth = depth;
-
-	this.buffertime = 2;
-
-	this.characterState  = "standing";
-
-	// Starting shape
-	var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
-	var material = new THREE.MeshPhongMaterial({
-		color: 0x0000ff, 
-		//side: THREE.DoubleSide, 
-		wireframe: false,
-		specular: 0x000000, 
-		shininess: 0, 
-		shading: THREE.FlatShading
-	});
-
-	this.node = new THREE.Mesh(geometry, material);
-	
-	this.actionFrames = 0;
+	this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
 
 	if(character == "SuperStar")
 	{
 		this.superStar();
 	}
 
+	this.buffertime = 2;
+
+	this.characterState  = "standing";
+	
+	this.actionFrames = 0;
+
 	return this;
+};
+
+// Getters
+
+PlayerCharacter.prototype.press = function(key)
+{
+	return this.keybuffers[key] == this.buffertime;
+}
+
+PlayerCharacter.prototype.getCharacterState = function()
+{
+	return this.characterState;
+};
+
+PlayerCharacter.prototype.getCollider = function()
+{
+	return this.collider;
+};
+
+PlayerCharacter.prototype.getActionFrames = function()
+{
+	return this.actionFrames;
 };
 
 // Setters
@@ -134,11 +123,7 @@ PlayerCharacter.prototype.initWithDimensions = function(width, height, depth, ch
 PlayerCharacter.prototype.setEnemy = function(enemy)
 {
 	this.enemy = enemy;
-}
-
-PlayerCharacter.prototype.setName = function(name)
-{
-	this.node.name = name;
+	this.collider.setEnemy(enemy);
 }
 
 PlayerCharacter.prototype.superStar = function()
@@ -149,7 +134,7 @@ PlayerCharacter.prototype.superStar = function()
 	this.walkSpeed = 4;
 	this.dashSpeed = 10;
 	this.jumpSpeed = 30;
-	this.gravity = 2;
+	this.collider.setGravity(2);
 
 	this.attacks['lightpunch'] = "star storm";
 	this.attacks['heavypunch'] = "star shot";
@@ -221,14 +206,14 @@ PlayerCharacter.prototype.setKeyRelease = function(keycode)
 	}
 };
 
-PlayerCharacter.prototype.setXVelocity = function(velocity)
+PlayerCharacter.prototype.setHealthBar = function(healthBar)
 {
-	this.xVelocity = velocity;
+	this.healthBar = healthBar;
 };
 
-PlayerCharacter.prototype.setYVelocity = function(velocity)
+PlayerCharacter.prototype.setCharacterState = function(state)
 {
-	this.yVelocity = velocity;
+	this.characterState = state;
 };
 
 PlayerCharacter.prototype.setActionFrames = function(frames)
@@ -236,37 +221,10 @@ PlayerCharacter.prototype.setActionFrames = function(frames)
 	this.actionFrames = frames;
 };
 
-// Getters
-
-PlayerCharacter.prototype.getNode = function()
-{
-   return this.node;
-};
-
-PlayerCharacter.prototype.press = function(key)
-{
-	return this.keybuffers[key] == this.buffertime;
-}
-
-PlayerCharacter.prototype.getWidth = function()
-{
-	return this.width;
-}
-
-PlayerCharacter.prototype.getHeight = function()
-{
-	return this.height;
-};
-
-PlayerCharacter.prototype.getActionFrames = function()
-{
-	return this.actionFrames;
-};
-
 // Methods
 
 PlayerCharacter.prototype.createAttack = function(command)
-{	
+{
 	var hbox = new HitBox();
 
 	hbox.initAttack(command, this, this.enemy);
@@ -280,72 +238,12 @@ PlayerCharacter.prototype.update = function()
 	{
 		this.resolveInput();
 	}
+	
+	this.collider.update();
 
 	if(this.characterState == "blocking" && this.actionFrames == 0)
 	{
-		this.node.material.color.setHex (0xaf00ff); // purple is blocking
-	}
-
-	if(this.checkCollision())
-	{
-		if((this.xVelocity>0 && this.node.position.x > this.enemy.getNode().position.x) || (this.xVelocity < 0 && this.node.position.x < this.enemy.getNode().position.x)) // removing  this.xVelocity < 0  allows passing through
-		{
-			this.node.position.x += this.xVelocity;
-		}
-		else
-		{
-			this.node.position.x -= this.xVelocity;
-		}
-		
-		if(this.node.position.y > this.enemy.getNode().position.y && this.yVelocity < 0)
-		{
-			this.yVelocity = 0;//this.jumpSpeed;
-
-			if(this.node.position.x>=this.enemy.node.position.x)
-			this.xVelocity = this.dashSpeed;
-			else
-			this.xVelocity = -this.dashSpeed;
-		}
-	}
-	
-	this.node.position.x += this.xVelocity;
-
-	this.node.position.y += this.yVelocity;
-
-	this.yVelocity -= this.gravity;
-
-	// right bound
-	if(this.node.position.x > gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2)
-	{
-		this.node.position.x = gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2;
-	}
-
-	// left bound
-	if(this.node.position.x < -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2)
-	{
-		this.node.position.x = -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2;
-	}
-
-	// floor bounds player's falling
-	if(this.node.position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2)
-	{
-		this.node.position.y = gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2;
-		
-		if(this.yVelocity < 0)
-		{
-			this.yVelocity = 0;
-		}
-
-		if(this.characterState  == "jumping")
-		{
-			this.characterState = "standing";
-		}
-		
-		if(this.characterState == "blocking")
-		{
-			this.xVelocity = 0;
-		}
-	
+		this.collider.getNode().material.color.setHex (0xaf00ff); // purple is blocking
 	}
 
 	if(this.actionFrames > 0)
@@ -373,7 +271,7 @@ PlayerCharacter.prototype.resolveInput = function()
 	{
 		if(this.characterState != "jumping")
 		{
-			this.xVelocity = 0;
+			this.collider.setXVelocity(0);
 		}
 		
 		this.actionFrames = 30;
@@ -384,9 +282,9 @@ PlayerCharacter.prototype.resolveInput = function()
 	if(this.keystates['block'] == false && this.characterState  == "blocking")
 	{
 		this.actionFrames = 30;
-		this.node.material.color.setHex (0x0000ff); // blue is standing
+		this.collider.getNode().material.color.setHex (0x0000ff); // blue is standing
 		
-		if(this.node.position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2)
+		if(this.collider.getNode().position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2)
 		{
 			this.characterState = "standing";
 		}
@@ -429,18 +327,18 @@ PlayerCharacter.prototype.resolveInput = function()
 
 PlayerCharacter.prototype.jump = function()
 {
-	this.yVelocity = this.jumpSpeed;
+	this.collider.setYVelocity(this.jumpSpeed);
 };
 
 PlayerCharacter.prototype.left = function()
 {
 	if(this.keystates['dash'])
 	{
-		this.xVelocity = -this.dashSpeed;
+		this.collider.setXVelocity(-this.dashSpeed);
 	}
 	else
 	{
-		this.xVelocity = -this.walkSpeed;
+		this.collider.setXVelocity(-this.walkSpeed);
 	}
 };
 
@@ -448,17 +346,17 @@ PlayerCharacter.prototype.right = function()
 {
 	if(this.keystates['dash'])
 	{
-		this.xVelocity = this.dashSpeed;
+		this.collider.setXVelocity(this.dashSpeed);
 	}
 	else
 	{
-		this.xVelocity = this.walkSpeed;
+		this.collider.setXVelocity(this.walkSpeed);
 	}
 };
 
 PlayerCharacter.prototype.movementEnd = function()
 {
-	this.xVelocity = 0;
+	this.collider.setXVelocity(0);
 };
 
 PlayerCharacter.prototype.updateKeyBuffers = function()
@@ -482,8 +380,8 @@ PlayerCharacter.prototype.updateHitBoxes = function()
 
 PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 {
-	this.node.remove(hitbox.getNode());
-	gameEngine.arena.getRootObject().remove(hitbox.getNode());
+	this.collider.getNode().remove(hitbox.getCollider().getNode());
+	gameEngine.arena.getRootObject().remove(hitbox.getCollider().getNode());
 	
 	var targetHitBox = this.hitBoxes.indexOf(hitbox);
 	
@@ -492,51 +390,7 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 
 PlayerCharacter.prototype.takeDamage = function(damage, hitPosition)
 {
-	this.hp -= damage;
+	this.healthBar.takeDamage(damage);
 
-	if(this.node.position.x > hitPosition.x)
-	{
-		this.node.position.x += 15;
-	}
-	else
-	{
-		this.node.position.x -= 15;
-	}
+	this.collider.bump(hitPosition);
 }
-
-PlayerCharacter.prototype.checkCollision = function()
-{
-	return( this.checkVertexHit() || this.checkContain());
-};
-
-// *** modified from https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Collision-Detection.html
-PlayerCharacter.prototype.checkVertexHit = function()
-{
-	var originPoint = new THREE.Vector3();
-	originPoint.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
-	
-	for (var vertexIndex = 0; vertexIndex < this.node.geometry.vertices.length; vertexIndex++)
-	{
-		var localVertex = this.node.geometry.vertices[vertexIndex].clone();
-		var globalVertex = localVertex.applyMatrix4( this.node.matrix );
-		var directionVector = globalVertex.sub( this.node.position );
-		
-		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObject( this.enemy.node , true);
-		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
-		{
-			return true;
-		}
-	}
-
-	return false;
-};
-// ***
-
-PlayerCharacter.prototype.checkContain = function() // checks if the center of the node is within the bounds of the enemy node, raycasts can't detect this kind of collision
-{
-	var worldPosition = new THREE.Vector3();
-	worldPosition.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
-
-	return (Math.abs( worldPosition.x - this.enemy.getNode().position.x)<this.width && Math.abs( worldPosition.y - this.enemy.getNode().position.y)<this.height && Math.abs( worldPosition.z - this.enemy.getNode().position.z)<this.depth);
-};
