@@ -97,7 +97,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 
 		var healthX = -this.getRootObject().geometry.parameters.width/2.5;
 
-		var healthBar1 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100, 0x00ff0f, 0xff0000);
+		var healthBar1 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100);
 
 		this.player1.setHealthBar(healthBar1);
 		this.rootObject.add(healthBar1.getNode());
@@ -111,7 +111,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 
 		var healthX = this.getRootObject().geometry.parameters.width/2.5;
 
-		var healthBar2 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 347, 0x00ff0f, 0xff0000);
+		var healthBar2 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100);
 
 		this.player2.setHealthBar(healthBar2);
 		this.rootObject.add(healthBar2.getNode());

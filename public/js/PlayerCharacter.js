@@ -33,6 +33,9 @@ function PlayerCharacter()
 	this.dashSpeed;
 	this.jumpSpeed;
 	this.characterState;
+
+	// Consecutive times this character has been hit while in hit-stun
+	this.comboCount;
 }
 
 // Initialisers
@@ -73,6 +76,9 @@ PlayerCharacter.prototype.initEmpty = function()
 	this.jumpSpeed  = null;
 	this.characterState  = null;
 
+	// Consecutive times this character has been hit while in hit-stun
+	this.comboCount = null;
+
   return this;
 };
 
@@ -92,6 +98,8 @@ PlayerCharacter.prototype.initWithSettings = function(width, height, depth, char
 	this.characterState  = "standing";
 	
 	this.actionFrames = 0;
+
+	this.comboCount = 0;
 
 	return this;
 };
@@ -135,9 +143,25 @@ PlayerCharacter.prototype.superStar = function()
 	this.dashSpeed = 10;
 	this.jumpSpeed = 30;
 	this.collider.setGravity(2);
+	var geometry = new THREE.BoxGeometry(50, 50, 50);
+	var material = new THREE.MeshPhongMaterial({
+		color: 0x0000ff, 
+		//side: THREE.DoubleSide, 
+		wireframe: false,
+		specular: 0x000000, 
+		shininess: 0, 
+		shading: THREE.FlatShading
+	});
+	var head = new THREE.Mesh(geometry, material);
+	head.position.y=75;
+	head.position.x=10;
+	this.collider.getNode().add(head);
+	if(gameEngine.arena.player1!=null)
+	this.collider.getNode().rotation.y = Math.PI;
 
 	this.attacks['lightpunch'] = "star storm";
 	this.attacks['heavypunch'] = "star shot";
+	this.attacks['grab'] = "grab";
 };
 
 PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
@@ -241,7 +265,7 @@ PlayerCharacter.prototype.update = function()
 	
 	this.collider.update();
 
-	if(this.characterState == "blocking" && this.actionFrames == 0)
+	if(this.characterState == "blocking")
 	{
 		this.collider.getNode().material.color.setHex (0xaf00ff); // purple is blocking
 	}
@@ -249,6 +273,13 @@ PlayerCharacter.prototype.update = function()
 	if(this.actionFrames > 0)
 	{
 		this.actionFrames -= 1;
+
+		if(this.actionFrames == 0)
+		{
+			this.comboCount = 0;
+			if(this.characterState == "standing" || this.characterState == "jumping")
+			this.collider.getNode().material.color.setHex(0x0000ff);
+		}
 	}
 
 	// update all hitboxes beloning to this character
@@ -266,22 +297,38 @@ PlayerCharacter.prototype.resolveInput = function()
 		this.createAttack(this.attacks['lightpunch']);
 		return;
 	}
-	
-	if(this.press('block'))
+
+	if(this.press('grab'))
 	{
-		if(this.characterState != "jumping")
-		{
-			this.collider.setXVelocity(0);
-		}
-		
-		this.actionFrames = 30;
-		this.characterState  = "blocking";
+		this.createAttack(this.attacks['grab']);
 		return;
 	}
-	
-	if(this.keystates['block'] == false && this.characterState  == "blocking")
+
+	if(this.keystates['block'] == true)
+	{
+		if(this.characterState == "standing" || this.characterState == "jumping")
+		{
+			if(this.characterState == "standing")
+			{
+				this.collider.setXVelocity(0);
+			}
+			
+			this.actionFrames = 30;
+			this.characterState = "initBlocking";
+
+			return;
+		}
+		else
+		{
+			this.characterState  = "blocking";
+			return;
+		}
+	}
+
+	if(this.keystates['block'] == false && this.characterState  == "blocking") // end blocking
 	{
 		this.actionFrames = 30;
+
 		this.collider.getNode().material.color.setHex (0x0000ff); // blue is standing
 		
 		if(this.collider.getNode().position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2)
@@ -332,6 +379,8 @@ PlayerCharacter.prototype.jump = function()
 
 PlayerCharacter.prototype.left = function()
 {
+	this.collider.getNode().rotation.y = Math.PI;
+
 	if(this.keystates['dash'])
 	{
 		this.collider.setXVelocity(-this.dashSpeed);
@@ -344,6 +393,8 @@ PlayerCharacter.prototype.left = function()
 
 PlayerCharacter.prototype.right = function()
 {
+	this.collider.getNode().rotation.y = 0;
+
 	if(this.keystates['dash'])
 	{
 		this.collider.setXVelocity(this.dashSpeed);
@@ -388,8 +439,41 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 	this.hitBoxes.splice(targetHitBox, 1); // 1 is the number of instances to remove
 };
 
-PlayerCharacter.prototype.takeDamage = function(damage, hitPosition)
+PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
 {
+	if(this.characterState == "blocking" && attackType != "grab")
+	{
+		damage = Math.round(damage / 10);
+	}
+
+	this.collider.getNode().material.color.setHex(0xffff00); // collider turns yellow during hit stun
+
+	if(this.collider.getNode().position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2) // cancel initBlocking and blocking states
+	{
+		this.characterState = "standing";
+	}
+	else
+	{
+		this.characterState = "jumping";
+	}
+
+	this.actionFrames = (damage - this.comboCount) * 2;
+	
+	if(this.actionFrames < 1) // minimum hit stun
+	{
+		this.actionFrames = 1;
+	}
+
+	this.comboCount += 1;
+
+	this.movementEnd();
+	
+	if(attackType == "grab")
+	{
+		this.collider.setYVelocity(40);
+		this.characterState = "jumping";
+	}
+
 	this.healthBar.takeDamage(damage);
 
 	this.collider.bump(hitPosition);

@@ -13,8 +13,16 @@ function HitBox()
 
 	// Owner of this hitbox
 	this.owner;
-	this.isProjectile;
-	
+	this.attackType;
+
+	// Motion of HitBox
+	this.initialXVelocity;
+	this.initialYVelocity;
+	this.initialZVelocity;
+	this.endingXVelocity;
+	this.endingYVelocity;
+	this.endingZVelocity;
+
 	this.damage;
 	
 	this.active;
@@ -37,8 +45,16 @@ HitBox.prototype.initEmpty = function()
 
 	// Owner of this hitbox
 	this.owner = null;
-	this.isProjectile = null;
-	
+	this.attackType = null;
+
+	// Motion
+	this.initialXVelocity = 0;
+	this.initialYVelocity = 0;
+	this.initialZVelocity = 0;
+	this.endingXVelocity = 0;
+	this.endingYVelocity = 0;
+	this.endingZVelocity = 0;
+
 	this.damage = null;
 	
 	this.active = null;
@@ -54,7 +70,7 @@ HitBox.prototype.initWithDimensions = function(width, height, depth)
 	
 
 	this.active = false;
-	this.isProjectile = false;
+	this.attackType = "melee";
 
 	return this;
 };
@@ -70,10 +86,10 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 	{
 		this.initStarShot(character);
 	}
-	
-	if(command == "super kick")
+
+	if(command == "grab")
 	{
-		this.superKick();
+		this.initGrab(character);
 	}
 	
 	this.enemy = enemy;
@@ -84,24 +100,25 @@ HitBox.prototype.initStarStorm = function(character)
 {	
 	this.initWithDimensions(50,50,50);
 
-	character.setActionFrames(95);
+	character.setActionFrames(30);
 
 	character.getCollider().setXVelocity(0);
 
 	this.owner = character;
 	
 	this.owner.getCollider().getNode().add(this.collider.getNode());
+	this.attackType = "melee";
 	
 	var xstart = this.collider.getWidth()/2 + this.owner.getCollider().getWidth()/2;
 	var ystart = 0;
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
-	this.beginTime = 15;
+	this.beginTime = 5;
 
-	this.endTime = 65;
+	this.endTime = 15;
 	
-	this.damage = 3;
+	this.damage = 20;
 }
 
 HitBox.prototype.initStarShot = function(character)
@@ -115,20 +132,45 @@ HitBox.prototype.initStarShot = function(character)
 	this.owner = character;
 	
 	gameEngine.arena.getRootObject().add(this.collider.getNode());
-	this.isProjectile = true;
+	this.attackType = "projectile";
 	
 	var xstart = character.getCollider().getNode().position.x + this.collider.getWidth()/2;
 	var ystart = character.getCollider().getNode().position.y;
 	
 	this.collider.setPosition(xstart, ystart, 0);
-	
-	this.collider.setXVelocity(10);
+
+	this.initialXVelocity = 10;
 
 	this.beginTime = 15;
 
 	this.endTime = 95;
 	
-	this.damage = 27;
+	this.damage = 2;
+}
+
+HitBox.prototype.initGrab = function(character)
+{	
+	this.initWithDimensions(50,50,50);
+
+	character.setActionFrames(95);
+
+	character.getCollider().setXVelocity(0);
+
+	this.owner = character;
+	
+	this.owner.getCollider().getNode().add(this.collider.getNode());
+	this.attackType = "grab";
+	
+	var xstart = this.collider.getWidth()/2 + this.owner.getCollider().getWidth()/2;
+	var ystart = 0;
+	
+	this.collider.setPosition(xstart, ystart, 0);
+
+	this.beginTime = 15;
+
+	this.endTime = 65;
+	
+	this.damage = 20;
 }
 
 // Getters
@@ -147,6 +189,9 @@ HitBox.prototype.update = function()
 	if(this.time == this.beginTime)
 	{
 		this.collider.getNode().material.color.setHex (0x00ff00); // attacks become green when they become active
+		this.collider.setXVelocity(this.initialXVelocity);
+		this.collider.setYVelocity(this.initialYVelocity);
+		this.collider.setZVelocity(this.initialZVelocity);
 		this.active = true;
 	}
 
@@ -155,7 +200,7 @@ HitBox.prototype.update = function()
 		this.active = false;
 		this.collider.getNode().material.color.setHex (0xaf00ff); // deactivated attacks (either due to collision or time) are purple
 		
-		if(this.isProjectile)
+		if(this.attackType == "projectile")
 		{
 			this.owner.deleteHitBox(this);
 		}
@@ -163,7 +208,7 @@ HitBox.prototype.update = function()
 	
 	this.time += 1;
 	
-	if(this.owner.getActionFrames() == 0 && this.isProjectile == false)
+	if(this.owner.getActionFrames() == 0 && this.attackType != "projectile")
 	{
 		this.owner.deleteHitBox(this);
 	}
@@ -179,10 +224,12 @@ HitBox.prototype.onCollision = function()
 		var worldPosition = new THREE.Vector3();
 		worldPosition.setFromMatrixPosition( this.collider.getNode().matrixWorld ); // get world coordinates
 
-		this.enemy.takeDamage(this.damage, worldPosition);
-		this.collider.setXVelocity(0);
+		this.enemy.takeDamage(this.damage, worldPosition, this.attackType, this.xKnockBack, this.yKnockBack);
+		this.collider.setXVelocity(this.endingXVelocity);
+		this.collider.setYVelocity(this.endingYVelocity);
+		this.collider.setZVelocity(this.endingZVelocity);
 		
-		if(this.isProjectile == true)
+		if(this.attackType == "projectile")
 		{
 			this.time = this.endTime - 3; // show the projectile for 3 frames after collision
 		}

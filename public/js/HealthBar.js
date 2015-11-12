@@ -7,9 +7,6 @@ function HealthBar()
 
 	this.health;
 	this.maxHealth;
-
-	this.fullHealthColor;
-	this.lowHealthColor;
 }
 
 HealthBar.prototype.initEmpty = function()
@@ -22,13 +19,10 @@ HealthBar.prototype.initEmpty = function()
 	this.health = null;
 	this.maxHealth = null;
 
-	this.fullHealthColor = null;
-	this.lowHealthColor = null;
-	
 	return this;
 };
 
-HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth, fullHealthColor, lowHealthColor)
+HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
 {
 	this.initEmpty();
 
@@ -38,8 +32,7 @@ HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth, 
 	this.maxHealth = maxHealth;
 	this.health = maxHealth;
 
-	this.fullHealthColor = new THREE.Color(fullHealthColor);
-	this.lowHealthColor = new THREE.Color(lowHealthColor);
+	var fullHealthColor = 0x00ff00;
 
 	var outlineColor = 0x000000;
 	var margin = 25;
@@ -57,7 +50,7 @@ HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth, 
 	// Inner Bar
 
 	geometry = new THREE.PlaneGeometry( this.width, this.height, 32 );
-	material = new THREE.MeshBasicMaterial( {color: this.fullHealthColor, side: THREE.DoubleSide} );
+	material = new THREE.MeshBasicMaterial( {color: fullHealthColor, side: THREE.DoubleSide} );
 
 	this.node.children[0] =( new THREE.Mesh( geometry, material ) );
 
@@ -79,10 +72,11 @@ HealthBar.prototype.getNode = function()
 HealthBar.prototype.takeDamage = function(damage)
 {
 	this.health -= damage;
-	var currentColor = this.node.children[0].material.color.clone();
 
-	currentColor.addColors(this.node.children[0].material.color, this.lowHealthColor);
-	this.node.children[0].material.color.set(currentColor);
+	var healthPercent = this.health / this.maxHealth;
+
+	this.node.children[0].material.color.r = (1 - healthPercent) * 2;
+	this.node.children[0].material.color.g = healthPercent * 2;
 
 	if(this.health <= 0)
 	{
@@ -92,8 +86,8 @@ HealthBar.prototype.takeDamage = function(damage)
 
 	if(this.health != 0)
 	{
-		this.node.children[0].scale.x = this.health / this.maxHealth;
+		this.node.children[0].scale.x = healthPercent;
 	}
 
-	this.node.children[0].position.x -= damage*3/(this.maxHealth/100);
+	this.node.children[0].position.x -= damage * this.width / (2 * this.maxHealth);
 };

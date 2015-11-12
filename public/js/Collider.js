@@ -17,6 +17,7 @@ function Collider()
 	// Motion
 	this.xVelocity;
 	this.yVelocity;
+	this.zVelocity;
 	this.gravity;
 	
 	// Behaviour Sentinel
@@ -41,6 +42,7 @@ Collider.prototype.initEmpty = function()
 	// Motion
 	this.xVelocity = 0;
 	this.yVelocity = 0;
+	this.zVelocity = 0;
 	this.gravity = 0;
 	
 	// Behaviour Sentinel
@@ -117,6 +119,11 @@ Collider.prototype.setYVelocity = function(velocity)
 	this.yVelocity = velocity;
 };
 
+Collider.prototype.setZVelocity = function(velocity)
+{
+	this.zVelocity = velocity;
+};
+
 Collider.prototype.setGravity = function(gravity)
 {
 	this.gravity = gravity;
@@ -146,6 +153,8 @@ Collider.prototype.update = function()
 	this.node.position.x += this.xVelocity;
 
 	this.node.position.y += this.yVelocity;
+
+	this.node.position.z += this.zVelocity;
 
 	this.yVelocity -= this.gravity;
 
@@ -218,13 +227,14 @@ Collider.prototype.enforceLevelBounds = function()
 			this.yVelocity = 0;
 		}
 
-		if(this.owner.getCharacterState()  == "jumping")
+		var characterState = this.owner.getCharacterState();
+
+		if(characterState  == "jumping" )
 		{
 			this.owner.setCharacterState("standing");
-			this.node.material.color.setHex (0xff0000);
 		}
-		
-		if(this.owner.getCharacterState() == "blocking")
+
+		if(characterState == "initBlocking" || characterState == "blocking")
 		{
 			this.xVelocity = 0;
 		}
@@ -250,7 +260,7 @@ Collider.prototype.checkVertexHit = function()
 		var directionVector = globalVertex.sub( this.node.position );
 		
 		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObject( this.enemy.getCollider().getNode() , true);
+		var collisionResults = ray.intersectObject( this.enemy.getCollider().getNode() , false);
 		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
 		{
 			return true;
