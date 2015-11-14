@@ -1,14 +1,29 @@
+/**
+* Class responsible for visually indicating the health of a PlayerCharacter.
+* Has variables for width, height, a plane Object3D, the health of a PlayerCharacter, and the maximum health of a PlayerCharacter.
+*
+* @constructor
+*/
 function HealthBar()
 {
+	/** @property {float} width - The width of the HealthBar's Object3D.*/
 	this.width;
+	/** @property {float} height - The height of the HealthBar's Object3D.*/
 	this.height;
-	
+
+	/** @property {Object3D} node - The rendered polygon that represents the HealthBar instance.*/
 	this.node;
 
+	/** @property {float} health - The current amount of health of the PlayerCharacter that corresponds to this HealthBar.*/
 	this.health;
+	/** @property {float} maxHealth - The maximum amount of health of the PlayerCharacter that corresponds to this HealthBar.*/
 	this.maxHealth;
 }
 
+/**
+* Creates a new instance of HealthBar. All values default to null.
+* @return {HealthBar} The HealthBar instance.
+*/
 HealthBar.prototype.initEmpty = function()
 {
 	this.width = null;
@@ -22,6 +37,10 @@ HealthBar.prototype.initEmpty = function()
 	return this;
 };
 
+/**
+* Creates a new instance of HealthBar with specific dimensions, and a PlayerCharacter's maximum health
+* @return {HealthBar} The HealthBar instance.
+*/
 HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
 {
 	this.initEmpty();
@@ -62,6 +81,10 @@ HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
 
 // Getters
 
+/**
+* Returns the Object3D belonging to this instance.
+* @return {Object3D} The Object3D of the instance.
+*/
 HealthBar.prototype.getNode = function()
 {
 	return this.node;
@@ -69,6 +92,10 @@ HealthBar.prototype.getNode = function()
 
 // Setters
 
+/**
+* Sets the current health of a PlayerCharacter based on a given damage value.
+* @param {float} damage - The float value that will be subtracted from the health.
+*/
 HealthBar.prototype.takeDamage = function(damage)
 {
 	this.health -= damage;

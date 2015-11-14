@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: PlayerCharacter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: PlayerCharacter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * PlayerCharacter attribute definition.
+ * 
+ * @constructor
+ */
+function PlayerCharacter()
+{
+    // Key codes
+    /** @property {String} keyValues */
+    this.keyValues;
+
+    // Key states
+    this.keyStates;
+
+    // Key buffers
+    this.keyBuffers;
+    this.keyBufferTime;
+
+    // Collision Box
+    this.collider;
+    
+    // Opposing player character
+    this.enemy;
+    
+    // Hit Boxes
+    this.hitBoxes;
+    
+    // Attacks
+    this.attacks;
+    
+    // Timing
+    this.actionFrames;
+
+    // Health
+    this.healthBar;
+
+    // Character attributes
+    this.walkSpeed;
+    this.dashSpeed;
+    this.jumpSpeed;
+    this.characterState;
+
+    // Consecutive times this character has been hit while in hit-stun
+    this.comboCount;
+}
+
+PlayerCharacter.
+
+// Initialisers
+/**
+ * Initializes a PlayerCharacter object with an empty state.
+ * 
+ * @return {PlayerCharacter}
+ */
+PlayerCharacter.prototype.initEmpty = function()
+{
+    // Key codes
+    this.keyValues = {};
+
+    // Key states
+    this.keyStates = {};
+
+    // Key buffers
+    this.keyBuffers = {};
+    this.keyBufferTime = null;
+
+    // Collision Box
+    this.collider = null;
+
+    // Opposing player character
+    this.enemy;
+
+    // Hit Boxes
+    this.hitBoxes = new Array();
+
+    // Attacks
+    this.attacks = {};
+
+    // Timing
+    this.actionFrames = null;
+    
+    // Health
+    this.healthBar = null;
+
+    // Character attributes
+    this.walkSpeed = null;
+    this.dashSpeed = null;
+    this.jumpSpeed = null;
+    this.characterState = null;
+
+    // Consecutive times this character has been hit while in hit-stun
+    this.comboCount = null;
+
+  return this;
+};
+/**
+ * Initializes a PlayerCharacter object with designated dimensions and a player character class.
+ * 
+ * @param  {Integer} width
+ * @param  {Integer} height
+ * @param  {Integer} depth
+ * @param  {Strings} Character currently there's only one class - 'SuperStar'.
+ * @return {PlayerCharacter}
+ */
+PlayerCharacter.prototype.initWithSettings = function(width, height, depth, character)
+{
+    this.initEmpty();
+
+    this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
+
+    if (character == 'SuperStar') {
+        this.superStar();
+    }
+
+    this.keyBufferTime = 2;
+    this.characterState = 'standing';
+    this.actionFrames = 0;
+    this.comboCount = 0;
+
+    return this;
+};
+/**
+ * Initializes PlayerCharacter attributes specific to this player character class.
+ */
+PlayerCharacter.prototype.superStar = function()
+{
+    this.walkSpeed = 4;
+    this.dashSpeed = 10;
+    this.jumpSpeed = 30;
+    this.collider.setGravity(2);
+    var geometry = new THREE.BoxGeometry(50, 50, 50);
+    var material = new THREE.MeshPhongMaterial({
+        color: 0x0000ff,
+        wireframe: false,
+        specular: 0x000000, 
+        shininess: 0, 
+        shading: THREE.FlatShading
+    });
+    var head = new THREE.Mesh(geometry, material);
+    head.position.y = 75;
+    head.position.x = 10;
+    this.collider.getNode().add(head);
+    if (gameEngine.arena.player1 != null) {
+    	this.collider.getNode().rotation.y = Math.PI;
+    }
+
+    this.attacks['lightpunch'] = 'star storm';
+    this.attacks['heavypunch'] = 'star shot';
+    this.attacks['grab'] = 'grab';
+};
+
+// Getters
+/**
+ * Answers whether a specific key is pressed.
+ * 
+ * @param  {Character} key
+ * @return {Boolean} if the key is pressed.
+ */
+PlayerCharacter.prototype.press = function(key)
+{
+    return this.keyBuffers[key] == this.keyBufferTime;
+}
+/**
+ * Gives the current state.
+ * 
+ * @return {String} current state.
+ */
+PlayerCharacter.prototype.getCharacterState = function()
+{
+    return this.characterState;
+};
+/**
+ * Gives the current collider.
+ * 
+ * @return {Collider}
+ */
+PlayerCharacter.prototype.getCollider = function()
+{
+    return this.collider;
+};
+/**
+ * Gives the remaining action frame count.
+ * 
+ * @return {Integer} frame count.
+ */
+PlayerCharacter.prototype.getActionFrames = function()
+{
+    return this.actionFrames;
+};
+
+// Setters
+/**
+ * Saves a reference to the opponent's PlayerCharacter.
+ * 
+ * @param {PlayerCharacter} enemy is an istance of the opponent's PlayerCharacter.
+ */
+PlayerCharacter.prototype.setEnemy = function(enemy)
+{
+    this.enemy = enemy;
+    this.collider.setEnemy(enemy);
+}
+/**
+ * Associates keyboard keys with specific PlayerCharacter actions.
+ * 
+ * @param {Character} jump
+ * @param {Character} crouch
+ * @param {Character} left
+ * @param {Character} right
+ * @param {Character} lightpunch
+ * @param {Character} heavypunch
+ * @param {Character} lightkick
+ * @param {Character} heavykick
+ * @param {Character} dash
+ * @param {Character} block
+ * @param {Character} grab
+ */
+PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
+{
+    this.keyValues['jump'] = jump;
+    this.keyValues['crouch'] = crouch;
+    this.keyValues['left'] = left;
+    this.keyValues['right'] = right;
+    this.keyValues['lightpunch'] = lightpunch;
+    this.keyValues['heavypunch'] = heavypunch;
+    this.keyValues['lightkick'] = lightkick;
+    this.keyValues['heavykick'] = heavykick;
+    this.keyValues['dash'] = dash;
+    this.keyValues['block'] = block;
+    this.keyValues['grab'] = grab;
+    
+    this.keyStates['jump'] = false;
+    this.keyStates['crouch'] = false;
+    this.keyStates['left'] = false;
+    this.keyStates['right'] = false;
+    this.keyStates['lightpunch'] = false;
+    this.keyStates['heavypunch'] = false;
+    this.keyStates['lightkick'] = false;
+    this.keyStates['heavykick'] = false;
+    this.keyStates['dash'] = false;
+    this.keyStates['block'] = false;
+    this.keyStates['grab'] = false;
+    
+    this.keyBuffers['jump'] = 0;
+    this.keyBuffers['crouch'] = 0;
+    this.keyBuffers['left'] = 0;
+    this.keyBuffers['right'] = 0;
+    this.keyBuffers['lightpunch'] = 0;
+    this.keyBuffers['heavypunch'] = 0;
+    this.keyBuffers['lightkick'] = 0;
+    this.keyBuffers['heavykick'] = 0;
+    this.keyBuffers['dash'] = 0;
+    this.keyBuffers['block'] = 0;
+    this.keyBuffers['grab'] = 0;
+};
+/**
+ * Changes the state of a specific key to an active state.
+ * 
+ * @param {Character} keycode defines the keyboard key
+ */
+PlayerCharacter.prototype.setKeyPress = function(keycode)
+{
+    for (var i in this.keyValues) {
+        if (keycode == this.keyValues[i]) {
+            if (this.keyBuffers[i] == 0 &amp;&amp; this.keyStates[i] == false) {
+            	// on initial press
+                this.keyBuffers[i] = this.keyBufferTime;
+            }
+            this.keyStates[i] = true;
+        }
+    }
+};
+/**
+ * Changes the state of a specific key to an inactive state.
+ * 
+ * @param {Character} keycode defines the keyboard key.
+ */
+PlayerCharacter.prototype.setKeyRelease = function(keycode)
+{
+    for (var i in this.keyValues) {
+        if (keycode == this.keyValues[i]) {
+            this.keyStates[i] = false;
+        }
+    }
+};
+/**
+ * Associates a HealthBar object with this PlayerCharacter.
+ * 
+ * @param {HealthBar}
+ */
+PlayerCharacter.prototype.setHealthBar = function(healthBar)
+{
+    this.healthBar = healthBar;
+};
+/**
+ * Changes the current PlayerCharacter state.
+ * @param {String}
+ */
+PlayerCharacter.prototype.setCharacterState = function(state)
+{
+    this.characterState = state;
+};
+/**
+ * Sets how many frames an action requires.
+ * 
+ * @param {Integer}
+ */
+PlayerCharacter.prototype.setActionFrames = function(frames)
+{
+    this.actionFrames = frames;
+};
+
+// Methods
+/**
+ * Creates a HitBox of a certain type and adds it to the hitBoxes stack.
+ * 
+ * @param  {String} command
+ */
+PlayerCharacter.prototype.createAttack = function(command)
+{
+    var hbox = new HitBox();
+
+    hbox.initAttack(command, this, this.enemy);
+
+    this.hitBoxes.push(hbox);
+};
+/**
+ * This method is called within the Engine update method. It's responsible for responding to user input, updating the collision body of the PlayerCharacter and the active HitBoxes.
+ */
+PlayerCharacter.prototype.update = function()
+{
+    if (this.actionFrames == 0) {
+        this.resolveInput();
+    }
+    
+    this.collider.update();
+
+    if (this.characterState == 'blocking') {
+        this.collider.getNode().material.color.setHex(0xaf00ff); // purple is blocking
+    }
+
+    if (this.actionFrames > 0) {
+        this.actionFrames -= 1;
+        if (this.actionFrames == 0) {
+            this.comboCount = 0;
+            if (this.characterState == 'standing' || this.characterState == 'jumping') {
+            	this.collider.getNode().material.color.setHex(0x0000ff);
+            }
+        }
+    }
+
+    // update all hitboxes beloning to this character
+    this.updateHitBoxes();
+    
+    // update keybuffer times
+    this.updateKeyBuffers();
+};
+/**
+ * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
+ */
+PlayerCharacter.prototype.resolveInput = function()
+{
+    if (this.press('lightpunch')) {
+        this.createAttack(this.attacks['lightpunch']);
+        return;
+    }
+
+    if (this.press('grab')) {
+        this.createAttack(this.attacks['grab']);
+        return;
+    }
+
+    if (this.keyStates['block'] == true) {
+        if (this.characterState == 'standing' || this.characterState == 'jumping') {
+            if (this.characterState == 'standing') {
+                this.collider.setXVelocity(0);
+            }
+            this.actionFrames = 30;
+            this.characterState = 'initBlocking';
+        } else {
+            this.characterState  = 'blocking';
+        }
+        return;
+    }
+
+    if (this.keyStates['block'] == false &amp;&amp; this.characterState  == 'blocking') {
+    	// end blocking
+        this.actionFrames = 30;
+
+        this.collider.getNode().material.color.setHex (0x0000ff); // blue is standing
+        
+        var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+        if (this.collider.getNode().position.y &lt;= initialVerticalPosition) {
+            this.characterState = 'standing';
+        } else {
+            this.characterState = 'jumping';
+        }
+        return;
+    }
+    
+    if (this.press('heavypunch')){
+        this.createAttack(this.attacks['heavypunch']);
+        return;
+    }
+
+    if (this.characterState  == 'standing') {
+        if (this.press('jump')) {
+            this.jump();
+            this.characterState  = 'jumping';
+        }
+
+        if (this.keyStates['left']) {
+            this.left();
+        } else if (this.keyStates['right']) {
+            this.right();
+        } else {
+            this.movementEnd();
+        }
+    }
+};
+/**
+ * Changes the PlayerCharacter's Y velocity to display a jump action.
+ */
+PlayerCharacter.prototype.jump = function()
+{
+    this.collider.setYVelocity(this.jumpSpeed);
+};
+/**
+ * Rotates the PlayerCharacter and changes it's X velocity to display left movement.
+ */
+PlayerCharacter.prototype.left = function()
+{
+    this.collider.getNode().rotation.y = Math.PI;
+    this.collider.setXVelocity(this.keyStates['dash'] ? -this.dashSpeed : -this.walkSpeed);
+};
+/**
+ * Rotates the PlayerCharacter and changes it's X velocity to display right movement.
+ */
+PlayerCharacter.prototype.right = function()
+{
+    this.collider.getNode().rotation.y = 0;
+    this.collider.setXVelocity(this.keyStates['dash'] ? this.dashSpeed : this.walkSpeed);
+};
+/**
+ * Resets X velocity to stop all lateral movement.
+ */
+PlayerCharacter.prototype.movementEnd = function()
+{
+    this.collider.setXVelocity(0);
+};
+/**
+ * Iterates over all key buffers and reduces their count if there's any commands left in the buffer.
+ */
+PlayerCharacter.prototype.updateKeyBuffers = function()
+{
+    for (var i in this.keyBuffers) {
+        if (this.keyBuffers[i] > 0) {
+            this.keyBuffers[i] -= 1;
+        }
+    }
+};
+/**
+ * Iterates over all active HitBoxes and calls their update() method.
+ */
+PlayerCharacter.prototype.updateHitBoxes = function()
+{
+    for (var i in this.hitBoxes) {
+        this.hitBoxes[i].update();
+    }
+};
+/**
+ * Removes a specific HitBox from the scene and from the hitBoxes array.
+ * 
+ * @param  {HitBox} hitbox
+ */
+PlayerCharacter.prototype.deleteHitBox = function(hitbox)
+{
+    this.collider.getNode().remove(hitbox.getCollider().getNode());
+    gameEngine.arena.getRootObject().remove(hitbox.getCollider().getNode());
+    
+    var targetHitBox = this.hitBoxes.indexOf(hitbox);
+    
+    this.hitBoxes.splice(targetHitBox, 1); // 1 is the number of instances to remove
+};
+/**
+ * Analyses the current PlayerCharacter state and takes some damage. Also, it updates the associated HealthBar and Collider.
+ * @param  {Integer} damage
+ * @param  {Position} hitPosition
+ * @param  {String} attackType
+ */
+PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
+{
+    if (this.characterState == 'blocking' &amp;&amp; attackType != 'grab') {
+        damage = Math.round(damage / 10);
+    }
+
+    this.collider.getNode().material.color.setHex(0xffff00); // collider turns yellow during hit stun
+
+    var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+    if (this.collider.getNode().position.y &lt;= initialVerticalPosition) {
+    	// cancel initBlocking and blocking states
+        this.characterState = 'standing';
+    } else {
+        this.characterState = 'jumping';
+    }
+
+    this.actionFrames = (damage - this.comboCount) * 2;
+    
+    if (this.actionFrames &lt; 1) {
+    	// minimum hit stun
+        this.actionFrames = 1;
+    }
+
+    this.comboCount += 1;
+    this.movementEnd();
+    
+    if (attackType == 'grab') {
+        this.collider.setYVelocity(40);
+        this.characterState = 'jumping';
+    }
+
+    this.healthBar.takeDamage(damage);
+    this.collider.bump(hitPosition);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collider.html">Collider</a></li><li><a href="HealthBar.html">HealthBar</a></li><li><a href="PlayerCharacter.html">PlayerCharacter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#active">active</a></li><li><a href="global.html#Arena">Arena</a></li><li><a href="global.html#arena">arena</a></li><li><a href="global.html#attackType">attackType</a></li><li><a href="global.html#beginTime">beginTime</a></li><li><a href="global.html#camera">camera</a></li><li><a href="global.html#collider">collider</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#damage">damage</a></li><li><a href="global.html#depth">depth</a></li><li><a href="global.html#endingXVelocity">endingXVelocity</a></li><li><a href="global.html#endingYVelocity">endingYVelocity</a></li><li><a href="global.html#endingZVelocity">endingZVelocity</a></li><li><a href="global.html#endTime">endTime</a></li><li><a href="global.html#enemy">enemy</a></li><li><a href="global.html#Engine">Engine</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#HitBox">HitBox</a></li><li><a href="global.html#initialXVelocity">initialXVelocity</a></li><li><a href="global.html#initialYVelocity">initialYVelocity</a></li><li><a href="global.html#initialZVelocity">initialZVelocity</a></li><li><a href="global.html#owner">owner</a></li><li><a href="global.html#player1">player1</a></li><li><a href="global.html#player2">player2</a></li><li><a href="global.html#renderer">renderer</a></li><li><a href="global.html#rootObject">rootObject</a></li><li><a href="global.html#scene">scene</a></li><li><a href="global.html#shading">shading</a></li><li><a href="global.html#shininess">shininess</a></li><li><a href="global.html#specular">specular</a></li><li><a href="global.html#time">time</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wireframe">wireframe</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Nov 14 2015 14:55:30 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
