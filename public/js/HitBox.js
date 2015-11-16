@@ -1,35 +1,52 @@
+/**
+* Create hitbox dimensions, handling the initial and ending velocity and time .
+* Set collider box and enemy character. Determine the attack type  and damage of the 
+* attack. status checking of the character class.
+*
+* @constructor
+*/
 function HitBox()
 {	
-	// Time
+	/** begin time */
 	this.beginTime;
+	/** duration */
 	this.time;
+	/** end time */
 	this.endTime;
 
-	// Collision Box
+	/** Collision Box */
 	this.collider;
 
-	// Opposing player character
+	/** opposing character */
 	this.enemy;
 
-	// Owner of this hitbox
+	/** owner of the hitbox */
 	this.owner;
+	/** attack type */
 	this.attackType;
 
-	// Motion of HitBox
+	/** intial X velocity */
 	this.initialXVelocity;
+	/** initial Y velocity */
 	this.initialYVelocity;
+	/** initial Z velocity */
 	this.initialZVelocity;
+	/** ending velocity if X */
 	this.endingXVelocity;
+	/** ending  velocity of Y */
 	this.endingYVelocity;
+	/** ending velocity of Z */
 	this.endingZVelocity;
-
+	/** damage instance */
 	this.damage;
-	
+	/** status */
 	this.active;
 }
 
-// Initialisers
 
+/**
+* Constructor of the Hitbox class, set everything to null
+*/
 HitBox.prototype.initEmpty = function()
 {
 	// Time
@@ -61,7 +78,12 @@ HitBox.prototype.initEmpty = function()
 
   return this;
 };
-
+/** constructor for the hitbox dimensions
+* @param {int} width set the width of the hitbox
+* @param {int} height set the height of the hitbox
+* @param {int} depth set the depth of the hitbox
+* @return {HitBox} initWithDimensions return the dimensions of the hitbox
+*/
 HitBox.prototype.initWithDimensions = function(width, height, depth)
 {
 	this.initEmpty();
@@ -74,6 +96,13 @@ HitBox.prototype.initWithDimensions = function(width, height, depth)
 
 	return this;
 };
+
+/**
+*	initae the attack of a character and handling enemy state
+* @param {string} command name of the attack type
+* @param {PlayerCharacter} character character 
+* @param {PlayerCharacter} class enemy character
+*/
 
 HitBox.prototype.initAttack = function(command , character, enemy)
 {
@@ -96,6 +125,10 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 	this.collider.setEnemy(enemy);
 };
 
+/**
+* initiate Star Storm attack
+* @param {PlayerCharacter} character character issueing the starstorm
+*/
 HitBox.prototype.initStarStorm = function(character)
 {	
 	this.initWithDimensions(50,50,50);
@@ -120,6 +153,11 @@ HitBox.prototype.initStarStorm = function(character)
 	
 	this.damage = 20;
 }
+
+/**
+* initiate Star shot attack, set its velocity, dimensions, speed,damage, time and node
+* @param {PlayerCharacter} character character issuing the attack
+*/
 
 HitBox.prototype.initStarShot = function(character)
 {	
@@ -147,7 +185,10 @@ HitBox.prototype.initStarShot = function(character)
 	
 	this.damage = 2;
 }
-
+/**
+* initiate the grab fucntion
+* @param {PlayerCharacter} character
+*/ 
 HitBox.prototype.initGrab = function(character)
 {	
 	this.initWithDimensions(50,50,50);
@@ -173,14 +214,18 @@ HitBox.prototype.initGrab = function(character)
 	this.damage = 20;
 }
 
-// Getters
-
+/**
+* get the collider
+* @return {Collider} collider
+*/
 HitBox.prototype.getCollider = function()
 {
    return this.collider;
 };
 
-// Methods
+/**
+* Update the collision status, remove hitbox if needed 
+*/
 
 HitBox.prototype.update = function()
 {
@@ -188,7 +233,8 @@ HitBox.prototype.update = function()
 
 	if(this.time == this.beginTime)
 	{
-		this.collider.getNode().material.color.setHex (0x00ff00); // attacks become green when they become active
+		/** attack become green if they are active */
+		this.collider.getNode().material.color.setHex (0x00ff00);
 		this.collider.setXVelocity(this.initialXVelocity);
 		this.collider.setYVelocity(this.initialYVelocity);
 		this.collider.setZVelocity(this.initialZVelocity);
@@ -213,6 +259,9 @@ HitBox.prototype.update = function()
 		this.owner.deleteHitBox(this);
 	}
 };
+/** 
+* onCollision were use one collision is dectected. It determines if the attack is block or not , damage calculation and set repective velocity
+*/
 
 HitBox.prototype.onCollision = function()
 {

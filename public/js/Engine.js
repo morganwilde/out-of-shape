@@ -1,16 +1,31 @@
-function Engine() {
+/**
+ * Engine attribute definition
+ *
+ * @constructor
+ */
+function Engine()
+{
   // Canvas size
+  /** @property {Integer} */
   this.width;
+  /** @property {Integer} */
   this.height;
   // THREE
+  /** @property {THREE.Scene} */
   this.scene;
+  /** @property {THREE.PerspectiveCamera} */
   this.camera;
+  /** @property {THREE.WebGLRenderer} */
   this.renderer;
+  /** @property {Arena} */
   this.arena;
 }
 
 // Initialisers
-
+/**
+ * Initializes an Engine object with an empty state.
+ * @return {Engine}
+ */
 Engine.prototype.initEmpty = function()
 {
   // Canvas size
@@ -24,7 +39,12 @@ Engine.prototype.initEmpty = function()
 
   return this;
 };
-
+/**
+ * Initializes an Engine object with specific screen dimensions.
+ * @param  {Integer} width
+ * @param  {Integer} height
+ * @return {Engine}
+ */
 Engine.prototype.initWithCanvasSize = function(width, height)
 {
   this.initEmpty();
@@ -56,7 +76,9 @@ Engine.prototype.initWithCanvasSize = function(width, height)
 };
 
 // Methods
-
+/**
+ * The frame render method, which is called every time the renderer needs a need frame.
+ */
 Engine.prototype.render = function()
 {
   requestAnimationFrame(function() {
@@ -67,20 +89,29 @@ Engine.prototype.render = function()
   this.arena.update();
     
 };
-
+/**
+ * Responds to keyDown events from the keyboard.
+ * @param  {Event} event
+ */
 Engine.prototype.keyDown = function(event)
 {
-	event.preventDefault();
-	this.arena.setKeyPress(event.keyCode);
-	
+  event.preventDefault();
+  this.arena.setKeyPress(event.keyCode);
+  
 };
-
+/**
+ * Responds to keyUp events from the keyboard.
+ * @param  {Event} event
+ */
 Engine.prototype.keyUp = function(event)
 {
-	event.preventDefault();
-	this.arena.setKeyRelease(event.keyCode);
+  event.preventDefault();
+  this.arena.setKeyRelease(event.keyCode);
 };
-
+/**
+ * Assigns an Arena object that will contain all the necessary visuals for the game.
+ * @param {Arena} arena
+ */
 Engine.prototype.addArena = function(arena)
 {
   this.arena = arena;
