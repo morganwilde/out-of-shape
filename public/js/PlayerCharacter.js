@@ -1,46 +1,50 @@
 /**
- * PlayerCharacter attribute definition.
+ * PlayerCharacter is the base class for the player's in-game avatar. It is reponsible for maintaining attributes such as how fast the avatar walks, dashes or jumps. It also maitains the information about the current state the character is in, for example standing, walking or attacking. Currently it is also responsible for keeping track of the keyboard inputs and translating them into specific actions. This functionality will be moved over to a Keyboard class.
  * 
  * @constructor
  */
 function PlayerCharacter()
 {
-    // Key codes
-    /** @property {String} keyValues */
+    /** @property {object} keyValues A key-value store for player character actions and their associated keyboard keys. */
     this.keyValues;
 
-    // Key states
+    /** @property {object} keyStates A key-value store for character actions and a boolean indicating if they're currently active. Keeping track of key state (up or down) is important when considering long key presses, those that exhaust the key buffer. */
     this.keyStates;
 
-    // Key buffers
+    /** @property {object} keyBuffers A place to store how many frames a certain action has remaining. If an action has zero in the key buffer, it is considered finished. */
     this.keyBuffers;
+    /** @property {Integer} keyBufferTime A default keyBuffers frame count. Currently stored as 2. */
     this.keyBufferTime;
 
-    // Collision Box
+    /** @property {Collider} collider Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or any other object with an associated Collider. */
     this.collider;
     
-    // Opposing player character
+    /** @property {PlayerCharacter} enemy A reference to the opponent's PlayerCharacter instance. This reference is required when creating HitBox objects targetting the opponent. */
     this.enemy;
     
-    // Hit Boxes
+    /** @property {Array} hitBoxes An array of all current actions that are taking place, for example all attack HitBoxes. */
     this.hitBoxes;
     
-    // Attacks
+    /** @property {object} attacks A key-value store for identifying specific attacks that different PlayerCharacter classes have. For now, we only have one class, but in future releases PlayerCharacter subclasses will override the default values with their versions of the different attacks. */
     this.attacks;
     
-    // Timing
+    /** @property {Integer} actionFrames An integer that stores how many frame are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions. */
     this.actionFrames;
 
-    // Health
+    /** @property {HealthBar} healthBar A reference to the HealthBar object that indicates a PlayerCharacter's remaining health. */
     this.healthBar;
 
     // Character attributes
+   	/** @property {Integer} walkSpeed How much horizontal distance is covered in one frame while walking. Currently it's 4 units. */
     this.walkSpeed;
+    /** @property {Integer} dashSpeed How much horizontal distance is covered in one frame while dashing. Currently it's 10 units. */
     this.dashSpeed;
+    /** @property {Integer} jumpSpeed How much vertical distance is covered in one frame while jumping. Currently it's 30 units. */
     this.jumpSpeed;
+    /** @property {String} characterState A string that indicates the current state of a PlayerCharacter, for exmple 'standing' or 'blocking'. */
     this.characterState;
 
-    // Consecutive times this character has been hit while in hit-stun
+    /** @property {Integer} comboCount The number of consecutive times this character has been hit while in the 'inactive' state. */
     this.comboCount;
 }
 
@@ -48,56 +52,34 @@ function PlayerCharacter()
 /**
  * Initializes a PlayerCharacter object with an empty state.
  * 
- * @return {PlayerCharacter}
+ * @return {PlayerCharacter} An empty version of a PlayerCharacter
  */
 PlayerCharacter.prototype.initEmpty = function()
 {
-    // Key codes
     this.keyValues = {};
-
-    // Key states
     this.keyStates = {};
-
-    // Key buffers
     this.keyBuffers = {};
     this.keyBufferTime = null;
-
-    // Collision Box
     this.collider = null;
-
-    // Opposing player character
     this.enemy;
-
-    // Hit Boxes
     this.hitBoxes = new Array();
-
-    // Attacks
     this.attacks = {};
-
-    // Timing
     this.actionFrames = null;
-    
-    // Health
     this.healthBar = null;
-
-    // Character attributes
     this.walkSpeed = null;
     this.dashSpeed = null;
     this.jumpSpeed = null;
     this.characterState = null;
-
-    // Consecutive times this character has been hit while in hit-stun
     this.comboCount = null;
-
-  return this;
+	return this;
 };
 /**
  * Initializes a PlayerCharacter object with designated dimensions and a player character class.
  * 
- * @param  {Integer} width
- * @param  {Integer} height
- * @param  {Integer} depth
- * @param  {Strings} Character currently there's only one class - 'SuperStar'.
+ * @param  {Integer} width The horizontal size of the PlayerCharacter's Collider object.
+ * @param  {Integer} height The vertical size of the PlayerCharacter's Collider object.
+ * @param  {Integer} depth The depth of the PlayerCharacter's Collider object.
+ * @param  {Strings} Character currently there's only one Character class - 'SuperStar'.
  * @return {PlayerCharacter}
  */
 PlayerCharacter.prototype.initWithSettings = function(width, height, depth, character)
@@ -151,8 +133,8 @@ PlayerCharacter.prototype.superStar = function()
 /**
  * Answers whether a specific key is pressed.
  * 
- * @param  {Character} key
- * @return {Boolean} if the key is pressed.
+ * @param  {Character} key A numeric code for the key pressed.
+ * @return {Boolean} If the key is pressed.
  */
 PlayerCharacter.prototype.press = function(key)
 {
@@ -161,7 +143,7 @@ PlayerCharacter.prototype.press = function(key)
 /**
  * Gives the current state.
  * 
- * @return {String} current state.
+ * @return {String} Current state value.
  */
 PlayerCharacter.prototype.getCharacterState = function()
 {
@@ -170,16 +152,16 @@ PlayerCharacter.prototype.getCharacterState = function()
 /**
  * Gives the current collider.
  * 
- * @return {Collider}
+ * @return {Collider} Current Collider reference.
  */
 PlayerCharacter.prototype.getCollider = function()
 {
     return this.collider;
 };
 /**
- * Gives the remaining action frame count.
+ * Gives the remaining action frame count, I.e. the number of frame the PlayerCharacter is in the 'inactive' state.
  * 
- * @return {Integer} frame count.
+ * @return {Integer} Action frame count.
  */
 PlayerCharacter.prototype.getActionFrames = function()
 {
@@ -190,7 +172,7 @@ PlayerCharacter.prototype.getActionFrames = function()
 /**
  * Saves a reference to the opponent's PlayerCharacter.
  * 
- * @param {PlayerCharacter} enemy is an istance of the opponent's PlayerCharacter.
+ * @param {PlayerCharacter} enemy An istance of the opponent's PlayerCharacter.
  */
 PlayerCharacter.prototype.setEnemy = function(enemy)
 {
@@ -200,17 +182,17 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
 /**
  * Associates keyboard keys with specific PlayerCharacter actions.
  * 
- * @param {Character} jump
- * @param {Character} crouch
- * @param {Character} left
- * @param {Character} right
- * @param {Character} lightpunch
- * @param {Character} heavypunch
- * @param {Character} lightkick
- * @param {Character} heavykick
- * @param {Character} dash
- * @param {Character} block
- * @param {Character} grab
+ * @param {Character} jump Numerical key code for the Jump command.
+ * @param {Character} crouch Numerical key code for the Crouch command.
+ * @param {Character} left Numerical key code for the Left command.
+ * @param {Character} right Numerical key code for the Right command.
+ * @param {Character} lightpunch Numerical key code for the Lightpunch command.
+ * @param {Character} heavypunch Numerical key code for the Heavypunch command.
+ * @param {Character} lightkick Numerical key code for the Lightkick command.
+ * @param {Character} heavykick Numerical key code for the Heavykick command.
+ * @param {Character} dash Numerical key code for the Dash command.
+ * @param {Character} block Numerical key code for the Block command.
+ * @param {Character} grab Numerical key code for the Grab command.
  */
 PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
 {
@@ -253,7 +235,7 @@ PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpun
 /**
  * Changes the state of a specific key to an active state.
  * 
- * @param {Character} keycode defines the keyboard key
+ * @param {Character} keycode Numerical key code.
  */
 PlayerCharacter.prototype.setKeyPress = function(keycode)
 {
@@ -270,7 +252,7 @@ PlayerCharacter.prototype.setKeyPress = function(keycode)
 /**
  * Changes the state of a specific key to an inactive state.
  * 
- * @param {Character} keycode defines the keyboard key.
+ * @param {Character} keycode Numerical key code.
  */
 PlayerCharacter.prototype.setKeyRelease = function(keycode)
 {
@@ -283,7 +265,7 @@ PlayerCharacter.prototype.setKeyRelease = function(keycode)
 /**
  * Associates a HealthBar object with this PlayerCharacter.
  * 
- * @param {HealthBar}
+ * @param {HealthBar} healthBar Reference to a HealthBar object.
  */
 PlayerCharacter.prototype.setHealthBar = function(healthBar)
 {
@@ -291,7 +273,8 @@ PlayerCharacter.prototype.setHealthBar = function(healthBar)
 };
 /**
  * Changes the current PlayerCharacter state.
- * @param {String}
+ * 
+ * @param {String} state Name of the PlayerCharacter state.
  */
 PlayerCharacter.prototype.setCharacterState = function(state)
 {
@@ -300,7 +283,7 @@ PlayerCharacter.prototype.setCharacterState = function(state)
 /**
  * Sets how many frames an action requires.
  * 
- * @param {Integer}
+ * @param {Integer} frames Number of frame.
  */
 PlayerCharacter.prototype.setActionFrames = function(frames)
 {
@@ -309,9 +292,9 @@ PlayerCharacter.prototype.setActionFrames = function(frames)
 
 // Methods
 /**
- * Creates a HitBox of a certain type and adds it to the hitBoxes stack.
+ * Creates a HitBox of a certain type and adds it to the hitBoxes array.
  * 
- * @param  {String} command
+ * @param {String} command Name of the command which is used a basis for the HitBox initializer.
  */
 PlayerCharacter.prototype.createAttack = function(command)
 {
@@ -468,7 +451,7 @@ PlayerCharacter.prototype.updateHitBoxes = function()
 /**
  * Removes a specific HitBox from the scene and from the hitBoxes array.
  * 
- * @param  {HitBox} hitbox
+ * @param  {HitBox} hitbox A reference to the HitBox you want removed.
  */
 PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 {
@@ -481,9 +464,9 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 };
 /**
  * Analyses the current PlayerCharacter state and takes some damage. Also, it updates the associated HealthBar and Collider.
- * @param  {Integer} damage
- * @param  {Position} hitPosition
- * @param  {String} attackType
+ * @param  {Integer} damage A number that indicates the initial damage.
+ * @param  {Position} hitPosition The vector of the HitBox that triggered the collision.
+ * @param  {String} attackType The name of the attack.
  */
 PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
 {
