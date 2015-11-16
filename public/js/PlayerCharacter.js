@@ -84,6 +84,7 @@ PlayerCharacter.prototype.initEmpty = function()
  */
 PlayerCharacter.prototype.initWithSettings = function(width, height, depth, character)
 {
+	// Something
     this.initEmpty();
 
     this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
