@@ -5,17 +5,17 @@
 * @constructor
 */
 function Arena() {
-	/** Width of the canvas */
+	/** @property {float} width - The width of the Arena platform.*/
 	this.width;
-	/** Height of the canvas */
+	/** @property {float} height - The height of the Arena platform.*/
 	this.height;
-	/** Depth of the canvas */
+	/** @property {float} depth - The depth size of the Arena platform.*/
 	this.depth;
-	/** Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D */
+	/** @property {Object3D} rootObject - The polygon of the Arena platform.*/
 	this.rootObject;
-	/**Player character 1 */
+	/** @property {PlayerCharacter} player1 - The PlayerCharacter of the user called "Player 1".*/
 	this.player1;
-	/**Player character 2 */
+	/** @property {PlayerCharacter} player1 - The PlayerCharacter of the user called "Player 2".*/
 	this.player2;
 }
 
