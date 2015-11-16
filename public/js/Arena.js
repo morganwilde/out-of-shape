@@ -21,7 +21,7 @@ function Arena() {
 
 
 /** 
-* contructor of the arena class. Set everything to null
+* Contructor of the Arena class. Sets all instance variables to null.
 *
 * @return {Arena}
 */
@@ -44,8 +44,8 @@ Arena.prototype.initEmpty = function()
 };
 
 /** 
-* Initate the arena class with engine class 
-* @param {Engine} engine - Pass the engine class to the method
+* Instantiate the Arena class with the Engine instance as a parameter. 
+* @param {Engine} engine - The Engine class passed to the constructor.
 * @return {Arena} initWithEngine - Return the Arena with contructed dimensions.
 */
 Arena.prototype.initWithEngine = function(engine)
@@ -89,8 +89,8 @@ Arena.prototype.initWithEngine = function(engine)
 };
 
 /** 
-* get Root object 
-* @return {object3D} rootObject return rootObject
+* Get rootObject, the Object3d polygon.
+* @return {object3D} Return rootObject.
 */
 Arena.prototype.getRootObject = function()
 {
@@ -99,8 +99,8 @@ Arena.prototype.getRootObject = function()
 };
 
 /**
-* sets the state of the key when it is pressed.
-* @param {int} keycode - key to be checked
+* Sets the state of keys when they are pressed.
+* @param {int} keycode - Key to be checked.
 */
 Arena.prototype.setKeyPress = function(keycode)
 {
@@ -109,8 +109,8 @@ Arena.prototype.setKeyPress = function(keycode)
 };
 
 /**
-* sets the state of the key when it is released.
-* @param {int} keycode - key to be checked
+* Sets the state of keys when they are released.
+* @param {int} keycode - Key to be checked.
 */
 Arena.prototype.setKeyRelease = function(keycode)
 {
@@ -119,8 +119,9 @@ Arena.prototype.setKeyRelease = function(keycode)
 };
 
 /** 
-* Add player characters and assign them to player 1 and player 2. Healthbar is also added and assign to players.
-* @param {PlayerCharacter} playercharacter - Takes in player character class
+* Take a PlayerCharacter and assign it to either the player1 or player2 variable, then adjust that PlayerCharacter's position appropriately.
+* A Healthbar is also added and assigned to the player.
+* @param {PlayerCharacter} playercharacter - Takes in a PlayerCharacter class.
 *
 */
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
@@ -177,7 +178,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 
 
 /** 
-* Update the status of player 1 character and player 2 character 
+* Update the status of player1 and player2 on each frame. 
 */
 Arena.prototype.update = function()
 {
