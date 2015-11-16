@@ -44,8 +44,6 @@ function PlayerCharacter()
     this.comboCount;
 }
 
-PlayerCharacter.
-
 // Initialisers
 /**
  * Initializes a PlayerCharacter object with an empty state.
@@ -159,7 +157,7 @@ PlayerCharacter.prototype.superStar = function()
 PlayerCharacter.prototype.press = function(key)
 {
     return this.keyBuffers[key] == this.keyBufferTime;
-}
+};
 /**
  * Gives the current state.
  * 
@@ -198,7 +196,7 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
 {
     this.enemy = enemy;
     this.collider.setEnemy(enemy);
-}
+};
 /**
  * Associates keyboard keys with specific PlayerCharacter actions.
  * 
@@ -520,4 +518,4 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
 
     this.healthBar.takeDamage(damage);
     this.collider.bump(hitPosition);
-}
+};

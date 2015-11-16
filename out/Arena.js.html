@@ -29,6 +29,8 @@
             <pre class="prettyprint source linenums"><code>/** 
 * Arena is where canvas of the arena of the game will be create.
 * Player character 1 and 2 will be added to the arena as well.
+*
+* @constructor
 */
 function Arena() {
 	/** Width of the canvas */
@@ -48,6 +50,8 @@ function Arena() {
 
 /** 
 * contructor of the arena class. Set everything to null
+*
+* @return {Arena}
 */
 Arena.prototype.initEmpty = function()
 {
@@ -69,14 +73,14 @@ Arena.prototype.initEmpty = function()
 
 /** 
 * Initate the arena class with engine class 
-* @param {class} engine pass the engine class to the method
-* @return {class} initWithEngine return the contructed dimensions
+* @param {Engine} engine - Pass the engine class to the method
+* @return {Arena} initWithEngine - Return the Arena with contructed dimensions.
 */
 Arena.prototype.initWithEngine = function(engine)
 {
 	/** set the canvas width as engine.width */
 	this.width = engine.width;
-	/** et the canvas height as engine.height
+	/** set the canvas height as engine.height*/
 	this.height = engine.height;
 	/** set the canvas depth to 1000*/
 	this.depth = 1000;
@@ -89,24 +93,16 @@ Arena.prototype.initWithEngine = function(engine)
 	var zScale = .9;
 
 	/**
-	* create a geometry ( cancas ) as a base of the arena. the plane will be initialize with xScale(width), yScale(height) and zScale(depth).
-	* @param width*xScale set the width of the canvas as xScale 
-	* @param height*yScale set the height of the canvas as yScale
-	* @param depth*zScale set the depth of the canvas as zScale
+	* create a geometry ( canvas ) as a base of the arena. Rhe plane will be initialized with xScale(width), yScale(height), and zScale(depth).
 	*/
 	var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
 
 	/** create plane object in the canvas */
 	var material = new THREE.MeshPhongMaterial({
-	    /** set the color to red*/
 		color: 0xff0000, 
-		/**      */
 		wireframe: false,
-		/**      */
 		specular: 0x000000,
-		/** set the shininess to 30 */ 
 		shininess: 30, 
-		/** Flatshading the plane */
 		shading: THREE.FlatShading
 	}); 
 
@@ -131,8 +127,8 @@ Arena.prototype.getRootObject = function()
 };
 
 /**
-* sets the state of the key when it is press
-* @param {int} keycode key to be check  
+* sets the state of the key when it is pressed.
+* @param {int} keycode - key to be checked
 */
 Arena.prototype.setKeyPress = function(keycode)
 {
@@ -141,8 +137,8 @@ Arena.prototype.setKeyPress = function(keycode)
 };
 
 /**
-* sets the state of the key when it is release
-* @param {int} keycode key to be check 
+* sets the state of the key when it is released.
+* @param {int} keycode - key to be checked
 */
 Arena.prototype.setKeyRelease = function(keycode)
 {
@@ -152,7 +148,7 @@ Arena.prototype.setKeyRelease = function(keycode)
 
 /** 
 * Add player characters and assign them to player 1 and player 2. Healthbar is also added and assign to players.
-* @param {class} playercharacter takes in player character class
+* @param {PlayerCharacter} playercharacter - Takes in player character class
 *
 */
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
@@ -203,9 +199,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 		/** add healthbar2 to node */
 		this.rootObject.add(healthBar2.getNode());
 	}
-	/** add player character Node
-	* @param {class} playerCharacterNode add player character node
-	*/
+	
 	this.rootObject.add(playerCharacterNode);
 };
 
@@ -229,13 +223,13 @@ Arena.prototype.update = function()
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collider.html">Collider</a></li><li><a href="HealthBar.html">HealthBar</a></li><li><a href="PlayerCharacter.html">PlayerCharacter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#active">active</a></li><li><a href="global.html#Arena">Arena</a></li><li><a href="global.html#arena">arena</a></li><li><a href="global.html#attackType">attackType</a></li><li><a href="global.html#beginTime">beginTime</a></li><li><a href="global.html#camera">camera</a></li><li><a href="global.html#collider">collider</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#damage">damage</a></li><li><a href="global.html#depth">depth</a></li><li><a href="global.html#endingXVelocity">endingXVelocity</a></li><li><a href="global.html#endingYVelocity">endingYVelocity</a></li><li><a href="global.html#endingZVelocity">endingZVelocity</a></li><li><a href="global.html#endTime">endTime</a></li><li><a href="global.html#enemy">enemy</a></li><li><a href="global.html#Engine">Engine</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#HitBox">HitBox</a></li><li><a href="global.html#initialXVelocity">initialXVelocity</a></li><li><a href="global.html#initialYVelocity">initialYVelocity</a></li><li><a href="global.html#initialZVelocity">initialZVelocity</a></li><li><a href="global.html#owner">owner</a></li><li><a href="global.html#player1">player1</a></li><li><a href="global.html#player2">player2</a></li><li><a href="global.html#renderer">renderer</a></li><li><a href="global.html#rootObject">rootObject</a></li><li><a href="global.html#scene">scene</a></li><li><a href="global.html#shading">shading</a></li><li><a href="global.html#shininess">shininess</a></li><li><a href="global.html#specular">specular</a></li><li><a href="global.html#time">time</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wireframe">wireframe</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Arena.html">Arena</a></li><li><a href="Collider.html">Collider</a></li><li><a href="Engine.html">Engine</a></li><li><a href="HealthBar.html">HealthBar</a></li><li><a href="HitBox.html">HitBox</a></li><li><a href="PlayerCharacter.html">PlayerCharacter</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Nov 14 2015 14:55:30 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 14:36:35 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

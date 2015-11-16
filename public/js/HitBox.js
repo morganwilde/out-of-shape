@@ -2,8 +2,9 @@
 * Create hitbox dimensions, handling the initial and ending velocity and time .
 * Set collider box and enemy character. Determine the attack type  and damage of the 
 * attack. status checking of the character class.
+*
+* @constructor
 */
-
 function HitBox()
 {	
 	/** begin time */
@@ -81,7 +82,7 @@ HitBox.prototype.initEmpty = function()
 * @param {int} width set the width of the hitbox
 * @param {int} height set the height of the hitbox
 * @param {int} depth set the depth of the hitbox
-* @return {class} initWithDimensions return the dimensions of the hitbox
+* @return {HitBox} initWithDimensions return the dimensions of the hitbox
 */
 HitBox.prototype.initWithDimensions = function(width, height, depth)
 {
@@ -99,8 +100,8 @@ HitBox.prototype.initWithDimensions = function(width, height, depth)
 /**
 *	initae the attack of a character and handling enemy state
 * @param {string} command name of the attack type
-* @param {class} character character 
-* @param {class} class enemy character
+* @param {PlayerCharacter} character character 
+* @param {PlayerCharacter} class enemy character
 */
 
 HitBox.prototype.initAttack = function(command , character, enemy)
@@ -126,7 +127,7 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 
 /**
 * initiate Star Storm attack
-* @param {class} character character issueing the starstorm
+* @param {PlayerCharacter} character character issueing the starstorm
 */
 HitBox.prototype.initStarStorm = function(character)
 {	
@@ -155,7 +156,7 @@ HitBox.prototype.initStarStorm = function(character)
 
 /**
 * initiate Star shot attack, set its velocity, dimensions, speed,damage, time and node
-* @param {class} character character issuing the attack
+* @param {PlayerCharacter} character character issuing the attack
 */
 
 HitBox.prototype.initStarShot = function(character)
@@ -186,7 +187,7 @@ HitBox.prototype.initStarShot = function(character)
 }
 /**
 * initiate the grab fucntion
-* @param {class} character
+* @param {PlayerCharacter} character
 */ 
 HitBox.prototype.initGrab = function(character)
 {	
@@ -215,7 +216,7 @@ HitBox.prototype.initGrab = function(character)
 
 /**
 * get the collider
-* @return {class} cllider
+* @return {Collider} collider
 */
 HitBox.prototype.getCollider = function()
 {

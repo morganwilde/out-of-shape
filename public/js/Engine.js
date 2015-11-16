@@ -1,5 +1,7 @@
 /**
  * Engine attribute definition
+ *
+ * @constructor
  */
 function Engine()
 {

@@ -1,6 +1,8 @@
 /** 
-* Arena is where canvas of the arena of the game will be create.
-* Player character 1 and 2 will be added to the arena as well.
+* Arena has an Object3D which serves as the platform for PlayerCharacters to stand on.
+* The two PlayerCharacters are instantiated as children of the Arena.
+*
+* @constructor
 */
 function Arena() {
 	/** Width of the canvas */
@@ -20,6 +22,8 @@ function Arena() {
 
 /** 
 * contructor of the arena class. Set everything to null
+*
+* @return {Arena}
 */
 Arena.prototype.initEmpty = function()
 {
@@ -41,14 +45,14 @@ Arena.prototype.initEmpty = function()
 
 /** 
 * Initate the arena class with engine class 
-* @param {class} engine pass the engine class to the method
-* @return {class} initWithEngine return the contructed dimensions
+* @param {Engine} engine - Pass the engine class to the method
+* @return {Arena} initWithEngine - Return the Arena with contructed dimensions.
 */
 Arena.prototype.initWithEngine = function(engine)
 {
 	/** set the canvas width as engine.width */
 	this.width = engine.width;
-	/** et the canvas height as engine.height
+	/** set the canvas height as engine.height*/
 	this.height = engine.height;
 	/** set the canvas depth to 1000*/
 	this.depth = 1000;
@@ -61,24 +65,16 @@ Arena.prototype.initWithEngine = function(engine)
 	var zScale = .9;
 
 	/**
-	* create a geometry ( cancas ) as a base of the arena. the plane will be initialize with xScale(width), yScale(height) and zScale(depth).
-	* @param width*xScale set the width of the canvas as xScale 
-	* @param height*yScale set the height of the canvas as yScale
-	* @param depth*zScale set the depth of the canvas as zScale
+	* create a geometry ( canvas ) as a base of the arena. Rhe plane will be initialized with xScale(width), yScale(height), and zScale(depth).
 	*/
 	var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
 
 	/** create plane object in the canvas */
 	var material = new THREE.MeshPhongMaterial({
-	    /** set the color to red*/
 		color: 0xff0000, 
-		/**      */
 		wireframe: false,
-		/**      */
 		specular: 0x000000,
-		/** set the shininess to 30 */ 
 		shininess: 30, 
-		/** Flatshading the plane */
 		shading: THREE.FlatShading
 	}); 
 
@@ -103,8 +99,8 @@ Arena.prototype.getRootObject = function()
 };
 
 /**
-* sets the state of the key when it is press
-* @param {int} keycode key to be check  
+* sets the state of the key when it is pressed.
+* @param {int} keycode - key to be checked
 */
 Arena.prototype.setKeyPress = function(keycode)
 {
@@ -113,8 +109,8 @@ Arena.prototype.setKeyPress = function(keycode)
 };
 
 /**
-* sets the state of the key when it is release
-* @param {int} keycode key to be check 
+* sets the state of the key when it is released.
+* @param {int} keycode - key to be checked
 */
 Arena.prototype.setKeyRelease = function(keycode)
 {
@@ -124,7 +120,7 @@ Arena.prototype.setKeyRelease = function(keycode)
 
 /** 
 * Add player characters and assign them to player 1 and player 2. Healthbar is also added and assign to players.
-* @param {class} playercharacter takes in player character class
+* @param {PlayerCharacter} playercharacter - Takes in player character class
 *
 */
 Arena.prototype.addPlayerCharacter = function(playerCharacter)
@@ -175,9 +171,7 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 		/** add healthbar2 to node */
 		this.rootObject.add(healthBar2.getNode());
 	}
-	/** add player character Node
-	* @param {class} playerCharacterNode add player character node
-	*/
+	
 	this.rootObject.add(playerCharacterNode);
 };
 
