@@ -1,6 +1,5 @@
 /**
 * Class responsible for visually indicating the health of a PlayerCharacter.
-* Has variables for width, height, a plane Object3D, the health of a PlayerCharacter, and the maximum health of a PlayerCharacter.
 *
 * @constructor
 */
@@ -11,7 +10,7 @@ function HealthBar()
 	/** @property {float} height - The height of the HealthBar's Object3D.*/
 	this.height;
 
-	/** @property {Object3D} node - The rendered polygon that represents the HealthBar instance.*/
+	/** @property {Object3D} node - The rendered polygon ( Object3D ) that represents the HealthBar instance.*/
 	this.node;
 
 	/** @property {float} health - The current amount of health of the PlayerCharacter that corresponds to this HealthBar.*/
@@ -21,8 +20,8 @@ function HealthBar()
 }
 
 /**
-* Creates a new instance of HealthBar. All values default to null.
-* @return {HealthBar} The HealthBar instance.
+* Creates a new instance of HealthBar. All instance variables default to null.
+* @return {HealthBar} The HealthBar instance that is created.
 */
 HealthBar.prototype.initEmpty = function()
 {
@@ -38,8 +37,8 @@ HealthBar.prototype.initEmpty = function()
 };
 
 /**
-* Creates a new instance of HealthBar with specific dimensions, and a PlayerCharacter's maximum health
-* @return {HealthBar} The HealthBar instance.
+* Creates a new instance of HealthBar with specific dimensions, and a PlayerCharacter's maximum health.
+* @return {HealthBar} The HealthBar instance that is created.
 */
 HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
 {
