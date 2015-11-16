@@ -1,5 +1,5 @@
 /** 
-* Arena has an Object3D which serves as the platform for PlayerCharacters to stand on.
+* The Arena is the space in which two players fight in. It has an Object3D which serves as the platform for PlayerCharacters to stand on.
 * The two PlayerCharacters are instantiated as children of the Arena.
 *
 * @constructor
