@@ -12,16 +12,16 @@ function Collider()
 
 	// Size
 
-	/** @property {float} width - The width of the Collider's Object3D.*/
+	/** @property {float} width - The width of the Collider's THREE.Object3D.*/
 	this.width;
-	/** @property {float} height - The height of the Collider's Object3D.*/
+	/** @property {float} height - The height of the Collider's THREE.Object3D.*/
 	this.height;
-	/** @property {float} depth - The depth of the Collider's Object3D.*/
+	/** @property {float} depth - The depth of the Collider's THREE.Object3D.*/
 	this.depth;
 	
-	// Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
+	// Root of type THREE.Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
 
-	/** @property {Object3D} node - The rendered polygon that represents the Collider instance.*/
+	/** @property {THREE.Object3D} node - The rendered polygon that represents the Collider instance.*/
 	this.node;
 	
 	// Opposing player character
@@ -42,7 +42,7 @@ function Collider()
 	
 	// Behaviour Sentinel
 
-	/** @property {boolean} isPlayer - The behavioural state of the Collider, either Player.*/
+	/** @property {boolean} isPlayer - The behavioural state of the Collider, either for a PlayerCharacter or a HitBox.*/
 	this.isPlayer;
 }
 
@@ -51,7 +51,7 @@ function Collider()
 /**
  * Creates a new instance of a Collider. Motion variables default to 0, all other instance variables default to null.
  * 
- * @return {Collider} The Collider instance that is created.
+ * @return {Collider} A Collider instance.
  */
 Collider.prototype.initEmpty = function()
 {
@@ -63,7 +63,7 @@ Collider.prototype.initEmpty = function()
 	this.height = null;
 	this.depth = null;
 	
-	// Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
+	// Root of type THREE.Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
 	this.node = null;
 	
 	// Motion
@@ -81,13 +81,13 @@ Collider.prototype.initEmpty = function()
 /**
  * Creates a new instance of Collider with the given dimensions, owner, and isPlayer sentinal value.
  *
- * @param {float} width - The value for the width of the Collider's Object3d.
- * @param {float} height - The value for the height of the Collider's Object3d.
- * @param {float} depth - The value for the depth of the Collider's Object3d.
+ * @param {float} width - The value for the width of the Collider's THREE.Object3D.
+ * @param {float} height - The value for the height of the Collider's THREE.Object3D.
+ * @param {float} depth - The value for the depth of the Collider's THREE.Object3D.
  * @param {PlayerCharacter} owner - The PlayerCharacter or HitBox that this Collider instance belongs to.
  * @param {boolean} isPlayer - The sentinal determining if this Collider is for a PlayerCharacter or a HitBox.
  * 
- * @return {Collider} The Collider instance that is created.
+ * @return {Collider} A Collider instance.
  */
 Collider.prototype.initWithSettings = function(width, height, depth, owner, isPlayer)
 {
@@ -124,8 +124,9 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 // Getters
 
 /**
-* Returns the polygon ( Object3D ) of this instance.
-* @return {Object3D} The Object3D of the Collider.
+* Returns the polygon (THREE.Object3D) of this instance.
+* 
+* @return {THREE.Object3D} A THREE.Object3D instance.
 */
 Collider.prototype.getNode = function()
 {
@@ -133,8 +134,9 @@ Collider.prototype.getNode = function()
 };
 
 /**
-* Returns the width of this instance's Object3D.
-* @return {float} The width used for the Object3D of the Collider.
+* Returns the width of this instance's THREE.Object3D.
+* 
+* @return {float} The width used for the THREE.Object3D of the Collider.
 */
 Collider.prototype.getWidth = function()
 {
@@ -142,8 +144,9 @@ Collider.prototype.getWidth = function()
 }
 
 /**
-* Returns the height of this instance's Object3D.
-* @return {float} The height used for the Object3D of the Collider.
+* Returns the height of this instance's THREE.Object3D.
+* 
+* @return {float} The height used for the THREE.Object3D of the Collider.
 */
 Collider.prototype.getHeight = function()
 {
@@ -153,7 +156,8 @@ Collider.prototype.getHeight = function()
 // Setters
 
 /**
-* Sets the x, y, and z position values of the Object3D.
+* Sets the x, y, and z position values of the THREE.Object3D.
+* 
 * @param {float} x - The value that the x position of the node will be set to.
 * @param {float} y - The value that the y position of the node will be set to.
 * @param {float} z - The value that the z position of the node will be set to.
@@ -167,6 +171,7 @@ Collider.prototype.setPosition = function(x, y, z)
 
 /**
 * Sets the horizontal velocity of the instance.
+* 
 * @param {float} velocity - The value that the xVelocity will be set to.
 */
 Collider.prototype.setXVelocity = function(velocity)
@@ -176,6 +181,7 @@ Collider.prototype.setXVelocity = function(velocity)
 
 /**
 * Sets the vertical velocity of the instance.
+* 
 * @param {float} velocity - The value that the yVelocity will be set to.
 */
 Collider.prototype.setYVelocity = function(velocity)
@@ -185,6 +191,7 @@ Collider.prototype.setYVelocity = function(velocity)
 
 /**
 * Sets the depth velocity of the instance.
+* 
 * @param {float} velocity - The value that the zVelocity will be set to.
 */
 Collider.prototype.setZVelocity = function(velocity)
@@ -194,6 +201,7 @@ Collider.prototype.setZVelocity = function(velocity)
 
 /**
 * Sets the gravity for the instance.
+* 
 * @param {float} gravity - The value the gravity will be set to.
 */
 Collider.prototype.setGravity = function(gravity)
@@ -203,6 +211,7 @@ Collider.prototype.setGravity = function(gravity)
 
 /**
 * Sets the instance that will be the enemy of this instance's player.
+* 
 * @param {PlayerCharacter} enemy - The PlayerCharacter that will be set as the enemy.
 */
 Collider.prototype.setEnemy = function(enemy)
@@ -246,6 +255,7 @@ Collider.prototype.update = function()
 
 /**
 * Moves the instance a small distance away from a given HitBox position.
+* 
 * @param {THREE.Vector3} hitPosition - The location of the HitBox that made contact.
 */
 Collider.prototype.bump = function(hitPosition)
@@ -290,7 +300,7 @@ Collider.prototype.enforcePlayerBounds = function()
 };
 
 /**
-* Prevents the instance from moving outside of the established left and right boundaries of the Arena, and from moving downward beyond the floor ( top surface of the Arena).
+* Prevents the instance from moving outside of the established left and right boundaries of the Arena, and from moving downward beyond the floor (top surface of the Arena).
 * The owner's characterState is set to "standing" if it is jumping and there is a collision with the floor.
 */
 Collider.prototype.enforceLevelBounds = function()
@@ -334,6 +344,7 @@ Collider.prototype.enforceLevelBounds = function()
 
 /**
 * Checks for collision with the enemy's Collider.
+* 
 * @return {boolean} A boolean indicating if a collision has occured or not.
 */
 Collider.prototype.checkCollision = function()
@@ -342,7 +353,7 @@ Collider.prototype.checkCollision = function()
 };
 
 /**
-* Checks if a raycast from any vertice of this instance's Object3D hits the enemy Collider's Object3D.
+* Checks if a raycast from any vertice of this instance's THREE.Object3D hits the enemy Collider's THREE.Object3D.
 * 
 * @return {boolean} A boolean indicating if any of the raycasts have collided with an enemy.
 */
@@ -371,7 +382,7 @@ Collider.prototype.checkVertexHit = function()
 };
 
 /**
-* Checks if this instance's Object3D is within the Enemy Collider's Object3D.
+* Checks if this instance's THREE.Object3D is within the Enemy Collider's THREE.Object3D.
 *
 * @return {boolean} A boolean indicating if this Collider is within the enemy's Collider bounds or not.
 */

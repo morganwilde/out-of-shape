@@ -5,22 +5,23 @@
 */
 function HealthBar()
 {
-	/** @property {float} width - The width of the HealthBar's Object3D.*/
+	/** @property {float} width - The width of the HealthBar's THREE.Object3D. */
 	this.width;
-	/** @property {float} height - The height of the HealthBar's Object3D.*/
+	/** @property {float} height - The height of the HealthBar's THREE.Object3D. */
 	this.height;
 
-	/** @property {Object3D} node - The rendered polygon ( Object3D ) that represents the HealthBar instance.*/
+	/** @property {Object3D} node - The rendered polygon (THREE.Object3D) that represents the HealthBar instance. */
 	this.node;
 
-	/** @property {float} health - The current amount of health of the PlayerCharacter that corresponds to this HealthBar.*/
+	/** @property {float} health - The current amount of health of the PlayerCharacter that corresponds to this HealthBar. */
 	this.health;
-	/** @property {float} maxHealth - The maximum amount of health of the PlayerCharacter that corresponds to this HealthBar.*/
+	/** @property {float} maxHealth - The maximum amount of health of the PlayerCharacter that corresponds to this HealthBar. */
 	this.maxHealth;
 }
 
 /**
 * Creates a new instance of HealthBar. All instance variables default to null.
+* 
 * @return {HealthBar} The HealthBar instance that is created.
 */
 HealthBar.prototype.initEmpty = function()
@@ -38,6 +39,7 @@ HealthBar.prototype.initEmpty = function()
 
 /**
 * Creates a new instance of HealthBar with specific dimensions, and a PlayerCharacter's maximum health.
+* 
 * @return {HealthBar} The HealthBar instance that is created.
 */
 HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
@@ -81,8 +83,9 @@ HealthBar.prototype.initWithSettings = function(x, y, width, height, maxHealth)
 // Getters
 
 /**
-* Returns the Object3D belonging to this instance.
-* @return {Object3D} The Object3D of the instance.
+* Returns the THREE.Object3D belonging to this instance.
+* 
+* @return {THREE.Object3D} The Object3D of the instance.
 */
 HealthBar.prototype.getNode = function()
 {
@@ -93,7 +96,8 @@ HealthBar.prototype.getNode = function()
 
 /**
 * Sets the current health of a PlayerCharacter based on a given damage value.
-* @param {float} damage - The float value that will be subtracted from the health.
+* 
+* @param {float} damage - The float value that will be subtracted from the PlayerCharacter's health.
 */
 HealthBar.prototype.takeDamage = function(damage)
 {

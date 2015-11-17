@@ -1,51 +1,49 @@
 /**
-* Create hitbox dimensions, handling the initial and ending velocity and time .
-* Set collider box and enemy character. Determine the attack type  and damage of the 
-* attack. status checking of the character class.
+* The purpose of the HitBox class is to define dimmensions for itself, handle initial and ending velocities and time. It stores references to a Collider box and the two PlayerCharacters, as well as defining the type and damage of the attack.
 *
 * @constructor
 */
 function HitBox()
 {	
-	/** begin time */
+	/** @property {Integer} beginTime Begin time */
 	this.beginTime;
-	/** duration */
+	/** @property {Integer} duration Duration */
 	this.time;
-	/** end time */
+	/** @property {Integer} endTime End time */
 	this.endTime;
 
-	/** Collision Box */
+	/** @property {Collider} collider Collision Box */
 	this.collider;
 
-	/** opposing character */
+	/** @property {PlayerCharacter} enemy Opposing character */
 	this.enemy;
 
-	/** owner of the hitbox */
+	/** @property {PlayerCharacter} owner Owner of the hitbox */
 	this.owner;
-	/** attack type */
+	/** @property {String} attackType Attack type */
 	this.attackType;
 
-	/** intial X velocity */
+	/** @property {Float} initialXVelocity Intial X velocity */
 	this.initialXVelocity;
-	/** initial Y velocity */
+	/** @property {Float} initialYVelocity Intial Y velocity */
 	this.initialYVelocity;
-	/** initial Z velocity */
+	/** @property {Float} initialZVelocity Intial Z velocity */
 	this.initialZVelocity;
-	/** ending velocity if X */
+	/** @property {Float} endingXVelocity Ending X velocity */
 	this.endingXVelocity;
-	/** ending  velocity of Y */
+	/** @property {Float} endingYVelocity Ending Y velocity */
 	this.endingYVelocity;
-	/** ending velocity of Z */
+	/** @property {Float} endingZVelocity Ending Z velocity */
 	this.endingZVelocity;
-	/** damage instance */
+	/** @property {Integer} damage The amount of damage that this HitBox deals. */
 	this.damage;
-	/** status */
+	/** @property {Boolean} active If the HitBox is active then collisions are triggered. */
 	this.active;
 }
 
 
 /**
-* Constructor of the Hitbox class, set everything to null
+* Constructor of the HitBox class, set everything to null.
 */
 HitBox.prototype.initEmpty = function()
 {
@@ -78,11 +76,13 @@ HitBox.prototype.initEmpty = function()
 
   return this;
 };
-/** constructor for the hitbox dimensions
-* @param {int} width set the width of the hitbox
-* @param {int} height set the height of the hitbox
-* @param {int} depth set the depth of the hitbox
-* @return {HitBox} initWithDimensions return the dimensions of the hitbox
+/** Constructor for the HitBox dimensions.
+
+* @param {Integer} width - Width of the HitBox.
+* @param {Integer} height - Height of the HitBox.
+* @param {Integer} depth - Depth of the HitBox.
+* 
+* @return {HitBox} A HitBox instance.
 */
 HitBox.prototype.initWithDimensions = function(width, height, depth)
 {
@@ -98,13 +98,14 @@ HitBox.prototype.initWithDimensions = function(width, height, depth)
 };
 
 /**
-*	initae the attack of a character and handling enemy state
-* @param {string} command name of the attack type
-* @param {PlayerCharacter} character character 
-* @param {PlayerCharacter} class enemy character
+* Create a HitBox instance using a specified command.
+* 
+* @param {string} command Name of the attack type.
+* @param {PlayerCharacter} character The PlayerCharacter that initializes the attack. 
+* @param {PlayerCharacter} enemy The target PlayerCharacter.
 */
 
-HitBox.prototype.initAttack = function(command , character, enemy)
+HitBox.prototype.initAttack = function(command, character, enemy)
 {
 	if(command == "star storm")
 	{
@@ -126,8 +127,9 @@ HitBox.prototype.initAttack = function(command , character, enemy)
 };
 
 /**
-* initiate Star Storm attack
-* @param {PlayerCharacter} character character issueing the starstorm
+* Create a HitBox instance for a specific PlayerCharacter class.
+* 
+* @param {PlayerCharacter} character The PlayerCharacter that initializes the attack.
 */
 HitBox.prototype.initStarStorm = function(character)
 {	

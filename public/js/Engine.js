@@ -6,24 +6,25 @@
 function Engine()
 {
   // Canvas size
-  /** @property {Integer} width - The base width of the screen size relative to the machines screen size.*/
+  /** @property {Integer} width - The base width of the screen size relative to the machine's screen size. */
   this.width;
-  /** @property {Integer} height - The base height of the screen size relative to the machines screen size.*/
+  /** @property {Integer} height - The base height of the screen size relative to the machine's screen size. */
   this.height;
   // THREE
-  /** @property {THREE.Scene} scene - The THREE js object that is used for managing rendered graphics and sounds.*/
+  /** @property {THREE.Scene} scene - The THREE.js object that is used for managing rendered graphics. */
   this.scene;
-  /** @property {THREE.PerspectiveCamera} camera - The THREE js object that controls the perspective of the scene.*/
+  /** @property {THREE.PerspectiveCamera} camera - The THREE.js object that controls the perspective of the scene. */
   this.camera;
-  /** @property {THREE.WebGLRenderer} renderer - The THREE js object that is used for rendering graphics.*/
+  /** @property {THREE.WebGLRenderer} renderer - The THREE.js object that is used for rendering graphics. */
   this.renderer;
-  /** @property {Arena} - The platform that PlayerCharacters fight upon.*/
+  /** @property {Arena} - The platform that PlayerCharacters fight upon. */
   this.arena;
 }
 
 // Initialisers
 /**
  * Initializes an Engine object with an empty state.
+ * 
  * @return {Engine}
  */
 Engine.prototype.initEmpty = function()
@@ -41,6 +42,7 @@ Engine.prototype.initEmpty = function()
 };
 /**
  * Initializes an Engine object with specific screen dimensions.
+ * 
  * @param  {Integer} width - The base width of the camera.
  * @param  {Integer} height - The base height of the camera.
  * @return {Engine}
@@ -91,7 +93,8 @@ Engine.prototype.render = function()
 };
 /**
  * Responds to keyDown events from the keyboard.
- * @param  {Event} event - The keyboard input detected.
+ * 
+ * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
  */
 Engine.prototype.keyDown = function(event)
 {
@@ -101,7 +104,8 @@ Engine.prototype.keyDown = function(event)
 };
 /**
  * Responds to keyUp events from the keyboard.
- * @param  {Event} event - The keyboard input detected.
+ * 
+ * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
  */
 Engine.prototype.keyUp = function(event)
 {
@@ -110,6 +114,7 @@ Engine.prototype.keyUp = function(event)
 };
 /**
  * Assigns an Arena object that will contain all the necessary visuals for the game.
+ * 
  * @param {Arena} arena - The platform object which has PlayerCharacters as Children.
  */
 Engine.prototype.addArena = function(arena)
