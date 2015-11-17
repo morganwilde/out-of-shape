@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    PlayerCharacter attribute definition.
+    PlayerCharacter is the base class for the player's in-game avatar. It is reponsible for maintaining attributes such as how fast the avatar walks, dashes or jumps. It also maitains the information about the current state the character is in, for example standing, walking or attacking. Currently it is also responsible for keeping track of the keyboard inputs and translating them into specific actions. This functionality will be moved over to a Keyboard class.
 </div>
 
 
@@ -137,6 +137,1436 @@
 
         
             
+<h4 class="name" id="actionFrames"><span class="type-signature"></span>actionFrames<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actionFrames</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An integer that stores how many frame are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="attacks"><span class="type-signature"></span>attacks<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>attacks</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A key-value store for identifying specific attacks that different PlayerCharacter classes have. For now, we only have one class, but in future releases PlayerCharacter subclasses will override the default values with their versions of the different attacks.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="characterState"><span class="type-signature"></span>characterState<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>characterState</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A string that indicates the current state of a PlayerCharacter, for exmple 'standing' or 'blocking'.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="collider"><span class="type-signature"></span>collider<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Collider.html">Collider</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or any other object with an associated Collider.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="comboCount"><span class="type-signature"></span>comboCount<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>comboCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of consecutive times this character has been hit while in the 'inactive' state.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dashSpeed"><span class="type-signature"></span>dashSpeed<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dashSpeed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">How much horizontal distance is covered in one frame while dashing. Currently it's 10 units.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="enemy"><span class="type-signature"></span>enemy<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enemy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PlayerCharacter.html">PlayerCharacter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A reference to the opponent's PlayerCharacter instance. This reference is required when creating HitBox objects targetting the opponent.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="healthBar"><span class="type-signature"></span>healthBar<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>healthBar</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="HealthBar.html">HealthBar</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A reference to the HealthBar object that indicates a PlayerCharacter's remaining health.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="hitBoxes"><span class="type-signature"></span>hitBoxes<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hitBoxes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An array of all current actions that are taking place, for example all attack HitBoxes.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="jumpSpeed"><span class="type-signature"></span>jumpSpeed<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>jumpSpeed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">How much vertical distance is covered in one frame while jumping. Currently it's 30 units.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="keyBuffers"><span class="type-signature"></span>keyBuffers<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyBuffers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A place to store how many frames a certain action has remaining. If an action has zero in the key buffer, it is considered finished.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="keyBufferTime"><span class="type-signature"></span>keyBufferTime<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyBufferTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A default keyBuffers frame count. Currently stored as 2.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="keyStates"><span class="type-signature"></span>keyStates<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyStates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A key-value store for character actions and a boolean indicating if they're currently active. Keeping track of key state (up or down) is important when considering long key presses, those that exhaust the key buffer.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="keyValues"><span class="type-signature"></span>keyValues<span class="type-signature"></span></h4>
 
 
@@ -180,7 +1610,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">object</span>
 
 
             
@@ -190,7 +1620,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">A key-value store for player character actions and their associated keyboard keys.</td>
         </tr>
 
     
@@ -229,7 +1659,117 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line10">line 10</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="walkSpeed"><span class="type-signature"></span>walkSpeed<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>walkSpeed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">How much horizontal distance is covered in one frame while walking. Currently it's 4 units.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line39">line 39</a>
     </li></ul></dd>
     
 
@@ -263,7 +1803,7 @@
 
 
 <div class="description">
-    Creates a HitBox of a certain type and adds it to the hitBoxes stack.
+    Creates a HitBox of a certain type and adds it to the hitBoxes array.
 </div>
 
 
@@ -315,7 +1855,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Name of the command which is used a basis for the HitBox initializer.</td>
         </tr>
 
     
@@ -356,7 +1896,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line316">line 316</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -446,7 +1986,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">A reference to the HitBox you want removed.</td>
         </tr>
 
     
@@ -487,7 +2027,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line473">line 473</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line457">line 457</a>
     </li></ul></dd>
     
 
@@ -525,7 +2065,7 @@
 
 
 <div class="description">
-    Gives the remaining action frame count.
+    Gives the remaining action frame count, I.e. the number of frame the PlayerCharacter is in the 'inactive' state.
 </div>
 
 
@@ -569,7 +2109,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line184">line 184</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -596,7 +2136,7 @@
 
         
 <div class="param-desc">
-    frame count.
+    Action frame count.
 </div>
 
 
@@ -673,7 +2213,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line166">line 166</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -700,7 +2240,7 @@
 
         
 <div class="param-desc">
-    current state.
+    Current state value.
 </div>
 
 
@@ -777,7 +2317,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line175">line 175</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -803,6 +2343,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    Current Collider reference.
+</div>
+
 
 
 <dl>
@@ -877,7 +2421,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line53">line 53</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -903,6 +2447,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    An empty version of a PlayerCharacter
+</div>
+
 
 
 <dl>
@@ -985,7 +2533,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The horizontal size of the PlayerCharacter's Collider object.</td>
         </tr>
 
     
@@ -1008,7 +2556,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The vertical size of the PlayerCharacter's Collider object.</td>
         </tr>
 
     
@@ -1031,7 +2579,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The depth of the PlayerCharacter's Collider object.</td>
         </tr>
 
     
@@ -1054,7 +2602,7 @@
 
             
 
-            <td class="description last">currently there's only one class - 'SuperStar'.</td>
+            <td class="description last">currently there's only one Character class - 'SuperStar'.</td>
         </tr>
 
     
@@ -1095,7 +2643,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line103">line 103</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -1195,7 +2743,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line421">line 421</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line405">line 405</a>
     </li></ul></dd>
     
 
@@ -1277,7 +2825,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line428">line 428</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line412">line 412</a>
     </li></ul></dd>
     
 
@@ -1359,7 +2907,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line444">line 444</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line428">line 428</a>
     </li></ul></dd>
     
 
@@ -1449,7 +2997,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">A numeric code for the key pressed.</td>
         </tr>
 
     
@@ -1490,7 +3038,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line157">line 157</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -1517,7 +3065,7 @@
 
         
 <div class="param-desc">
-    if the key is pressed.
+    If the key is pressed.
 </div>
 
 
@@ -1594,7 +3142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line358">line 358</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line342">line 342</a>
     </li></ul></dd>
     
 
@@ -1676,7 +3224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line436">line 436</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line420">line 420</a>
     </li></ul></dd>
     
 
@@ -1766,7 +3314,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Number of frame.</td>
         </tr>
 
     
@@ -1807,7 +3355,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line305">line 305</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -1897,7 +3445,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Name of the PlayerCharacter state.</td>
         </tr>
 
     
@@ -1938,7 +3486,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line296">line 296</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line280">line 280</a>
     </li></ul></dd>
     
 
@@ -2028,7 +3576,7 @@
 
             
 
-            <td class="description last">is an istance of the opponent's PlayerCharacter.</td>
+            <td class="description last">An istance of the opponent's PlayerCharacter.</td>
         </tr>
 
     
@@ -2069,7 +3617,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line195">line 195</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line178">line 178</a>
     </li></ul></dd>
     
 
@@ -2159,7 +3707,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Reference to a HealthBar object.</td>
         </tr>
 
     
@@ -2200,7 +3748,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line288">line 288</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line271">line 271</a>
     </li></ul></dd>
     
 
@@ -2290,7 +3838,7 @@
 
             
 
-            <td class="description last">defines the keyboard key</td>
+            <td class="description last">Numerical key code.</td>
         </tr>
 
     
@@ -2331,7 +3879,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line258">line 258</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line241">line 241</a>
     </li></ul></dd>
     
 
@@ -2421,7 +3969,7 @@
 
             
 
-            <td class="description last">defines the keyboard key.</td>
+            <td class="description last">Numerical key code.</td>
         </tr>
 
     
@@ -2462,7 +4010,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line275">line 275</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -2552,7 +4100,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Jump command.</td>
         </tr>
 
     
@@ -2575,7 +4123,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Crouch command.</td>
         </tr>
 
     
@@ -2598,7 +4146,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Left command.</td>
         </tr>
 
     
@@ -2621,7 +4169,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Right command.</td>
         </tr>
 
     
@@ -2644,7 +4192,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Lightpunch command.</td>
         </tr>
 
     
@@ -2667,7 +4215,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Heavypunch command.</td>
         </tr>
 
     
@@ -2690,7 +4238,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Lightkick command.</td>
         </tr>
 
     
@@ -2713,7 +4261,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Heavykick command.</td>
         </tr>
 
     
@@ -2736,7 +4284,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Dash command.</td>
         </tr>
 
     
@@ -2759,7 +4307,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Block command.</td>
         </tr>
 
     
@@ -2782,7 +4330,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Numerical key code for the Grab command.</td>
         </tr>
 
     
@@ -2823,7 +4371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line215">line 215</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line198">line 198</a>
     </li></ul></dd>
     
 
@@ -2905,7 +4453,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line123">line 123</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -2995,7 +4543,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">A number that indicates the initial damage.</td>
         </tr>
 
     
@@ -3018,7 +4566,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The vector of the HitBox that triggered the collision.</td>
         </tr>
 
     
@@ -3041,7 +4589,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The name of the attack.</td>
         </tr>
 
     
@@ -3082,7 +4630,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line488">line 488</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line472">line 472</a>
     </li></ul></dd>
     
 
@@ -3164,7 +4712,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line327">line 327</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line311">line 311</a>
     </li></ul></dd>
     
 
@@ -3246,7 +4794,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line462">line 462</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line446">line 446</a>
     </li></ul></dd>
     
 
@@ -3328,7 +4876,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line451">line 451</a>
+        <a href="PlayerCharacter.js.html">PlayerCharacter.js</a>, <a href="PlayerCharacter.js.html#line435">line 435</a>
     </li></ul></dd>
     
 
@@ -3376,7 +4924,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 15:55:06 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 16:00:44 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

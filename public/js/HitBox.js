@@ -155,8 +155,8 @@ HitBox.prototype.initStarStorm = function(character)
 }
 
 /**
-* initiate Star shot attack, set its velocity, dimensions, speed,damage, time and node
-* @param {PlayerCharacter} character character issuing the attack
+* Create a HitBox instance for a specific PlayerCharacter class, this attack is a projectile.
+* @param {PlayerCharacter} character The PlayerCharacter that initializes the attack.
 */
 
 HitBox.prototype.initStarShot = function(character)
@@ -186,8 +186,8 @@ HitBox.prototype.initStarShot = function(character)
 	this.damage = 2;
 }
 /**
-* initiate the grab fucntion
-* @param {PlayerCharacter} character
+* Create a HitBox instance for a specific PlayerCharacter class, this attack is a grab.
+* @param {PlayerCharacter} character The PlayerCharacter that initializes the attack.
 */ 
 HitBox.prototype.initGrab = function(character)
 {	
@@ -215,8 +215,9 @@ HitBox.prototype.initGrab = function(character)
 }
 
 /**
-* get the collider
-* @return {Collider} collider
+* Returns the Collider instance that belongs to this HitBox.
+* 
+* @return {Collider} This HitBox's Collider.
 */
 HitBox.prototype.getCollider = function()
 {
@@ -224,7 +225,7 @@ HitBox.prototype.getCollider = function()
 };
 
 /**
-* Update the collision status, remove hitbox if needed 
+* Update the Collider instance of this HitBox, manage the timing, motion patterns and states of this HitBox.
 */
 
 HitBox.prototype.update = function()
@@ -257,30 +258,5 @@ HitBox.prototype.update = function()
 	if(this.owner.getActionFrames() == 0 && this.attackType != "projectile")
 	{
 		this.owner.deleteHitBox(this);
-	}
-};
-/** 
-* onCollision were use one collision is dectected. It determines if the attack is block or not , damage calculation and set repective velocity
-*/
-
-HitBox.prototype.onCollision = function()
-{
-	if( this.active == true && this.time >= this.beginTime)
-	{
-		this.active = false;
-		this.collider.getNode().material.color.setHex (0xaf00ff); // deactivated attacks (either due to collision or time) are purple
-
-		var worldPosition = new THREE.Vector3();
-		worldPosition.setFromMatrixPosition( this.collider.getNode().matrixWorld ); // get world coordinates
-
-		this.enemy.takeDamage(this.damage, worldPosition, this.attackType, this.xKnockBack, this.yKnockBack);
-		this.collider.setXVelocity(this.endingXVelocity);
-		this.collider.setYVelocity(this.endingYVelocity);
-		this.collider.setZVelocity(this.endingZVelocity);
-		
-		if(this.attackType == "projectile")
-		{
-			this.time = this.endTime - 3; // show the projectile for 3 frames after collision
-		}
 	}
 };
