@@ -122,3 +122,8 @@ Engine.prototype.addArena = function(arena)
   this.arena = arena;
   this.scene.add(arena.getRootObject());
 };
+
+Engine.prototype.addButton = function(button)
+{
+  this.scene.add(button.getNode());
+};

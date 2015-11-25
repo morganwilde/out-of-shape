@@ -1,0 +1,40 @@
+function SuperStar()
+{
+	PlayerCharacter.call(this);
+}
+SuperStar.prototype = Object.create(PlayerCharacter.prototype);
+SuperStar.prototype.constructor = SuperStar;
+
+SuperStar.prototype.init = function(width, height, depth)
+{
+	this.initWithDimensions(width, height, depth);
+
+	this.walkSpeed = 4;
+	this.dashSpeed = 10;
+	this.jumpSpeed = 30;
+
+    this.collider.setGravity(2);
+
+    // character body
+    var geometry = new THREE.BoxGeometry(50, 50, 50);
+    var material = new THREE.MeshPhongMaterial({
+        color: 0x0000ff,
+        wireframe: false,
+        specular: 0x000000, 
+        shininess: 0, 
+        shading: THREE.FlatShading
+    });
+    var head = new THREE.Mesh(geometry, material);
+    head.position.y = 75;
+    head.position.x = 10;
+    this.collider.getNode().add(head);
+
+    //attacks
+    this.attacks['lightpunch'] = Jab;
+    this.attacks['lightkick'] = UpperCut;
+    this.attacks['heavypunch'] = StarBlast;
+    this.attacks['heavykick'] = SweepKick;
+    this.attacks['grab'] = Grab;
+
+    return this;
+};

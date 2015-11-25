@@ -8,26 +8,39 @@
         overflow: hidden;
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
-    <script src="js/Engine.js"></script>
-    <script src="js/Arena.js"></script>
-    <script src="js/PlayerCharacter.js"></script>
-	<script src="js/Collider.js"></script>
-	<script src="js/HitBox.js"></script>
-	<script src="js/HealthBar.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+      <script src="js/Engine.js"></script>
+      <script src="js/Arena.js"></script>
+      <script src="js/PlayerCharacter.js"></script>
+      <script src="js/Collider.js"></script>
+      <script src="js/HitBox.js"></script>
+      <script src="js/HealthBar.js"></script>
+      <script src="js/AttackLibrary.js"></script>
+      <script src="js/CharacterLibrary.js"></script>
+      <script src="js/Mouse.js"></script>
+      <script src="js/Button.js"></script>
+
+
 	
   </head>
   <body>
     <script>
       window.gameEngine = new Engine().initWithCanvasSize(window.innerWidth, window.innerHeight);
 
+      // Mouse Instance
+      var mouse = new Mouse().init();
+
+      // Button Instance
+      var button = new Button().initWithDimensions(0, 700, 700, 300, "Hello, world");
+      gameEngine.addButton(button);
+
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);
 
-      gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithSettings(100, 100, 100, "SuperStar"));
+      gameEngine.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
 	    gameEngine.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
 	  
-	    gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithSettings(100, 100, 100, "SuperStar"));
+	    gameEngine.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
 	    gameEngine.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
 	  
       window.gameEngine.render();

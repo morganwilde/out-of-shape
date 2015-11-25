@@ -1,61 +1,55 @@
-window.addEventListener( 'mousemove', onMouseMove, false );
+window.addEventListener( 'mousemove', Mouse.prototype.onMouseMove, false );
 				
-window.addEventListener( 'mousedown', onMouseDown, false );
+window.addEventListener( 'mousedown', Mouse.prototype.onMouseDown, false );
 
-window.addEventListener( 'mouseup', onMouseUp, false );
+window.addEventListener( 'mouseup', Mouse.prototype.onMouseUp, false );
 
 //http://threejs.org/docs/#Reference/Core/Raycaster
 
-var mouse = new Mouse();
-
-function onMouseDown (event)
+function Mouse()
 {
-	event.preventDefault();
-	//mouse.UpdateClick
 }
 
-function onMouseUp (event)
+Mouse.prototype.init = function()
+{
+};
+
+Mouse.prototype.onMouseDown = function(event)
 {
 	event.preventDefault();
-	//mouse.UpdateClick
-}
+};
 
-function onMouseMove( event ) {
+Mouse.prototype.onMouseUp = function(event)
+{
+	event.preventDefault();
+};
 
+Mouse.prototype.onMouseMove = function(event)
+{
 	// calculate mouse position in normalized device coordinates
 	// (-1 to +1) for both components
 
-	mouse.SetPosition(( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1);
+	this.position.x = (event.clientX / window.innerWidth ) * 2 - 1;
+	this.position.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-}
+};
 
-
-function Mouse()
+//this. 
+Mouse.prototype.MouseOverObject = function()
 {
 	var raycaster = new THREE.Raycaster();
 	var position = new THREE.Vector2();
-	
-	this.SetPosition = function(givenx, giveny)
+
+	// update the picking ray with the camera and mouse position	
+	raycaster.setFromCamera( position, camera );
+	var intersects = raycaster.intersectObject( null, false );
+
+	if(intersects.length>0)
 	{
-		position.x = givenx;
-		position.y = giveny;
+		return intersects[0].object.name;
 	}
-	
-	//this. 
-	this.MouseOverObject = function()
+	else
 	{
-
-		// update the picking ray with the camera and mouse position	
-		raycaster.setFromCamera( position, camera );
-		var intersects = raycaster.intersectObjects( scene.children, false );
-
-		if(intersects.length>0)
-		{
-			return intersects[0].object.name;
-		}
-		else
-		{
-			return "none";
-		}
+		return "none";
 	}
 }

@@ -190,7 +190,7 @@
 
             
 
-            <td class="description last">An integer that stores how many frame are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions.</td>
+            <td class="description last">An integer that stores how many frames are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions.</td>
         </tr>
 
     
@@ -300,7 +300,7 @@
 
             
 
-            <td class="description last">A key-value store for identifying specific attacks that different PlayerCharacter classes have. For now, we only have one class, but in future releases PlayerCharacter subclasses will override the default values with their versions of the different attacks.</td>
+            <td class="description last">A key-value stored for identifying specific attacks that different PlayerCharacter classes have. For now, we only have one class, but in future releases PlayerCharacter subclasses will override the default values with their versions of the different attacks.</td>
         </tr>
 
     
@@ -520,7 +520,7 @@
 
             
 
-            <td class="description last">Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or any other object with an associated Collider.</td>
+            <td class="description last">Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or for any other object with an associated Collider.</td>
         </tr>
 
     
@@ -1070,7 +1070,7 @@
 
             
 
-            <td class="description last">An array of all current actions that are taking place, for example all attack HitBoxes.</td>
+            <td class="description last">An array of all current offensive actions that are taking place, for example all attack HitBoxes.</td>
         </tr>
 
     
@@ -1290,7 +1290,7 @@
 
             
 
-            <td class="description last">A place to store how many frames a certain action has remaining. If an action has zero in the key buffer, it is considered finished.</td>
+            <td class="description last">A place to store how many frames a certain key press is considered active. If a key's buffer has a value of zero, it is no longer considered in the being initially pressed, and is instead simply held or released depending on the respective keyState.</td>
         </tr>
 
     
@@ -1400,7 +1400,7 @@
 
             
 
-            <td class="description last">A default keyBuffers frame count. Currently stored as 2.</td>
+            <td class="description last">The time limit ( frames ) that any key input is considered pressed, rather than held or released. Currently stored as 2.</td>
         </tr>
 
     
@@ -1510,7 +1510,7 @@
 
             
 
-            <td class="description last">A key-value store for character actions and a boolean indicating if they're currently active. Keeping track of key state (up or down) is important when considering long key presses, those that exhaust the key buffer.</td>
+            <td class="description last">A key-value stored for character actions and a boolean indicating if they're currently active. Keeping track of a key state (up or down) is important when considering long key presses that exhaust the key buffer.</td>
         </tr>
 
     
@@ -1620,7 +1620,7 @@
 
             
 
-            <td class="description last">A key-value store for player character actions and their associated keyboard keys.</td>
+            <td class="description last">A key-value stored for PlayerCharacter actions and their associated keyboard keys.</td>
         </tr>
 
     
@@ -2065,7 +2065,7 @@
 
 
 <div class="description">
-    Gives the remaining action frame count, I.e. the number of frame the PlayerCharacter is in the 'inactive' state.
+    Gives the remaining action frame count, I.e. the number of frames the PlayerCharacter is in the 'inactive' state.
 </div>
 
 
@@ -2579,7 +2579,7 @@
 
             
 
-            <td class="description last">The depth of the PlayerCharacter's Collider object.</td>
+            <td class="description last">The depth size of the PlayerCharacter's Collider object.</td>
         </tr>
 
     
@@ -3314,7 +3314,7 @@
 
             
 
-            <td class="description last">Number of frame.</td>
+            <td class="description last">Number of frames.</td>
         </tr>
 
     
@@ -3524,7 +3524,7 @@
 
 
 <div class="description">
-    Saves a reference to the opponent's PlayerCharacter.
+    Saves a reference to the opponent's PlayerCharacter instance.
 </div>
 
 
@@ -4589,7 +4589,7 @@
 
             
 
-            <td class="description last">The name of the attack.</td>
+            <td class="description last">The form of attack (melee, projectile, or grab).</td>
         </tr>
 
     
@@ -4668,7 +4668,7 @@
 
 
 <div class="description">
-    This method is called within the Engine update method. It's responsible for responding to user input, updating the collision body of the PlayerCharacter and the active HitBoxes.
+    This method is called within the Engine update method. It's responsible for responding to user input, updating the Collider of the PlayerCharacter and the active HitBoxes.
 </div>
 
 
@@ -4924,7 +4924,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 16:00:44 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 16:53:18 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

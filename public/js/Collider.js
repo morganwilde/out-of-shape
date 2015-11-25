@@ -70,6 +70,9 @@ Collider.prototype.initEmpty = function()
 	this.xVelocity = 0;
 	this.yVelocity = 0;
 	this.zVelocity = 0;
+	this.xRotationSpeed = 0;
+	this.yRotationSpeed = 0;
+	this.zRotationSpeed = 0;
 	this.gravity = 0;
 	
 	// Behaviour Sentinel
@@ -110,13 +113,18 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 		shininess: 0, 
 		shading: THREE.FlatShading
 	});
-	
+
+	this.node = new THREE.Mesh(geometry, material);
+
 	if(this.isPlayer == false)
 	{
 		material.color.setHex(0x00afaf);
-	}
 
-	this.node = new THREE.Mesh(geometry, material);
+		//prevent scale of player from affecting scale of hitboxes. Collision detection works fine based on internal scale, but not with inherited scaling.
+		this.node.scale.x = 1/this.owner.getOwner().getCollider().getNode().scale.x;
+		this.node.scale.y = 1/this.owner.getOwner().getCollider().getNode().scale.y;
+		this.node.scale.z = 1/this.owner.getOwner().getCollider().getNode().scale.z;
+	}
 
 	return this;
 };
@@ -140,7 +148,7 @@ Collider.prototype.getNode = function()
 */
 Collider.prototype.getWidth = function()
 {
-	return this.width;
+	return this.width * this.node.scale.x;
 }
 
 /**
@@ -150,7 +158,7 @@ Collider.prototype.getWidth = function()
 */
 Collider.prototype.getHeight = function()
 {
-	return this.height;
+	return this.height * this.node.scale.y;
 };
 
 // Setters
@@ -167,6 +175,20 @@ Collider.prototype.setPosition = function(x, y, z)
 	this.node.position.x = x;
 	this.node.position.y = y;
 	this.node.position.z = z;
+};
+
+Collider.prototype.setRelativePosition = function(x, y, z)
+{
+	this.node.position.x += x;
+	this.node.position.y += y;
+	this.node.position.z += z;
+};
+
+Collider.prototype.setRotation = function(x, y, z)
+{
+	this.node.rotation.x = x;
+	this.node.rotation.y = y;
+	this.node.rotation.z = z;
 };
 
 /**
@@ -198,6 +220,22 @@ Collider.prototype.setZVelocity = function(velocity)
 {
 	this.zVelocity = velocity;
 };
+
+Collider.prototype.setXRotationSpeed = function(rspeed)
+{
+	this.xRotationSpeed = rspeed;
+};
+
+Collider.prototype.setYRotationSpeed = function(rspeed)
+{
+	this.yRotationSpeed = rspeed;
+};
+
+Collider.prototype.setZRotationSpeed = function(rspeed)
+{
+	this.zRotationSpeed = rspeed;
+};
+
 
 /**
 * Sets the gravity for the instance.
@@ -306,21 +344,21 @@ Collider.prototype.enforcePlayerBounds = function()
 Collider.prototype.enforceLevelBounds = function()
 {
 	// right bound
-	if(this.node.position.x > gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2)
+	if(this.node.position.x > gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2 * this.node.scale.x)
 	{
-		this.node.position.x = gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2;
+		this.node.position.x = gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2 * this.node.scale.x;
 	}
 
 	// left bound
-	if(this.node.position.x < -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2)
+	if(this.node.position.x < -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2 * this.node.scale.x)
 	{
-		this.node.position.x = -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2;
+		this.node.position.x = -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2 * this.node.scale.x;
 	}
 
 	// floor bounds falling
-	if(this.node.position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2)
+	if(this.node.position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2 * this.node.scale.y)
 	{
-		this.node.position.y = gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2;
+		this.node.position.y = gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2 * this.node.scale.y;
 		
 		if(this.yVelocity < 0)
 		{
@@ -372,7 +410,7 @@ Collider.prototype.checkVertexHit = function()
 		
 		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 		var collisionResults = ray.intersectObject( this.enemy.getCollider().getNode() , false);
-		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
+		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() * this.node.scale.y ) 
 		{
 			return true;
 		}
@@ -391,5 +429,5 @@ Collider.prototype.checkContain = function() // checks if the center of the node
 	var worldPosition = new THREE.Vector3();
 	worldPosition.setFromMatrixPosition( this.node.matrixWorld ); // get world coordinates
 
-	return (Math.abs( worldPosition.x - this.enemy.getCollider().getNode().position.x)<this.width && Math.abs( worldPosition.y - this.enemy.getCollider().getNode().position.y)<this.height && Math.abs( worldPosition.z - this.enemy.getCollider().getNode().position.z)<this.depth);
+	return (Math.abs( worldPosition.x - this.enemy.getCollider().getNode().position.x)<this.width * this.node.scale.x && Math.abs( worldPosition.y - this.enemy.getCollider().getNode().position.y)<this.height * this.node.scale.y && Math.abs( worldPosition.z - this.enemy.getCollider().getNode().position.z)<this.depth * this.node.scale.z);
 };
