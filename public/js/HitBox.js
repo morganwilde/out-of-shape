@@ -23,6 +23,9 @@ function HitBox()
     /** @property {String} attackType Attack type */
     this.attackType;
 
+    /** @property {String} highOrLow If the player needs to be standing or ducking to block this attack */
+    this.highOrLow;
+
     /** @property {Float} initialXVelocity Intial X velocity */
     this.initialXVelocity;
     /** @property {Float} initialYVelocity Intial Y velocity */
@@ -60,7 +63,9 @@ HitBox.prototype.initEmpty = function()
 
     // Owner of this hitbox
     this.owner = null;
+
     this.attackType = null;
+    this.highOrLow = null;
 
     // Motion
     this.initialXVelocity = 0;
@@ -87,6 +92,8 @@ HitBox.prototype.initEmpty = function()
 HitBox.prototype.initWithDimensionsAndPlayers = function(width, height, depth, owner, enemy)
 {
     this.initEmpty();
+
+    this.highOrLow = "any";
 
     this.owner = owner;
     this.enemy = enemy;
@@ -168,7 +175,7 @@ HitBox.prototype.onCollision = function()
         var worldPosition = new THREE.Vector3();
         worldPosition.setFromMatrixPosition( this.collider.getNode().matrixWorld ); // get world coordinates
 
-        this.enemy.takeDamage(this.damage, worldPosition, this.attackType, this.xKnockBack, this.yKnockBack);
+        this.enemy.takeDamage(this.damage, worldPosition, this.attackType, this.highOrLow);
 
         if(this.attackType == "projectile")
         {

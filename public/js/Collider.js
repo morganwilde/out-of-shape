@@ -276,6 +276,12 @@ Collider.prototype.update = function()
 		}
 	}
 
+	this.node.rotation.x += this.xRotationSpeed;
+
+	this.node.rotation.y += this.yRotationSpeed;
+
+	this.node.rotation.z += this.zRotationSpeed;
+
 	this.node.position.x += this.xVelocity;
 
 	this.node.position.y += this.yVelocity;

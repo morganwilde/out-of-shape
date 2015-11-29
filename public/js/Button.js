@@ -42,3 +42,8 @@ Button.prototype.getNode = function()
 {
 	return this.node;
 };
+
+Button.prototype.onClick()
+{
+	console.log("hello world");
+};

@@ -17,8 +17,6 @@
       <script src="js/HealthBar.js"></script>
       <script src="js/AttackLibrary.js"></script>
       <script src="js/CharacterLibrary.js"></script>
-      <script src="js/Mouse.js"></script>
-      <script src="js/Button.js"></script>
 
 
 	
@@ -28,11 +26,11 @@
       window.gameEngine = new Engine().initWithCanvasSize(window.innerWidth, window.innerHeight);
 
       // Mouse Instance
-      var mouse = new Mouse().init();
+     // var mouse = new Mouse().init();
 
       // Button Instance
-      var button = new Button().initWithDimensions(0, 700, 700, 300, "Hello, world");
-      gameEngine.addButton(button);
+      //var button = new Button().initWithDimensions(0, 700, 700, 300, "Hello, world");
+      //gameEngine.addButton(button);
 
       var arena = new Arena().initWithEngine(gameEngine);
       gameEngine.addArena(arena);

@@ -227,6 +227,7 @@ SweepKick.prototype.init = function(owner, enemy)
 	owner.getCollider().getNode().add(this.collider.getNode());
 
 	this.attackType = "melee";
+	this.highOrLow = "low";
 	
 	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
 	var ystart = -this.collider.getHeight()/2;
@@ -240,7 +241,7 @@ SweepKick.prototype.init = function(owner, enemy)
 
 	this.endTime = 12;
 	
-	this.damage = 2;
+	this.damage = 20;
 
 	return this;
 };
@@ -263,12 +264,13 @@ HeadKick.prototype.init = function(owner, enemy)
 	owner.getCollider().getNode().add(this.collider.getNode());
 
 	this.attackType = "melee";
+	this.highOrLow = "high";
 	
 	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
-	var ystart = -this.collider.getHeight()/2;
+	var ystart = this.collider.getHeight()/4;
 	
 	this.collider.setPosition(xstart, ystart, 0);
-	this.collider.setRo(xstart, ystart, 0);
+	this.collider.setRotation(0, 0, 45);
 
 	this.initialXVelocity = 0;
 	this.initialYVelocity = 0;
@@ -277,7 +279,7 @@ HeadKick.prototype.init = function(owner, enemy)
 
 	this.endTime = 12;
 	
-	this.damage = 2;
+	this.damage = 20;
 
 	return this;
 };

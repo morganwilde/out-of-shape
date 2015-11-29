@@ -30,10 +30,17 @@ SuperStar.prototype.init = function(width, height, depth)
     this.collider.getNode().add(head);
 
     //attacks
-    this.attacks['lightpunch'] = Jab;
+    this.attacks['lightpunch'] = UpperCut;
+    this.attacks['lowlightpunch'] = Jab;
+
     this.attacks['lightkick'] = UpperCut;
+    this.attacks['lowlightkick'] = UpperCut;
+
     this.attacks['heavypunch'] = StarBlast;
-    this.attacks['heavykick'] = SweepKick;
+    this.attacks['lowheavypunch'] = StarBlast;
+
+    this.attacks['heavykick'] = HeadKick;
+    this.attacks['lowheavykick'] = SweepKick;
     this.attacks['grab'] = Grab;
 
     return this;

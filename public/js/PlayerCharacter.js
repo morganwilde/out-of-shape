@@ -315,28 +315,70 @@ PlayerCharacter.prototype.update = function()
 PlayerCharacter.prototype.resolveInput = function()
 {
     if (this.press('lightpunch')) {
-        this.createAttack(this.attacks['lightpunch']);
+        if(this.duckState == true)
+        {
+           this.createAttack(this.attacks['lowlightpunch']);
+        }
+        else
+        {
+            this.createAttack(this.attacks['lightpunch']);
+        };
         return;
     }
 
      if (this.press('heavypunch')){
-        this.createAttack(this.attacks['heavypunch']);
+        if(this.duckState == true)
+        {
+           this.createAttack(this.attacks['lowheavypunch']);
+        }
+        else
+        {
+            this.createAttack(this.attacks['lowheavypunch']);
+        }
         return;
     }
 
     if (this.press('lightkick')) {
-        this.createAttack(this.attacks['lightkick']);
+        if(this.duckState == true)
+        {
+           this.createAttack(this.attacks['lowlightkick']);
+        }
+        else
+        {
+            this.createAttack(this.attacks['lightkick']);
+        }
         return;
     }
 
      if (this.press('heavykick')){
-        this.createAttack(this.attacks['heavykick']);
+        if(this.duckState == true)
+        {
+           this.createAttack(this.attacks['lowheavykick']);
+        }
+        else
+        {
+            this.createAttack(this.attacks['heavykick']);
+        }
         return;
     }
 
     if (this.press('grab')) {
         this.createAttack(this.attacks['grab']);
         return;
+    }
+
+    if (this.characterState != 'jumping')
+    {
+        if (this.keyStates['duck'] == true){
+            this.duck();
+            this.duckState = true;
+            this.movementEnd();
+        }
+
+        if (this.keyStates['duck'] == false && this.duckState == true){
+            this.standUp();
+            this.duckState = false;
+        }
     }
 
     if (this.keyStates['block'] == true) {
@@ -371,13 +413,6 @@ PlayerCharacter.prototype.resolveInput = function()
 
     	if(this.duckState == false){
 
-	    	if (this.keyStates['duck'] == true){
-	        	this.duck();
-	        	this.duckState = true;
-	        	this.movementEnd();
-	        	return;
-	        }
-
 	        if (this.press('jump')) {
 	            this.jump();
 	            this.characterState  = 'jumping';
@@ -391,18 +426,13 @@ PlayerCharacter.prototype.resolveInput = function()
 	            this.movementEnd();
 	        }
 	    }
-
-        if (this.keyStates['duck'] == false && this.duckState == true){
-        	this.standUp();
-        	this.duckState = false;
-    	}
     }
 };
 
 PlayerCharacter.prototype.duck = function()
 {
     this.collider.getNode().scale.y = .5;
-    this.collider.setRelativePosition(0, - this.collider.getHeight(), 0);
+    this.collider.setRelativePosition(0, - this.collider.getHeight()/2, 0);
 };
 PlayerCharacter.prototype.standUp = function()
 {
@@ -478,9 +508,9 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
  * @param  {Position} hitPosition The vector of the HitBox that triggered the collision.
  * @param  {String} attackType The form of attack (melee, projectile, or grab).
  */
-PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
-{
-    if (this.characterState == 'blocking' && attackType != 'grab') {
+PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType, highOrLow)
+{console.log(highOrLow)
+    if (this.characterState == 'blocking' && attackType != 'grab' && ( (highOrLow == "any") || (highOrLow == "low" && this.duckState == true) || (highOrLow == "high" && this.duckState == false) ) ) {
         damage = Math.round(damage / 10);
     }
 
