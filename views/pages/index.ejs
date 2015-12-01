@@ -12,17 +12,21 @@
     <script src="js/Engine.js"></script>
     <script src="js/Arena.js"></script>
     <script src="js/PlayerCharacter.js"></script>
+<<<<<<< HEAD
 	<script src="js/Collider.js"></script>
 	<script src="js/HitBox.js"></script>
 	<script src="js/HealthBar.js"></script>
   <script src="js/Keyboard.js"></script>
 	
+=======
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
   </head>
   <body>
     <script>
       window.gameEngine = new Engine().initWithCanvasSize(window.innerWidth, window.innerHeight);
 
       var arena = new Arena().initWithEngine(gameEngine);
+<<<<<<< HEAD
       var keyboard = new Keyboard().initWithKeys('w','a','s');
 
       gameEngine.addArena(arena);
@@ -33,6 +37,14 @@
 	    gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithSettings(100, 100, 100, "SuperStar"));
 	    gameEngine.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
 	  
+=======
+      gameEngine.addArena(arena);
+
+      var player1 = gameEngine.arena.addPlayerCharacter(new PlayerCharacter().initWithDimensions(100, 100, 100));
+	  
+	  player1.getNode().position.x+=game;
+
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
       window.gameEngine.render();
     </script>
   </body>

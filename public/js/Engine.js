@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * The Engine is the main instance manager of the game. 
  *
@@ -18,15 +19,29 @@ function Engine()
   /** @property {THREE.WebGLRenderer} renderer - The THREE.js object that is used for rendering graphics. */
   this.renderer;
   /** @property {Arena} - The platform that PlayerCharacters fight upon. */
+=======
+function Engine() {
+  // Canvas size
+  this.width;
+  this.height;
+  // THREE
+  this.scene;
+  this.camera;
+  this.renderer;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
   this.arena;
 }
 
 // Initialisers
+<<<<<<< HEAD
 /**
  * Initializes an Engine object with an empty state.
  * 
  * @return {Engine}
  */
+=======
+
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 Engine.prototype.initEmpty = function()
 {
   // Canvas size
@@ -40,6 +55,7 @@ Engine.prototype.initEmpty = function()
 
   return this;
 };
+<<<<<<< HEAD
 /**
  * Initializes an Engine object with specific screen dimensions.
  * 
@@ -47,6 +63,9 @@ Engine.prototype.initEmpty = function()
  * @param  {Integer} height - The base height of the camera.
  * @return {Engine}
  */
+=======
+
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 Engine.prototype.initWithCanvasSize = function(width, height)
 {
   this.initEmpty();
@@ -62,6 +81,10 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
   this.camera.position.z = 1000;
   this.camera.position.y = 800;
+<<<<<<< HEAD
+=======
+  this.camera.rotation.x = 0;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 
   // Rendered
   this.renderer = new THREE.WebGLRenderer();
@@ -69,20 +92,31 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.renderer.setSize(this.width, this.height);
   document.body.appendChild(this.renderer.domElement);
   
+<<<<<<< HEAD
+=======
+  // User actions
+  window.addEventListener('keydown', this.keyDown, false);
+  window.addEventListener('keyup', this.keyUp, false);
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
   
   return this;
 };
 
 // Methods
+<<<<<<< HEAD
 /**
  * The frame render method, which is called every time the renderer needs a new frame.
  */
+=======
+
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 Engine.prototype.render = function()
 {
   requestAnimationFrame(function() {
     this.render();
   }.bind(this));
   this.renderer.render(this.scene, this.camera);
+<<<<<<< HEAD
   
   this.arena.update();
     
@@ -113,8 +147,27 @@ Engine.prototype.keyUp = function(event)
  * 
  * @param {Arena} arena - The platform object which has PlayerCharacters as Children.
  */
+=======
+};
+
+Engine.prototype.keyDown = function(event)
+{
+	console.log(event.keyCode);
+	return event.key;
+};
+
+Engine.prototype.keyUp = function(event)
+{
+	console.log(event);
+};
+
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 Engine.prototype.addArena = function(arena)
 {
   this.arena = arena;
   this.scene.add(arena.getRootObject());
+<<<<<<< HEAD
+=======
+ // this.camera.lookAt(arena.getRootObject().position);
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 };

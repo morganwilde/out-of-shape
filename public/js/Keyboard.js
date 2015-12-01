@@ -1,5 +1,6 @@
 function Keyboard()
 {
+<<<<<<< HEAD
 	
   this.keyValues;
 
@@ -15,22 +16,45 @@ function Keyboard()
   window.addEventListener('keydown', this.setKeyPress, false);
   window.addEventListener('keyup', this.setKeyRelease, false);
 
+=======
+	// Frame window for button Press
+	this.buffertime;
+	
+	this.keyvalue;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 }
 
 // Initialisers
 
 Keyboard.prototype.initEmpty = function()
 {
+<<<<<<< HEAD
   this.keyValues = {};
   this.keyStates = {};
   this.keyBuffers = {};
   this.keyBufferTime = null;
 
     
+=======
+    // Size
+    this.width = null;
+    this.height = null;
+    this.depth = null;
+    // Root
+    this.node = null;
+
+    //Movement properties
+    this.walkspeed = 4; //speed of horizontal movement
+    this.runspeed = 10; // additional horizontal speed when the run button is held
+    this.jumpspeed = 30;
+    this.yvelocity = 0;
+    this.gravity = 2;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 
   return this;
 };
 
+<<<<<<< HEAD
 Keyboard.prototype.initWithKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, grab, block)
 {
   this.initEmpty();
@@ -72,10 +96,27 @@ Keyboard.prototype.initWithKeys = function(jump, crouch, left, right, lightpunch
   this.keyBuffers['grab'] = 0;
 
   return this;
+=======
+Keyboard.prototype.initWithKeys = function(width, height, depth)
+{
+   this.initEmpty();
+
+   this.width = width;
+   this.height = height;
+   this.depth = depth;
+
+   // Starting shape
+   var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
+   var material = new THREE.MeshBasicMaterial({color: 0x0000ff});
+   this.node = new THREE.Mesh(geometry, material);
+   
+   return this;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 };
 
 // Getters
 
+<<<<<<< HEAD
 Keyboard.prototype.updateKeyBuffers = function()
 {
     for (var i in this.keyBuffers) {
@@ -111,4 +152,9 @@ Keyboard.prototype.setKeyRelease = function(event)
             this.keyStates[i] = false;
         }
     }
+=======
+PlayerCharacter.prototype.getNode = function()
+{
+   return this.node;
+>>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 };
