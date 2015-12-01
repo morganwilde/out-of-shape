@@ -158,6 +158,10 @@ HitBox.prototype.update = function()
     if(this.owner.getInactionableFrames() == 0 && this.attackType != "projectile")
     {
         this.owner.deleteHitBox(this);
+        this.owner.getCollider().setXRotationSpeed(0);
+        this.owner.getCollider().setYRotationSpeed(0);
+        this.owner.getCollider().setZRotationSpeed(0);
+        this.owner.getCollider().setRotation(0, 0, 0);
     }
 };
 

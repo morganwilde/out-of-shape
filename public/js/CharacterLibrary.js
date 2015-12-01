@@ -36,7 +36,7 @@ SuperStar.prototype.init = function(width, height, depth)
     this.attacks['lightkick'] = UpperCut;
     this.attacks['lowlightkick'] = UpperCut;
 
-    this.attacks['heavypunch'] = StarBlast;
+    this.attacks['heavypunch'] = HayMaker;
     this.attacks['lowheavypunch'] = StarBlast;
 
     this.attacks['heavykick'] = HeadKick;

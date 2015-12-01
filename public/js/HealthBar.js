@@ -92,6 +92,11 @@ HealthBar.prototype.getNode = function()
 	return this.node;
 };
 
+HealthBar.prototype.getHealth = function()
+{
+	return this.health;
+};
+
 // Setters
 
 /**

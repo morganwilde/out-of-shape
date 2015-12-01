@@ -187,7 +187,20 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 Arena.prototype.update = function()
 {
 	/** update player 1 character */
-	this.player1.update();
+	if(this.player1.update() == 0)
+	{
+		this.player1 = null;
+		this.player2 = null;
+		gameEngine.setGameState("P2Win");
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 2 Wins"));
+	}
+
 	/** update player 2 character */
-	this.player2.update();
+	if(this.player2.update() == 0)
+	{
+		this.player1 = null;
+		this.player2 = null;
+		gameEngine.setGameState("P1Win");
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 1 Wins"));
+	}
 };

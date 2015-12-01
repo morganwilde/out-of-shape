@@ -19,6 +19,11 @@ function Engine()
   this.renderer;
   /** @property {Arena} - The platform that PlayerCharacters fight upon. */
   this.arena;
+
+  this.gameState;
+
+  this.mouse;
+  this.buttonArray;
 }
 
 // Initialisers
@@ -37,6 +42,9 @@ Engine.prototype.initEmpty = function()
   this.camera = null;
   this.renderer = null;
   this.arena = null;
+  this.gameState = null;
+  this.mouse = null;
+  this.buttonArray = new Array();;
 
   return this;
 };
@@ -70,14 +78,32 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   document.body.appendChild(this.renderer.domElement);
     
   // User actions
-  window.addEventListener('keydown', this.keyDown, false);
-  window.addEventListener('keyup', this.keyUp, false);
+  window.addEventListener('keydown', function(event){this.keyDown(event)}.bind(this), false);
+  window.addEventListener('keyup', function(event){this.keyUp(event)}.bind(this), false);
   
+  this.gameState = "Intro";
+
+  this.mouse = new Mouse().init(this.camera, this);  
   
   return this;
 };
 
 // Methods
+
+Engine.prototype.startFight = function()
+{
+  this.arena = new Arena().initWithEngine(this);
+  this.scene.add(this.arena.getRootObject());
+
+  this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
+  this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
+
+  this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
+  this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
+
+  this.gameState = "Fight";
+};
+
 /**
  * The frame render method, which is called every time the renderer needs a new frame.
  */
@@ -86,9 +112,13 @@ Engine.prototype.render = function()
   requestAnimationFrame(function() {
     this.render();
   }.bind(this));
+
   this.renderer.render(this.scene, this.camera);
-  
-  this.arena.update();
+
+  if(this.gameState == "Fight")
+  {
+    this.arena.update();
+  }
     
 };
 /**
@@ -99,8 +129,8 @@ Engine.prototype.render = function()
 Engine.prototype.keyDown = function(event)
 {
   event.preventDefault();
-  this.arena.setKeyPress(event.keyCode);
   
+  this.arena.setKeyPress(event.which);
 };
 /**
  * Responds to keyUp events from the keyboard.
@@ -110,7 +140,8 @@ Engine.prototype.keyDown = function(event)
 Engine.prototype.keyUp = function(event)
 {
   event.preventDefault();
-  this.arena.setKeyRelease(event.keyCode);
+  
+  this.arena.setKeyRelease(event.which);
 };
 /**
  * Assigns an Arena object that will contain all the necessary visuals for the game.
@@ -126,4 +157,31 @@ Engine.prototype.addArena = function(arena)
 Engine.prototype.addButton = function(button)
 {
   this.scene.add(button.getNode());
+  this.buttonArray.push(button.getNode());
+};
+
+Engine.prototype.getButtonArray = function()
+{
+  return this.buttonArray;
+};
+
+Engine.prototype.getGameState = function()
+{
+  return this.gameState;
+};
+
+Engine.prototype.setGameState = function(state)
+{
+  this.gameState = state;
+};
+
+Engine.prototype.deleteButton = function(button)
+{
+  document.body.removeChild(button.getTextDiv());
+
+  this.scene.remove(button.getNode());
+
+  var targetButton = this.buttonArray.indexOf(button);
+
+  this.buttonArray.splice(targetButton, 1); // 1 is the number of instances to remove
 };

@@ -86,7 +86,7 @@ Grab.prototype.init = function(owner, enemy)
 
 	owner.getCollider().getNode().add(this.collider.getNode());
 
-	this.attackType = "Grab";
+	this.attackType = "grab";
 	
 	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
 	var ystart = 0;
@@ -191,6 +191,7 @@ UpperCut.prototype.init = function(owner, enemy)
 	owner.getCollider().getNode().add(this.collider.getNode());
 
 	this.attackType = "melee";
+	this.highOrLow = "high";
 	
 	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
 	var ystart = -this.collider.getHeight()/2;
@@ -280,6 +281,41 @@ HeadKick.prototype.init = function(owner, enemy)
 	this.endTime = 12;
 	
 	this.damage = 20;
+
+	return this;
+};
+
+function HayMaker()
+{
+	HitBox.call(this);
+}
+HayMaker.prototype = Object.create(HitBox.prototype);
+HayMaker.prototype.constructor = HayMaker;
+
+HayMaker.prototype.init = function(owner, enemy)
+{
+	this.initWithDimensionsAndPlayers(100, 50, 50, owner, enemy);
+
+	owner.setInactionableFrames(50);
+
+	owner.getCollider().setXVelocity(0);
+
+	owner.getCollider().getNode().add(this.collider.getNode());
+
+	this.attackType = "melee";
+	this.highOrLow = "high";
+	
+	var xstart = -(this.collider.getWidth()/2 + owner.getCollider().getWidth()/2);
+	var ystart = this.collider.getHeight()/4;
+	
+	this.collider.setPosition(xstart, ystart, 0);
+	owner.getCollider().setZRotationSpeed(-.125);
+
+	this.beginTime = 10;
+
+	this.endTime = 40;
+	
+	this.damage = 40;
 
 	return this;
 };

@@ -308,66 +308,71 @@ PlayerCharacter.prototype.update = function()
     
     // update keybuffer times
     this.updateKeyBuffers();
+
+    return this.healthBar.getHealth();
 };
 /**
  * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
  */
 PlayerCharacter.prototype.resolveInput = function()
 {
-    if (this.press('lightpunch')) {
-        if(this.duckState == true)
-        {
-           this.createAttack(this.attacks['lowlightpunch']);
+    if(this.keyStates['block'] == false)
+    {
+        if (this.press('lightpunch')) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightpunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightpunch']);
+            };
+            return;
         }
-        else
-        {
-            this.createAttack(this.attacks['lightpunch']);
-        };
-        return;
+
+         if (this.press('heavypunch')){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavypunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavypunch']);
+            }
+            return;
+        }
+
+        if (this.press('lightkick')) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightkick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightkick']);
+            }
+            return;
+        }
+
+         if (this.press('heavykick')){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavykick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavykick']);
+            }
+            return;
+        }
+
+        if (this.press('grab')) {
+            this.createAttack(this.attacks['grab']);
+            return;
+        }
     }
 
-     if (this.press('heavypunch')){
-        if(this.duckState == true)
-        {
-           this.createAttack(this.attacks['lowheavypunch']);
-        }
-        else
-        {
-            this.createAttack(this.attacks['lowheavypunch']);
-        }
-        return;
-    }
-
-    if (this.press('lightkick')) {
-        if(this.duckState == true)
-        {
-           this.createAttack(this.attacks['lowlightkick']);
-        }
-        else
-        {
-            this.createAttack(this.attacks['lightkick']);
-        }
-        return;
-    }
-
-     if (this.press('heavykick')){
-        if(this.duckState == true)
-        {
-           this.createAttack(this.attacks['lowheavykick']);
-        }
-        else
-        {
-            this.createAttack(this.attacks['heavykick']);
-        }
-        return;
-    }
-
-    if (this.press('grab')) {
-        this.createAttack(this.attacks['grab']);
-        return;
-    }
-
-    if (this.characterState != 'jumping')
+    if (this.characterState != 'jumping') // ducking
     {
         if (this.keyStates['duck'] == true){
             this.duck();
@@ -509,7 +514,7 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
  * @param  {String} attackType The form of attack (melee, projectile, or grab).
  */
 PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType, highOrLow)
-{console.log(highOrLow)
+{
     if (this.characterState == 'blocking' && attackType != 'grab' && ( (highOrLow == "any") || (highOrLow == "low" && this.duckState == true) || (highOrLow == "high" && this.duckState == false) ) ) {
         damage = Math.round(damage / 10);
     }
