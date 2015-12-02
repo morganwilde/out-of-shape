@@ -93,6 +93,11 @@ Engine.prototype.initWithCanvasSize = function(width, height)
 
   this.mouse = new Mouse().init(this.camera, this);
 
+  var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+var cube = new THREE.Mesh( geometry, material );
+this.scene.add( cube );
+
   this.bgMusic = new Audio();
   this.playMusic('IntroMusic.ogg');
   this.bgMusic.addEventListener('ended', function() {this.play(); }, false);
