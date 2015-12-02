@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /** 
 * The Arena is the space in which two players fight in. It has an THREE.Object3D instance which serves as the platform for PlayerCharacters to stand on. The two PlayerCharacters are instantiated as children of the Arena.
 *
@@ -82,11 +81,6 @@ Arena.prototype.initWithEngine = function(engine)
 
 	this.rootObject = new THREE.Mesh(geometry, material);
 
-	var light = new THREE.PointLight(0xffffff, 3, 0, 0);
-	light.position.set(0, 500, 500);
-	
-	this.rootObject.add(light);
-
 	return this;
 };
 
@@ -108,8 +102,11 @@ Arena.prototype.getRootObject = function()
 */
 Arena.prototype.setKeyPress = function(keycode)
 {
-	this.player1.setKeyPress(keycode);
-	this.player2.setKeyPress(keycode);
+	if(this.player1!=null)
+	{
+		this.player1.setKeyPress(keycode);
+		this.player2.setKeyPress(keycode);
+	}
 };
 
 /**
@@ -119,8 +116,11 @@ Arena.prototype.setKeyPress = function(keycode)
 */
 Arena.prototype.setKeyRelease = function(keycode)
 {
-	this.player1.setKeyRelease(keycode);
-	this.player2.setKeyRelease(keycode);
+	if(this.player1!=null)
+	{
+		this.player1.setKeyRelease(keycode);
+		this.player2.setKeyRelease(keycode);
+	}
 };
 
 /** 
@@ -188,70 +188,19 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 Arena.prototype.update = function()
 {
 	/** update player 1 character */
-	this.player1.update();
-	/** update player 2 character */
-	this.player2.update();
-
-	keyboard.updateKeyBuffers();
-=======
-function Arena() {
-  // Size
-  this.width;
-  this.height;
-  this.depth;
-  // Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
-  this.rootObject;
-}
-
-// Initialisers
-
-Arena.prototype.initEmpty = function()
-{
-  // Canvas size
-  this.width = null;
-  this.height = null;
-  this.depth = null;
-  // Root
-  this.rootNode = null;
-
-  return this;
-};
-
-Arena.prototype.initWithEngine = function(engine)
-{
-   this.width = engine.width;
-   this.height = engine.height;
-   this.depth = 1000;
-   
-   var xScale = 1.1;
-   var yScale = 1.1;
-   var zScale = .9;
-   
-   var geometry = new THREE.CubeGeometry(this.width*xScale, this.height*yScale, this.depth*zScale);
-   var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});   
-
-   this.rootObject = new THREE.Mesh(geometry, material);
-
-   return this;
-};
-
-// Getters
-
-Arena.prototype.getRootObject = function()
-{
-   return this.rootObject;
-};
-
-// Methods
-
-Arena.prototype.addPlayerCharacter = function(playerCharacter)
-{
-  var playerCharacterNode = playerCharacter.getNode();
-  var shiftYBy = playerCharacter.height/2;
-  playerCharacterNode.position.y = 400;
-  
-  this.rootObject.add(playerCharacterNode);
-  
-  return playerCharacter;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
+	if(this.player1.update() == 0)
+	{
+		this.player1 = null;
+		this.player2 = null;
+		gameEngine.setGameState("P2Win");
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 2 Wins","Fight"));
+	}
+	else /** update player 2 character */
+	if(this.player2.update() == 0)
+	{
+		this.player1 = null;
+		this.player2 = null;
+		gameEngine.setGameState("P1Win");
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 1 Wins","Fight"));
+	}
 };

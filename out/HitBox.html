@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    Create hitbox dimensions, handling the initial and ending velocity and time .Set collider box and enemy character. Determine the attack type  and damage of the attack. status checking of the character class.
+    The purpose of the HitBox class is to define dimmensions for itself, handle initial and ending velocities and time. It stores references to a Collider box and the two PlayerCharacters, as well as defining the type and damage of the attack.
 </div>
 
 
@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line8">line 8</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -142,260 +142,60 @@
 
 
 
-<div class="description">
-    status
-</div>
 
 
 
 
 
 
-
-<dl class="details">
+    <h5 class="subsection-title">Properties:</h5>
 
     
 
-    
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line43">line 43</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
+        <th>Type</th>
 
         
-            
-<h4 class="name" id="attackType"><span class="type-signature"></span>attackType<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    attack type
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<h4 class="name" id="beginTime"><span class="type-signature"></span>beginTime<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    begin time
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line11">line 11</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
+                <td class="name"><code>active</code></td>
             
-<h4 class="name" id="collider"><span class="type-signature"></span>collider<span class="type-signature"></span></h4>
 
-
-
-
-<div class="description">
-    Collision Box
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line18">line 18</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
+            <td class="type">
             
-<h4 class="name" id="damage"><span class="type-signature"></span>damage<span class="type-signature"></span></h4>
+                
+<span class="param-type">Boolean</span>
 
 
+            
+            </td>
 
+            
 
-<div class="description">
-    damage instance
-</div>
+            
 
+            <td class="description last">If the HitBox is active then collisions are triggered.</td>
+        </tr>
 
-
+    
+    </tbody>
+</table>
 
 
 
@@ -447,14 +247,7 @@
 
         
             
-<h4 class="name" id="endingXVelocity"><span class="type-signature"></span>endingXVelocity<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    ending velocity if X
-</div>
+<h4 class="name" id="attackType"><span class="type-signature"></span>attackType<span class="type-signature"></span></h4>
 
 
 
@@ -462,498 +255,57 @@
 
 
 
-<dl class="details">
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
 
     
 
-    
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line35">line 35</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
+        <th>Type</th>
 
         
-            
-<h4 class="name" id="endingYVelocity"><span class="type-signature"></span>endingYVelocity<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    ending  velocity of Y
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line37">line 37</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<h4 class="name" id="endingZVelocity"><span class="type-signature"></span>endingZVelocity<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    ending velocity of Z
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line39">line 39</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
+                <td class="name"><code>attackType</code></td>
             
-<h4 class="name" id="endTime"><span class="type-signature"></span>endTime<span class="type-signature"></span></h4>
 
-
-
-
-<div class="description">
-    end time
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line15">line 15</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
+            <td class="type">
             
-<h4 class="name" id="enemy"><span class="type-signature"></span>enemy<span class="type-signature"></span></h4>
+                
+<span class="param-type">String</span>
 
 
-
-
-<div class="description">
-    opposing character
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line21">line 21</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
             
-<h4 class="name" id="initialXVelocity"><span class="type-signature"></span>initialXVelocity<span class="type-signature"></span></h4>
+            </td>
 
-
-
-
-<div class="description">
-    intial X velocity
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line29">line 29</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
             
-<h4 class="name" id="initialYVelocity"><span class="type-signature"></span>initialYVelocity<span class="type-signature"></span></h4>
 
-
-
-
-<div class="description">
-    initial Y velocity
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line31">line 31</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
             
-<h4 class="name" id="initialZVelocity"><span class="type-signature"></span>initialZVelocity<span class="type-signature"></span></h4>
 
-
-
-
-<div class="description">
-    initial Z velocity
-</div>
-
-
-
-
-
-
-
-<dl class="details">
+            <td class="description last">Attack type</td>
+        </tr>
 
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="owner"><span class="type-signature"></span>owner<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    owner of the hitbox
-</div>
-
-
-
+    </tbody>
+</table>
 
 
 
@@ -1005,17 +357,725 @@
 
         
             
-<h4 class="name" id="time"><span class="type-signature"></span>time<span class="type-signature"></span></h4>
+<h4 class="name" id="beginTime"><span class="type-signature"></span>beginTime<span class="type-signature"></span></h4>
 
 
 
 
-<div class="description">
-    duration
-</div>
 
 
 
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>beginTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Begin time</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="collider"><span class="type-signature"></span>collider<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Collider.html">Collider</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Collision Box</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="damage"><span class="type-signature"></span>damage<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>damage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The amount of damage that this HitBox deals.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="endingXVelocity"><span class="type-signature"></span>endingXVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endingXVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Ending X velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="endingYVelocity"><span class="type-signature"></span>endingYVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endingYVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Ending Y velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="endingZVelocity"><span class="type-signature"></span>endingZVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endingZVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Ending Z velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="endTime"><span class="type-signature"></span>endTime<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">End time</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1066,6 +1126,666 @@
 
 
         
+            
+<h4 class="name" id="enemy"><span class="type-signature"></span>enemy<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enemy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PlayerCharacter.html">PlayerCharacter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Opposing character</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="initialXVelocity"><span class="type-signature"></span>initialXVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>initialXVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Intial X velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="initialYVelocity"><span class="type-signature"></span>initialYVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>initialYVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Intial Y velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="initialZVelocity"><span class="type-signature"></span>initialZVelocity<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>initialZVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Intial Z velocity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="owner"><span class="type-signature"></span>owner<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>owner</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PlayerCharacter.html">PlayerCharacter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Owner of the hitbox</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="time"><span class="type-signature"></span>time<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Duration</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -1083,7 +1803,7 @@
 
 
 <div class="description">
-    get the collider
+    Returns the Collider instance that belongs to this HitBox.
 </div>
 
 
@@ -1127,7 +1847,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line221">line 221</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line224">line 224</a>
     </li></ul></dd>
     
 
@@ -1154,7 +1874,7 @@
 
         
 <div class="param-desc">
-    collider
+    This HitBox's Collider.
 </div>
 
 
@@ -1180,14 +1900,14 @@
 
     
 
-    <h4 class="name" id="initAttack"><span class="type-signature"></span>initAttack<span class="signature">(command, character, class)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initAttack"><span class="type-signature"></span>initAttack<span class="signature">(command, character, enemy)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    initae the attack of a character and handling enemy state
+    Create a HitBox instance using a specified command.
 </div>
 
 
@@ -1239,7 +1959,7 @@
 
             
 
-            <td class="description last">name of the attack type</td>
+            <td class="description last">Name of the attack type.</td>
         </tr>
 
     
@@ -1262,14 +1982,14 @@
 
             
 
-            <td class="description last">character</td>
+            <td class="description last">The PlayerCharacter that initializes the attack.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>class</code></td>
+                <td class="name"><code>enemy</code></td>
             
 
             <td class="type">
@@ -1285,7 +2005,7 @@
 
             
 
-            <td class="description last">enemy character</td>
+            <td class="description last">The target PlayerCharacter.</td>
         </tr>
 
     
@@ -1326,7 +2046,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line107">line 107</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -1364,7 +2084,7 @@
 
 
 <div class="description">
-    Constructor of the Hitbox class, set everything to null
+    Constructor of the HitBox class, set everything to null.
 </div>
 
 
@@ -1408,7 +2128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line50">line 50</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -1446,7 +2166,7 @@
 
 
 <div class="description">
-    initiate the grab fucntion
+    Create a HitBox instance for a specific PlayerCharacter class, this attack is a grab.
 </div>
 
 
@@ -1498,7 +2218,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The PlayerCharacter that initializes the attack.</td>
         </tr>
 
     
@@ -1539,7 +2259,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line192">line 192</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -1577,7 +2297,7 @@
 
 
 <div class="description">
-    initiate Star shot attack, set its velocity, dimensions, speed,damage, time and node
+    Create a HitBox instance for a specific PlayerCharacter class, this attack is a projectile.
 </div>
 
 
@@ -1629,7 +2349,7 @@
 
             
 
-            <td class="description last">character issuing the attack</td>
+            <td class="description last">The PlayerCharacter that initializes the attack.</td>
         </tr>
 
     
@@ -1670,7 +2390,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line162">line 162</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -1708,7 +2428,7 @@
 
 
 <div class="description">
-    initiate Star Storm attack
+    Create a HitBox instance for a specific PlayerCharacter class.
 </div>
 
 
@@ -1760,7 +2480,7 @@
 
             
 
-            <td class="description last">character issueing the starstorm</td>
+            <td class="description last">The PlayerCharacter that initializes the attack.</td>
         </tr>
 
     
@@ -1801,7 +2521,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line132">line 132</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -1839,7 +2559,7 @@
 
 
 <div class="description">
-    constructor for the hitbox dimensions
+    Constructor for the HitBox dimensions.
 </div>
 
 
@@ -1881,7 +2601,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -1891,7 +2611,7 @@
 
             
 
-            <td class="description last">set the width of the hitbox</td>
+            <td class="description last">Width of the HitBox.</td>
         </tr>
 
     
@@ -1904,7 +2624,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -1914,7 +2634,7 @@
 
             
 
-            <td class="description last">set the height of the hitbox</td>
+            <td class="description last">Height of the HitBox.</td>
         </tr>
 
     
@@ -1927,7 +2647,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -1937,7 +2657,7 @@
 
             
 
-            <td class="description last">set the depth of the hitbox</td>
+            <td class="description last">Depth of the HitBox.</td>
         </tr>
 
     
@@ -2005,7 +2725,7 @@
 
         
 <div class="param-desc">
-    initWithDimensions return the dimensions of the hitbox
+    A HitBox instance.
 </div>
 
 
@@ -2031,88 +2751,6 @@
 
     
 
-    <h4 class="name" id="onCollision"><span class="type-signature"></span>onCollision<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    onCollision were use one collision is dectected. It determines if the attack is block or not , damage calculation and set repective velocity
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line266">line 266</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
@@ -2120,7 +2758,7 @@
 
 
 <div class="description">
-    Update the collision status, remove hitbox if needed
+    Update the Collider instance of this HitBox, manage the timing, motion patterns and states of this HitBox.
 </div>
 
 
@@ -2164,7 +2802,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line230">line 230</a>
+        <a href="HitBox.js.html">HitBox.js</a>, <a href="HitBox.js.html#line233">line 233</a>
     </li></ul></dd>
     
 
@@ -2212,7 +2850,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 16:00:44 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 16 2015 16:53:18 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * PlayerCharacter is the base class for the player's in-game avatar. It is reponsible for maintaining attributes such as how fast the avatar walks, dashes or jumps. It also maitains the information about the current state the character is in, for example standing, walking or attacking. Currently it is also responsible for keeping track of the keyboard inputs and translating them into specific actions. This functionality will be moved over to a Keyboard class.
  * 
@@ -29,8 +28,8 @@ function PlayerCharacter()
     /** @property {object} attacks A key-value stored for identifying specific attacks that different PlayerCharacter classes have. For now, we only have one class, but in future releases PlayerCharacter subclasses will override the default values with their versions of the different attacks. */
     this.attacks;
     
-    /** @property {Integer} actionFrames An integer that stores how many frames are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions. */
-    this.actionFrames;
+    /** @property {Integer} inactionableFrames An integer that stores how many frames are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions. */
+    this.inactionableFrames;
 
     /** @property {HealthBar} healthBar A reference to the HealthBar object that indicates a PlayerCharacter's remaining health. */
     this.healthBar;
@@ -45,8 +44,12 @@ function PlayerCharacter()
     /** @property {String} characterState A string that indicates the current state of a PlayerCharacter, for exmple 'standing' or 'blocking'. */
     this.characterState;
 
+    this.duckState;
+
     /** @property {Integer} comboCount The number of consecutive times this character has been hit while in the 'inactive' state. */
     this.comboCount;
+
+    this.bodyColor;
 }
 
 // Initialisers
@@ -65,13 +68,15 @@ PlayerCharacter.prototype.initEmpty = function()
     this.enemy;
     this.hitBoxes = new Array();
     this.attacks = {};
-    this.actionFrames = null;
+    this.inactionableFrames = null;
     this.healthBar = null;
     this.walkSpeed = null;
     this.dashSpeed = null;
     this.jumpSpeed = null;
     this.characterState = null;
+    this.duckState = null;
     this.comboCount = null;
+    this.bodyColor = null;
 	return this;
 };
 /**
@@ -83,52 +88,32 @@ PlayerCharacter.prototype.initEmpty = function()
  * @param  {Strings} Character currently there's only one Character class - 'SuperStar'.
  * @return {PlayerCharacter}
  */
-PlayerCharacter.prototype.initWithSettings = function(width, height, depth, character)
+PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
 {
 	// Something
     this.initEmpty();
 
     this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
 
-    if (character == 'SuperStar') {
-        this.superStar();
+    if (gameEngine.arena.player1 != null) {
+    	this.collider.getNode().rotation.y = Math.PI;
+        this.bodyColor = 0x0f0f0f;
+        
     }
+    else
+    {
+        this.bodyColor = 0x0000ff;
+    }
+
+    this.collider.getNode().material.color.setHex(this.bodyColor);
 
     this.keyBufferTime = 2;
     this.characterState = 'standing';
-    this.actionFrames = 0;
+    this.duckState = false;
+    this.inactionableFrames = 0;
     this.comboCount = 0;
 
     return this;
-};
-/**
- * Initializes PlayerCharacter attributes specific to this player character class.
- */
-PlayerCharacter.prototype.superStar = function()
-{
-    this.walkSpeed = 4;
-    this.dashSpeed = 10;
-    this.jumpSpeed = 30;
-    this.collider.setGravity(2);
-    var geometry = new THREE.BoxGeometry(50, 50, 50);
-    var material = new THREE.MeshPhongMaterial({
-        color: 0x0000ff,
-        wireframe: false,
-        specular: 0x000000, 
-        shininess: 0, 
-        shading: THREE.FlatShading
-    });
-    var head = new THREE.Mesh(geometry, material);
-    head.position.y = 75;
-    head.position.x = 10;
-    this.collider.getNode().add(head);
-    if (gameEngine.arena.player1 != null) {
-    	this.collider.getNode().rotation.y = Math.PI;
-    }
-
-    this.attacks['lightpunch'] = 'star storm';
-    this.attacks['heavypunch'] = 'star shot';
-    this.attacks['grab'] = 'grab';
 };
 
 // Getters
@@ -165,9 +150,9 @@ PlayerCharacter.prototype.getCollider = function()
  * 
  * @return {Integer} Action frame count.
  */
-PlayerCharacter.prototype.getActionFrames = function()
+PlayerCharacter.prototype.getInactionableFrames = function()
 {
-    return this.actionFrames;
+    return this.inactionableFrames;
 };
 
 // Setters
@@ -185,7 +170,7 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
  * Associates keyboard keys with specific PlayerCharacter actions.
  * 
  * @param {Character} jump Numerical key code for the Jump command.
- * @param {Character} crouch Numerical key code for the Crouch command.
+ * @param {Character} duck Numerical key code for the duck command.
  * @param {Character} left Numerical key code for the Left command.
  * @param {Character} right Numerical key code for the Right command.
  * @param {Character} lightpunch Numerical key code for the Lightpunch command.
@@ -196,17 +181,74 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
  * @param {Character} block Numerical key code for the Block command.
  * @param {Character} grab Numerical key code for the Grab command.
  */
-PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
+PlayerCharacter.prototype.setKeys = function(jump, duck, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
 {
+    this.keyValues['jump'] = jump;
+    this.keyValues['duck'] = duck;
+    this.keyValues['left'] = left;
+    this.keyValues['right'] = right;
+    this.keyValues['lightpunch'] = lightpunch;
+    this.keyValues['heavypunch'] = heavypunch;
+    this.keyValues['lightkick'] = lightkick;
+    this.keyValues['heavykick'] = heavykick;
+    this.keyValues['dash'] = dash;
+    this.keyValues['block'] = block;
+    this.keyValues['grab'] = grab;
     
+    this.keyStates['jump'] = false;
+    this.keyStates['duck'] = false;
+    this.keyStates['left'] = false;
+    this.keyStates['right'] = false;
+    this.keyStates['lightpunch'] = false;
+    this.keyStates['heavypunch'] = false;
+    this.keyStates['lightkick'] = false;
+    this.keyStates['heavykick'] = false;
+    this.keyStates['dash'] = false;
+    this.keyStates['block'] = false;
+    this.keyStates['grab'] = false;
+    
+    this.keyBuffers['jump'] = 0;
+    this.keyBuffers['duck'] = 0;
+    this.keyBuffers['left'] = 0;
+    this.keyBuffers['right'] = 0;
+    this.keyBuffers['lightpunch'] = 0;
+    this.keyBuffers['heavypunch'] = 0;
+    this.keyBuffers['lightkick'] = 0;
+    this.keyBuffers['heavykick'] = 0;
+    this.keyBuffers['dash'] = 0;
+    this.keyBuffers['block'] = 0;
+    this.keyBuffers['grab'] = 0;
 };
 /**
  * Changes the state of a specific key to an active state.
  * 
  * @param {Character} keycode Numerical key code.
  */
-
-
+PlayerCharacter.prototype.setKeyPress = function(keycode)
+{
+    for (var i in this.keyValues) {
+        if (keycode == this.keyValues[i]) {
+            if (this.keyBuffers[i] == 0 && this.keyStates[i] == false) {
+            	// on initial press
+                this.keyBuffers[i] = this.keyBufferTime;
+            }
+            this.keyStates[i] = true;
+        }
+    }
+};
+/**
+ * Changes the state of a specific key to an inactive state.
+ * 
+ * @param {Character} keycode Numerical key code.
+ */
+PlayerCharacter.prototype.setKeyRelease = function(keycode)
+{
+    for (var i in this.keyValues) {
+        if (keycode == this.keyValues[i]) {
+            this.keyStates[i] = false;
+        }
+    }
+};
 /**
  * Associates a HealthBar object with this PlayerCharacter.
  * 
@@ -230,9 +272,9 @@ PlayerCharacter.prototype.setCharacterState = function(state)
  * 
  * @param {Integer} frames Number of frames.
  */
-PlayerCharacter.prototype.setActionFrames = function(frames)
+PlayerCharacter.prototype.setInactionableFrames = function(frames)
 {
-    this.actionFrames = frames;
+    this.inactionableFrames = frames;
 };
 
 // Methods
@@ -243,18 +285,16 @@ PlayerCharacter.prototype.setActionFrames = function(frames)
  */
 PlayerCharacter.prototype.createAttack = function(command)
 {
-    var hbox = new HitBox();
+    var hbox = new command().init(this, this.enemy);
 
-    hbox.initAttack(command, this, this.enemy);
-
-    this.hitBoxes.push(hbox);
+   this.hitBoxes.push(hbox);
 };
 /**
  * This method is called within the Engine update method. It's responsible for responding to user input, updating the Collider of the PlayerCharacter and the active HitBoxes.
  */
 PlayerCharacter.prototype.update = function()
 {
-    if (this.actionFrames == 0) {
+    if (this.inactionableFrames == 0) {
         this.resolveInput();
     }
     
@@ -264,12 +304,12 @@ PlayerCharacter.prototype.update = function()
         this.collider.getNode().material.color.setHex(0xaf00ff); // purple is blocking
     }
 
-    if (this.actionFrames > 0) {
-        this.actionFrames -= 1;
-        if (this.actionFrames == 0) {
+    if (this.inactionableFrames > 0) {
+        this.inactionableFrames -= 1;
+        if (this.inactionableFrames == 0) {
             this.comboCount = 0;
             if (this.characterState == 'standing' || this.characterState == 'jumping') {
-            	this.collider.getNode().material.color.setHex(0x0000ff);
+            	this.collider.getNode().material.color.setHex(this.bodyColor);
             }
         }
     }
@@ -279,20 +319,82 @@ PlayerCharacter.prototype.update = function()
     
     // update keybuffer times
     this.updateKeyBuffers();
+
+    return this.healthBar.getHealth();
 };
 /**
  * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
  */
 PlayerCharacter.prototype.resolveInput = function()
 {
-    if (this.press('lightpunch')) {
-        this.createAttack(this.attacks['lightpunch']);
-        return;
+    if(this.keyStates['block'] == false)
+    {
+        if (this.press('lightpunch')) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightpunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightpunch']);
+            };
+            return;
+        }
+
+         if (this.press('heavypunch')){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavypunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavypunch']);
+            }
+            return;
+        }
+
+        if (this.press('lightkick')) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightkick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightkick']);
+            }
+            return;
+        }
+
+         if (this.press('heavykick')){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavykick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavykick']);
+            }
+            return;
+        }
+
+        if (this.press('grab')) {
+            this.createAttack(this.attacks['grab']);
+            return;
+        }
     }
 
-    if (this.press('grab')) {
-        this.createAttack(this.attacks['grab']);
-        return;
+    if (this.characterState != 'jumping') // ducking
+    {
+        if (this.keyStates['duck'] == true){
+            this.duck();
+            this.duckState = true;
+            this.movementEnd();
+        }
+
+        if (this.keyStates['duck'] == false && this.duckState == true){
+            this.standUp();
+            this.duckState = false;
+        }
     }
 
     if (this.keyStates['block'] == true) {
@@ -300,7 +402,7 @@ PlayerCharacter.prototype.resolveInput = function()
             if (this.characterState == 'standing') {
                 this.collider.setXVelocity(0);
             }
-            this.actionFrames = 30;
+            this.inactionableFrames = 10;
             this.characterState = 'initBlocking';
         } else {
             this.characterState  = 'blocking';
@@ -310,9 +412,9 @@ PlayerCharacter.prototype.resolveInput = function()
 
     if (this.keyStates['block'] == false && this.characterState  == 'blocking') {
     	// end blocking
-        this.actionFrames = 30;
+        this.inactionableFrames = 30;
 
-        this.collider.getNode().material.color.setHex (0x0000ff); // blue is standing
+        this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
         
         var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
         if (this.collider.getNode().position.y <= initialVerticalPosition) {
@@ -322,26 +424,35 @@ PlayerCharacter.prototype.resolveInput = function()
         }
         return;
     }
-    
-    if (this.press('heavypunch')){
-        this.createAttack(this.attacks['heavypunch']);
-        return;
-    }
 
     if (this.characterState  == 'standing') {
-        if (this.press('jump')) {
-            this.jump();
-            this.characterState  = 'jumping';
-        }
 
-        if (this.keyStates['left']) {
-            this.left();
-        } else if (this.keyStates['right']) {
-            this.right();
-        } else {
-            this.movementEnd();
-        }
+    	if(this.duckState == false){
+
+	        if (this.press('jump')) {
+	            this.jump();
+	            this.characterState  = 'jumping';
+	        }
+
+	        if (this.keyStates['left'] == true) {
+	            this.left();
+	        } else if (this.keyStates['right'] == true) {
+	            this.right();
+	        } else {
+	            this.movementEnd();
+	        }
+	    }
     }
+};
+
+PlayerCharacter.prototype.duck = function()
+{
+    this.collider.getNode().scale.y = .5;
+    this.collider.setRelativePosition(0, - this.collider.getHeight()/2, 0);
+};
+PlayerCharacter.prototype.standUp = function()
+{
+    this.collider.getNode().scale.y = 1;
 };
 /**
  * Changes the PlayerCharacter's Y velocity to display a jump action.
@@ -413,13 +524,23 @@ PlayerCharacter.prototype.deleteHitBox = function(hitbox)
  * @param  {Position} hitPosition The vector of the HitBox that triggered the collision.
  * @param  {String} attackType The form of attack (melee, projectile, or grab).
  */
-PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
+PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType, highOrLow)
 {
-    if (this.characterState == 'blocking' && attackType != 'grab') {
+    if (this.characterState == 'blocking' && attackType != 'grab' && ( (highOrLow == "any") || (highOrLow == "low" && this.duckState == true) || (highOrLow == "high" && this.duckState == false) ) ) {
         damage = Math.round(damage / 10);
     }
 
     this.collider.getNode().material.color.setHex(0xffff00); // collider turns yellow during hit stun
+    this.collider.setRotation(0, this.collider.getNode().rotation.y, 0);
+
+    for(var i = 0; i < this.hitBoxes.length; i++)
+    {
+        if(this.hitBoxes[i].getAttackType()!="projectile")
+        {
+            this.deleteHitBox(this.hitBoxes[i]);
+            i-=1;
+        }
+    }
 
     var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
     if (this.collider.getNode().position.y <= initialVerticalPosition) {
@@ -429,11 +550,11 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
         this.characterState = 'jumping';
     }
 
-    this.actionFrames = (damage - this.comboCount) * 2;
+    this.inactionableFrames = (damage - this.comboCount) * 2;
     
-    if (this.actionFrames < 1) {
+    if (this.inactionableFrames < 1) {
     	// minimum hit stun
-        this.actionFrames = 1;
+        this.inactionableFrames = 1;
     }
 
     this.comboCount += 1;
@@ -446,68 +567,4 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType)
 
     this.healthBar.takeDamage(damage);
     this.collider.bump(hitPosition);
-=======
-function PlayerCharacter()
-{
-	// Size
-	this.width;
-	this.height;
-	this.depth;
-	// Key codes
-	this.keyvalues;
-	// Root of type Object3D - http://threejs.org/docs/index.html#Reference/Core/Object3D
-	this.node;
-}
-
-// Initialisers
-
-PlayerCharacter.prototype.initEmpty = function()
-{
-	// Size
-	this.width = null;
-	this.height = null;
-	this.depth = null;
-	// Root
-	this.node = null;
-
-  return this;
-};
-
-PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
-{
-   this.initEmpty();
-
-   this.width = width;
-   this.height = height;
-   this.depth = depth;
-
-   // Starting shape
-   var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
-   var material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-   this.node = new THREE.Mesh(geometry, material);
-   
-   return this;
-};
-
-PlayerCharacter.prototype.setKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
-{
-	this.keyvalues['jump'] = jump;
-	this.keyvalues['crouch'] = crouch;
-	this.keyvalues['left'] = left;
-	this.keyvalues['right'] = right;
-	this.keyvalues['lightpunch'] = lightpunch;
-	this.keyvalues['heavypunch'] = heavypunch;
-	this.keyvalues['lightkick'] = lightkick;
-	this.keyvalues['heavykick'] = heavykick;
-	this.keyvalues['dash'] = dash;
-	this.keyvalues['block'] = block;
-	this.keyvalues['grab'] = grab;
-};
-
-// Getters
-
-PlayerCharacter.prototype.getNode = function()
-{
-   return this.node;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 };
