@@ -81,11 +81,6 @@ Arena.prototype.initWithEngine = function(engine)
 
 	this.rootObject = new THREE.Mesh(geometry, material);
 
-	var light = new THREE.PointLight(0xffffff, 3, 0, 0);
-	light.position.set(0, 500, 500);
-	
-	this.rootObject.add(light);
-
 	return this;
 };
 
@@ -107,8 +102,11 @@ Arena.prototype.getRootObject = function()
 */
 Arena.prototype.setKeyPress = function(keycode)
 {
-	this.player1.setKeyPress(keycode);
-	this.player2.setKeyPress(keycode);
+	if(this.player1!=null)
+	{
+		this.player1.setKeyPress(keycode);
+		this.player2.setKeyPress(keycode);
+	}
 };
 
 /**
@@ -118,8 +116,11 @@ Arena.prototype.setKeyPress = function(keycode)
 */
 Arena.prototype.setKeyRelease = function(keycode)
 {
-	this.player1.setKeyRelease(keycode);
-	this.player2.setKeyRelease(keycode);
+	if(this.player1!=null)
+	{
+		this.player1.setKeyRelease(keycode);
+		this.player2.setKeyRelease(keycode);
+	}
 };
 
 /** 
@@ -192,15 +193,14 @@ Arena.prototype.update = function()
 		this.player1 = null;
 		this.player2 = null;
 		gameEngine.setGameState("P2Win");
-		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 2 Wins"));
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 2 Wins","Fight"));
 	}
-
-	/** update player 2 character */
+	else /** update player 2 character */
 	if(this.player2.update() == 0)
 	{
 		this.player1 = null;
 		this.player2 = null;
 		gameEngine.setGameState("P1Win");
-		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 1 Wins"));
+		gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 1 Wins","Fight"));
 	}
 };

@@ -48,6 +48,8 @@ function PlayerCharacter()
 
     /** @property {Integer} comboCount The number of consecutive times this character has been hit while in the 'inactive' state. */
     this.comboCount;
+
+    this.bodyColor;
 }
 
 // Initialisers
@@ -74,6 +76,7 @@ PlayerCharacter.prototype.initEmpty = function()
     this.characterState = null;
     this.duckState = null;
     this.comboCount = null;
+    this.bodyColor = null;
 	return this;
 };
 /**
@@ -94,7 +97,15 @@ PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
 
     if (gameEngine.arena.player1 != null) {
     	this.collider.getNode().rotation.y = Math.PI;
+        this.bodyColor = 0x0f0f0f;
+        
     }
+    else
+    {
+        this.bodyColor = 0x0000ff;
+    }
+
+    this.collider.getNode().material.color.setHex(this.bodyColor);
 
     this.keyBufferTime = 2;
     this.characterState = 'standing';
@@ -298,7 +309,7 @@ PlayerCharacter.prototype.update = function()
         if (this.inactionableFrames == 0) {
             this.comboCount = 0;
             if (this.characterState == 'standing' || this.characterState == 'jumping') {
-            	this.collider.getNode().material.color.setHex(0x0000ff);
+            	this.collider.getNode().material.color.setHex(this.bodyColor);
             }
         }
     }
@@ -391,7 +402,7 @@ PlayerCharacter.prototype.resolveInput = function()
             if (this.characterState == 'standing') {
                 this.collider.setXVelocity(0);
             }
-            this.inactionableFrames = 30;
+            this.inactionableFrames = 10;
             this.characterState = 'initBlocking';
         } else {
             this.characterState  = 'blocking';
@@ -403,7 +414,7 @@ PlayerCharacter.prototype.resolveInput = function()
     	// end blocking
         this.inactionableFrames = 30;
 
-        this.collider.getNode().material.color.setHex (0x0000ff); // blue is standing
+        this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
         
         var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
         if (this.collider.getNode().position.y <= initialVerticalPosition) {
@@ -520,6 +531,16 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
     }
 
     this.collider.getNode().material.color.setHex(0xffff00); // collider turns yellow during hit stun
+    this.collider.setRotation(0, this.collider.getNode().rotation.y, 0);
+
+    for(var i = 0; i < this.hitBoxes.length; i++)
+    {
+        if(this.hitBoxes[i].getAttackType()!="projectile")
+        {
+            this.deleteHitBox(this.hitBoxes[i]);
+            i-=1;
+        }
+    }
 
     var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
     if (this.collider.getNode().position.y <= initialVerticalPosition) {

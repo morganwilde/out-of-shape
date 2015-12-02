@@ -116,6 +116,11 @@ HitBox.prototype.getCollider = function()
    return this.collider;
 };
 
+HitBox.prototype.getAttackType = function()
+{
+   return this.attackType;
+};
+
 HitBox.prototype.getOwner = function()
 {
    return this.owner;
@@ -161,7 +166,7 @@ HitBox.prototype.update = function()
         this.owner.getCollider().setXRotationSpeed(0);
         this.owner.getCollider().setYRotationSpeed(0);
         this.owner.getCollider().setZRotationSpeed(0);
-        this.owner.getCollider().setRotation(0, 0, 0);
+        this.owner.getCollider().setRotation(0, this.owner.getCollider().getNode().rotation.y, 0);
     }
 };
 

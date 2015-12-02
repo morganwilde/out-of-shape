@@ -20,10 +20,11 @@ Button.prototype.initWithDimensions = function(x, y, width, height, text, button
 	this.text.style.textAlign = "center";
 	this.text.style.width = width;
 	this.text.style.height = height;
-	this.text.style.backgroundColor = "blue";
-	this.text.style.top = toXYCoords(new THREE.Vector3(x,y,0)).y + 'px';
-	this.text.style.left = toXYCoords(new THREE.Vector3(x,y,0)).x + 'px';
+	//this.text.style.backgroundColor = "blue";
+	this.text.style.top = toXYCoords(new THREE.Vector3(x, y+24, 0)).y + 'px';
+	this.text.style.left = toXYCoords(new THREE.Vector3(x-text.length*10, y, 0)).x + 'px';
 	this.text.style.position = 'absolute';
+
 	document.body.appendChild(this.text);
 
 	var geometry = new THREE.PlaneGeometry(this.width, this.height);
@@ -69,6 +70,11 @@ Button.prototype.onClick = function()
 {
 	if(this.buttonType == "Fight")
 	{
+		if(gameEngine.arena!=null)
+		{
+			gameEngine.scene.remove(gameEngine.arena.getRootObject());
+			gameEngine.arena = null;
+		}
 		gameEngine.startFight();
 		gameEngine.deleteButton(this);
 	}

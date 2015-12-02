@@ -24,6 +24,8 @@ function Engine()
 
   this.mouse;
   this.buttonArray;
+
+  this.bgMusic;
 }
 
 // Initialisers
@@ -44,7 +46,8 @@ Engine.prototype.initEmpty = function()
   this.arena = null;
   this.gameState = null;
   this.mouse = null;
-  this.buttonArray = new Array();;
+  this.buttonArray = new Array();
+  this.bgMusic = null;
 
   return this;
 };
@@ -65,6 +68,11 @@ Engine.prototype.initWithCanvasSize = function(width, height)
 
   // Scene
   this.scene = new THREE.Scene();
+
+  var light = new THREE.PointLight(0xffffff, 3, 0, 0);
+  light.position.set(0, 500, 500);
+  
+  this.scene.add(light);
   
   // Camera
   this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
@@ -83,7 +91,11 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   
   this.gameState = "Intro";
 
-  this.mouse = new Mouse().init(this.camera, this);  
+  this.mouse = new Mouse().init(this.camera, this);
+
+  this.bgMusic = new Audio();
+  this.playMusic('IntroMusic.ogg');
+  this.bgMusic.addEventListener('ended', function() {this.play(); }, false);
   
   return this;
 };
@@ -102,6 +114,7 @@ Engine.prototype.startFight = function()
   this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
 
   this.gameState = "Fight";
+  this.playMusic('EpicMusic.ogg');
 };
 
 /**
@@ -129,8 +142,11 @@ Engine.prototype.render = function()
 Engine.prototype.keyDown = function(event)
 {
   event.preventDefault();
-  
-  this.arena.setKeyPress(event.which);
+
+  if(this.arena!=null)
+  {
+    this.arena.setKeyPress(event.which);
+  }
 };
 /**
  * Responds to keyUp events from the keyboard.
@@ -140,8 +156,10 @@ Engine.prototype.keyDown = function(event)
 Engine.prototype.keyUp = function(event)
 {
   event.preventDefault();
-  
-  this.arena.setKeyRelease(event.which);
+  if(this.arena!=null)
+  {
+    this.arena.setKeyRelease(event.which);
+  }
 };
 /**
  * Assigns an Arena object that will contain all the necessary visuals for the game.
@@ -184,4 +202,10 @@ Engine.prototype.deleteButton = function(button)
   var targetButton = this.buttonArray.indexOf(button);
 
   this.buttonArray.splice(targetButton, 1); // 1 is the number of instances to remove
+};
+
+Engine.prototype.playMusic = function(music)
+{
+  this.bgMusic.setAttribute('src', 'Music/'+music);
+  this.bgMusic.play();
 };

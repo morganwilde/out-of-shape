@@ -18,12 +18,13 @@ SuperStar.prototype.init = function(width, height, depth)
     // character body
     var geometry = new THREE.BoxGeometry(50, 50, 50);
     var material = new THREE.MeshPhongMaterial({
-        color: 0x0000ff,
+        color: this.bodyColor,
         wireframe: false,
         specular: 0x000000, 
         shininess: 0, 
         shading: THREE.FlatShading
     });
+
     var head = new THREE.Mesh(geometry, material);
     head.position.y = 75;
     head.position.x = 10;
