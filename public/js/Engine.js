@@ -101,11 +101,9 @@ Engine.prototype.initWithCanvasSize = function(width, height)
 };
 
 // Methods
-<<<<<<< HEAD
 /**
  * The frame render method, which is called every time the renderer needs a new frame.
  */
-=======
 
 Engine.prototype.startFight = function()
 {
