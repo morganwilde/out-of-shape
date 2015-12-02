@@ -93,6 +93,9 @@ Engine.prototype.initWithCanvasSize = function(width, height)
 
   this.mouse = new Mouse().init(this.camera, this);
 
+  var button = new Button().initWithDimensions(0, 700, 300, 300, "Fight!", "Fight", this);
+  this.addButton(button);
+
   this.bgMusic = new Audio();
   this.playMusic('IntroMusic.ogg');
   this.bgMusic.addEventListener('ended', function() {this.play(); }, false);
