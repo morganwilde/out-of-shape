@@ -7,17 +7,6 @@ function PlayerCharacter()
 {
     this.arena;
 
-    /** @property {object} keyValues A key-value stored for PlayerCharacter actions and their associated keyboard keys. */
-    this.keyValues;
-
-    /** @property {object} keyStates A key-value stored for character actions and a boolean indicating if they're currently active. Keeping track of a key state (up or down) is important when considering long key presses that exhaust the key buffer. */
-    this.keyStates;
-
-    /** @property {object} keyBuffers A place to store how many frames a certain key press is considered active. If a key's buffer has a value of zero, it is no longer considered in the being initially pressed, and is instead simply held or released depending on the respective keyState. */
-    this.keyBuffers;
-    /** @property {Integer} keyBufferTime The time limit ( frames ) that any key input is considered pressed, rather than held or released. Currently stored as 2. */
-    this.keyBufferTime;
-
     /** @property {Collider} collider Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or for any other object with an associated Collider. */
     this.collider;
     
@@ -66,10 +55,6 @@ function PlayerCharacter()
 PlayerCharacter.prototype.initEmpty = function()
 {
     this.arena = null;
-    this.keyValues = {};
-    this.keyStates = {};
-    this.keyBuffers = {};
-    this.keyBufferTime = null;
     this.collider = null;
     this.enemy;
     this.hitBoxes = new Array();
@@ -115,7 +100,6 @@ PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, d
 
     this.collider.getNode().material.color.setHex(this.bodyColor);
 
-    this.keyBufferTime = 2;
     this.characterState = 'standing';
     this.duckState = false;
     this.inactionableFrames = 0;
@@ -125,16 +109,7 @@ PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, d
 };
 
 // Getters
-/**
- * Answers whether a specific key is pressed.
- * 
- * @param  {Character} key A numeric code for the key pressed.
- * @return {Boolean} If the key is pressed.
- */
-PlayerCharacter.prototype.press = function(key)
-{
-    return this.keyBuffers[key] == this.keyBufferTime;
-};
+
 /**
  * Gives the current state.
  * 
@@ -355,6 +330,7 @@ PlayerCharacter.prototype.update = function()
             if (this.keyboard.press('jump'+this.playerNumber)) {
                 this.jump();
                 this.characterState  = 'jumping';
+                console.log("jump press");
             }
 
             if (this.keyboard.getKeyState('left'+this.playerNumber) == true) {

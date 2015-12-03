@@ -28,7 +28,7 @@ Keyboard.prototype.initEmpty = function()
   this.keyValues = {};
   this.keyStates = {};
   this.keyBuffers = {};
-  this.keyBufferTime = 10;
+  this.keyBufferTime = 2;
 
   return this;
 };
