@@ -377,7 +377,7 @@ Engine.prototype.startFight = function()
 
   // Add players
   var playerWidth = 10;
-  var playerHeight = 10;
+  var playerHeight = 18;
   var playerDepth = 10;
   this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena()));
   // this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
