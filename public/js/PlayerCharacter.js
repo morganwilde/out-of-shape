@@ -5,17 +5,6 @@
  */
 function PlayerCharacter()
 {
-    /** @property {object} keyValues A key-value stored for PlayerCharacter actions and their associated keyboard keys. */
-    this.keyValues;
-
-    /** @property {object} keyStates A key-value stored for character actions and a boolean indicating if they're currently active. Keeping track of a key state (up or down) is important when considering long key presses that exhaust the key buffer. */
-    this.keyStates;
-
-    /** @property {object} keyBuffers A place to store how many frames a certain key press is considered active. If a key's buffer has a value of zero, it is no longer considered in the being initially pressed, and is instead simply held or released depending on the respective keyState. */
-    this.keyBuffers;
-    /** @property {Integer} keyBufferTime The time limit ( frames ) that any key input is considered pressed, rather than held or released. Currently stored as 2. */
-    this.keyBufferTime;
-
     /** @property {Collider} collider Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or for any other object with an associated Collider. */
     this.collider;
     
@@ -50,6 +39,9 @@ function PlayerCharacter()
     this.comboCount;
 
     this.bodyColor;
+
+    this.playerNumber;
+    this.keyboard;
 }
 
 // Initialisers
@@ -77,6 +69,8 @@ PlayerCharacter.prototype.initEmpty = function()
     this.duckState = null;
     this.comboCount = null;
     this.bodyColor = null;
+    this.playerNumber = null;
+    this.keyboard = null;
 	return this;
 };
 /**
@@ -96,12 +90,14 @@ PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
     this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
 
     if (gameEngine.arena.player1 != null) {
+        this.playerNumber = 2;
     	this.collider.getNode().rotation.y = Math.PI;
         this.bodyColor = 0x0f0f0f;
         
     }
     else
     {
+        this.playerNumber = 1;
         this.bodyColor = 0x0000ff;
     }
 
@@ -112,6 +108,7 @@ PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
     this.duckState = false;
     this.inactionableFrames = 0;
     this.comboCount = 0;
+    this.keyboard = gameEngine.keyboard;
 
     return this;
 };
@@ -166,89 +163,7 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
     this.enemy = enemy;
     this.collider.setEnemy(enemy);
 };
-/**
- * Associates keyboard keys with specific PlayerCharacter actions.
- * 
- * @param {Character} jump Numerical key code for the Jump command.
- * @param {Character} duck Numerical key code for the duck command.
- * @param {Character} left Numerical key code for the Left command.
- * @param {Character} right Numerical key code for the Right command.
- * @param {Character} lightpunch Numerical key code for the Lightpunch command.
- * @param {Character} heavypunch Numerical key code for the Heavypunch command.
- * @param {Character} lightkick Numerical key code for the Lightkick command.
- * @param {Character} heavykick Numerical key code for the Heavykick command.
- * @param {Character} dash Numerical key code for the Dash command.
- * @param {Character} block Numerical key code for the Block command.
- * @param {Character} grab Numerical key code for the Grab command.
- */
-PlayerCharacter.prototype.setKeys = function(jump, duck, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
-{
-    this.keyValues['jump'] = jump;
-    this.keyValues['duck'] = duck;
-    this.keyValues['left'] = left;
-    this.keyValues['right'] = right;
-    this.keyValues['lightpunch'] = lightpunch;
-    this.keyValues['heavypunch'] = heavypunch;
-    this.keyValues['lightkick'] = lightkick;
-    this.keyValues['heavykick'] = heavykick;
-    this.keyValues['dash'] = dash;
-    this.keyValues['block'] = block;
-    this.keyValues['grab'] = grab;
-    
-    this.keyStates['jump'] = false;
-    this.keyStates['duck'] = false;
-    this.keyStates['left'] = false;
-    this.keyStates['right'] = false;
-    this.keyStates['lightpunch'] = false;
-    this.keyStates['heavypunch'] = false;
-    this.keyStates['lightkick'] = false;
-    this.keyStates['heavykick'] = false;
-    this.keyStates['dash'] = false;
-    this.keyStates['block'] = false;
-    this.keyStates['grab'] = false;
-    
-    this.keyBuffers['jump'] = 0;
-    this.keyBuffers['duck'] = 0;
-    this.keyBuffers['left'] = 0;
-    this.keyBuffers['right'] = 0;
-    this.keyBuffers['lightpunch'] = 0;
-    this.keyBuffers['heavypunch'] = 0;
-    this.keyBuffers['lightkick'] = 0;
-    this.keyBuffers['heavykick'] = 0;
-    this.keyBuffers['dash'] = 0;
-    this.keyBuffers['block'] = 0;
-    this.keyBuffers['grab'] = 0;
-};
-/**
- * Changes the state of a specific key to an active state.
- * 
- * @param {Character} keycode Numerical key code.
- */
-PlayerCharacter.prototype.setKeyPress = function(keycode)
-{
-    for (var i in this.keyValues) {
-        if (keycode == this.keyValues[i]) {
-            if (this.keyBuffers[i] == 0 && this.keyStates[i] == false) {
-            	// on initial press
-                this.keyBuffers[i] = this.keyBufferTime;
-            }
-            this.keyStates[i] = true;
-        }
-    }
-};
-/**
- * Changes the state of a specific key to an inactive state.
- * 
- * @param {Character} keycode Numerical key code.
- */
-PlayerCharacter.prototype.setKeyRelease = function(keycode)
-{
-    for (var i in this.keyValues) {
-        if (keycode == this.keyValues[i]) {
-            this.keyStates[i] = false;
-        }
-    }
-};
+
 /**
  * Associates a HealthBar object with this PlayerCharacter.
  * 
@@ -316,9 +231,6 @@ PlayerCharacter.prototype.update = function()
 
     // update all hitboxes beloning to this character
     this.updateHitBoxes();
-    
-    // update keybuffer times
-    this.updateKeyBuffers();
 
     return this.healthBar.getHealth();
 };
@@ -327,9 +239,9 @@ PlayerCharacter.prototype.update = function()
  */
 PlayerCharacter.prototype.resolveInput = function()
 {
-    if(this.keyStates['block'] == false)
+    if(this.keyboard.getKeyState('block'+this.playerNumber) == false)
     {
-        if (this.press('lightpunch')) {
+        if (this.keyboard.press('lightpunch'+this.playerNumber)) {
             if(this.duckState == true)
             {
                this.createAttack(this.attacks['lowlightpunch']);
@@ -341,7 +253,7 @@ PlayerCharacter.prototype.resolveInput = function()
             return;
         }
 
-         if (this.press('heavypunch')){
+         if (this.keyboard.press('heavypunch'+this.playerNumber)){
             if(this.duckState == true)
             {
                this.createAttack(this.attacks['lowheavypunch']);
@@ -353,7 +265,7 @@ PlayerCharacter.prototype.resolveInput = function()
             return;
         }
 
-        if (this.press('lightkick')) {
+        if (this.keyboard.press('lightkick'+this.playerNumber)) {
             if(this.duckState == true)
             {
                this.createAttack(this.attacks['lowlightkick']);
@@ -365,7 +277,7 @@ PlayerCharacter.prototype.resolveInput = function()
             return;
         }
 
-         if (this.press('heavykick')){
+         if (this.keyboard.press('heavykick'+this.playerNumber)){
             if(this.duckState == true)
             {
                this.createAttack(this.attacks['lowheavykick']);
@@ -377,7 +289,7 @@ PlayerCharacter.prototype.resolveInput = function()
             return;
         }
 
-        if (this.press('grab')) {
+        if (this.keyboard.press('grab'+this.playerNumber)) {
             this.createAttack(this.attacks['grab']);
             return;
         }
@@ -385,19 +297,19 @@ PlayerCharacter.prototype.resolveInput = function()
 
     if (this.characterState != 'jumping') // ducking
     {
-        if (this.keyStates['duck'] == true){
+        if (this.keyboard.getKeyState('duck'+this.playerNumber) == true){
             this.duck();
             this.duckState = true;
             this.movementEnd();
         }
 
-        if (this.keyStates['duck'] == false && this.duckState == true){
+        if (this.keyboard.getKeyState('duck'+this.playerNumber) == false && this.duckState == true){
             this.standUp();
             this.duckState = false;
         }
     }
 
-    if (this.keyStates['block'] == true) {
+    if (this.keyboard.getKeyState('block'+this.playerNumber) == true) {
         if (this.characterState == 'standing' || this.characterState == 'jumping') {
             if (this.characterState == 'standing') {
                 this.collider.setXVelocity(0);
@@ -410,7 +322,7 @@ PlayerCharacter.prototype.resolveInput = function()
         return;
     }
 
-    if (this.keyStates['block'] == false && this.characterState  == 'blocking') {
+    if (this.keyboard.getKeyState('block'+this.playerNumber) == false && this.characterState  == 'blocking') {
     	// end blocking
         this.inactionableFrames = 30;
 
@@ -429,14 +341,14 @@ PlayerCharacter.prototype.resolveInput = function()
 
     	if(this.duckState == false){
 
-	        if (this.press('jump')) {
+	        if (this.keyboard.press('jump'+this.playerNumber)) {
 	            this.jump();
 	            this.characterState  = 'jumping';
 	        }
 
-	        if (this.keyStates['left'] == true) {
+	        if (this.keyboard.getKeyState('left'+this.playerNumber) == true) {
 	            this.left();
-	        } else if (this.keyStates['right'] == true) {
+	        } else if (this.keyboard.getKeyState('right'+this.playerNumber) == true) {
 	            this.right();
 	        } else {
 	            this.movementEnd();
@@ -467,7 +379,7 @@ PlayerCharacter.prototype.jump = function()
 PlayerCharacter.prototype.left = function()
 {
     this.collider.getNode().rotation.y = Math.PI;
-    this.collider.setXVelocity(this.keyStates['dash'] ? -this.dashSpeed : -this.walkSpeed);
+    this.collider.setXVelocity(this.keyboard.getKeyState('dash'+this.playerNumber) ? -this.dashSpeed : -this.walkSpeed);
 };
 /**
  * Rotates the PlayerCharacter and changes it's X velocity to display right movement.
@@ -475,7 +387,7 @@ PlayerCharacter.prototype.left = function()
 PlayerCharacter.prototype.right = function()
 {
     this.collider.getNode().rotation.y = 0;
-    this.collider.setXVelocity(this.keyStates['dash'] ? this.dashSpeed : this.walkSpeed);
+    this.collider.setXVelocity(this.keyboard.getKeyState('dash'+this.playerNumber) ? this.dashSpeed : this.walkSpeed);
 };
 /**
  * Resets X velocity to stop all lateral movement.
@@ -484,17 +396,7 @@ PlayerCharacter.prototype.movementEnd = function()
 {
     this.collider.setXVelocity(0);
 };
-/**
- * Iterates over all key buffers and reduces their count if there's any commands left in the buffer.
- */
-PlayerCharacter.prototype.updateKeyBuffers = function()
-{
-    for (var i in this.keyBuffers) {
-        if (this.keyBuffers[i] > 0) {
-            this.keyBuffers[i] -= 1;
-        }
-    }
-};
+
 /**
  * Iterates over all active HitBoxes and calls their update() method.
  */

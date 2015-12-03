@@ -95,34 +95,6 @@ Arena.prototype.getRootObject = function()
 	return this.rootObject;
 };
 
-/**
-* Sets the state of keys when they are pressed.
-* 
-* @param {Integer} keycode - Key to be checked.
-*/
-Arena.prototype.setKeyPress = function(keycode)
-{
-	if(this.player1!=null)
-	{
-		this.player1.setKeyPress(keycode);
-		this.player2.setKeyPress(keycode);
-	}
-};
-
-/**
-* Sets the state of keys when they are released.
-* 
-* @param {Integer} keycode - Key to be checked.
-*/
-Arena.prototype.setKeyRelease = function(keycode)
-{
-	if(this.player1!=null)
-	{
-		this.player1.setKeyRelease(keycode);
-		this.player2.setKeyRelease(keycode);
-	}
-};
-
 /** 
 * Take a PlayerCharacter instance and assign it to either player1 or player2, then adjust that PlayerCharacter's position appropriately.
 * A Healthbar is also added and assigned to the player.

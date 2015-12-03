@@ -26,6 +26,7 @@ function Engine()
   this.buttonArray;
 
   this.bgMusic;
+  this.keyboard;
 }
 
 // Initialisers
@@ -48,6 +49,7 @@ Engine.prototype.initEmpty = function()
   this.mouse = null;
   this.buttonArray = new Array();
   this.bgMusic = null;
+  this.Keyboard = null;
 
   return this;
 };
@@ -84,10 +86,6 @@ Engine.prototype.initWithCanvasSize = function(width, height)
   this.renderer.setClearColor(0xffffff);
   this.renderer.setSize(this.width, this.height);
   document.body.appendChild(this.renderer.domElement);
-    
-  // User actions
-  window.addEventListener('keydown', function(event){this.keyDown(event)}.bind(this), false);
-  window.addEventListener('keyup', function(event){this.keyUp(event)}.bind(this), false);
   
   this.gameState = "Intro";
 
@@ -112,11 +110,14 @@ Engine.prototype.startFight = function()
   this.arena = new Arena().initWithEngine(this);
   this.scene.add(this.arena.getRootObject());
 
+  this.keyboard = new Keyboard().initEmpty();
   this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
-  this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
+
+  this.keyboard.setKeys(this.arena.player1.playerNumber, 38, 40, 37, 39, "P".charCodeAt(0),  "J".charCodeAt(0),  "O".charCodeAt(0),  "U".charCodeAt(0),  "I".charCodeAt(0),  "L".charCodeAt(0),  "K".charCodeAt(0));
+  //this.arena.player1.setKeys(38, 40, 37, 39, "P".charCodeAt(0),  "J".charCodeAt(0),  "O".charCodeAt(0),  "U".charCodeAt(0),  "I".charCodeAt(0),  "L".charCodeAt(0),  "K".charCodeAt(0));
 
   this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
-  this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
+  this.keyboard.setKeys(this.arena.player2.playerNumber, "W".charCodeAt(0),  "S".charCodeAt(0), "A".charCodeAt(0),  "D".charCodeAt(0),  "E".charCodeAt(0),  "R".charCodeAt(0),  "F".charCodeAt(0),  "G".charCodeAt(0),  "T".charCodeAt(0),  "C".charCodeAt(0),  "V".charCodeAt(0));
 
   this.gameState = "Fight";
   this.playMusic('EpicMusic.ogg');
@@ -136,36 +137,11 @@ Engine.prototype.render = function()
   if(this.gameState == "Fight")
   {
     this.arena.update();
+    this.keyboard.updateKeyBuffers();
   }
     
 };
-/**
- * Responds to keyDown events from the keyboard.
- * 
- * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
- */
-Engine.prototype.keyDown = function(event)
-{
-  event.preventDefault();
 
-  if(this.arena!=null)
-  {
-    this.arena.setKeyPress(event.which);
-  }
-};
-/**
- * Responds to keyUp events from the keyboard.
- * 
- * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
- */
-Engine.prototype.keyUp = function(event)
-{
-  event.preventDefault();
-  if(this.arena!=null)
-  {
-    this.arena.setKeyRelease(event.which);
-  }
-};
 /**
  * Assigns an Arena object that will contain all the necessary visuals for the game.
  * 
