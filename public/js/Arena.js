@@ -102,11 +102,8 @@ Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transp
    } else {
       var boxMaterial = new THREE.MeshPhongMaterial({
          color: color, 
-         specular: color, 
-         shininess: 0, 
          morphTargets: true, 
-         vertexColors: THREE.FaceColors, 
-         shading: THREE.FlatShading,
+         vertexColors: THREE.FaceColors,
          transparent: true,
          opacity: 0.5
       });
