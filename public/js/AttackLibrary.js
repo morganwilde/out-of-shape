@@ -7,7 +7,7 @@ StarStorm.prototype.constructor = StarStorm;
 
 StarStorm.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(50, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(10, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(30);
 
@@ -18,7 +18,7 @@ StarStorm.prototype.init = function(owner, enemy)
 	this.attackType = "melee";
 	
 	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
-	var ystart = 50;
+	var ystart = this.collider.position.y;
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
@@ -38,9 +38,9 @@ function StarBlast()
 StarBlast.prototype = Object.create(HitBox.prototype);
 StarBlast.prototype.constructor = StarBlast;
 
-StarBlast.prototype.init = function(owner, enemy)
+StarBlast.prototype.init = function(owner, enemy, arena)
 {
-	this.initWithDimensionsAndPlayers(75, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(15, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(35);
 
@@ -54,7 +54,7 @@ StarBlast.prototype.init = function(owner, enemy)
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
-	gameEngine.arena.getRootObject().add(this.collider.getNode());
+	arena.getObject3D().add(this.collider.getNode());
 
 	this.attackType = "projectile";
 
@@ -78,7 +78,7 @@ Grab.prototype.constructor = Grab;
 
 Grab.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(50, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(10, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(95);
 
@@ -111,7 +111,7 @@ ShootingStar.prototype.constructor = ShootingStar;
 
 ShootingStar.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(70, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(14, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(35);
 
@@ -146,7 +146,7 @@ Jab.prototype.constructor = Jab;
 
 Jab.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(50, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(10, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(30);
 
@@ -182,7 +182,7 @@ UpperCut.prototype.constructor = UpperCut;
 
 UpperCut.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(50, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(10, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(40);
 
@@ -219,7 +219,7 @@ SweepKick.prototype.constructor = SweepKick;
 
 SweepKick.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(100, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(20, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(40);
 
@@ -256,7 +256,7 @@ HeadKick.prototype.constructor = HeadKick;
 
 HeadKick.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(100, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(20, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(40);
 
@@ -294,7 +294,7 @@ HayMaker.prototype.constructor = HayMaker;
 
 HayMaker.prototype.init = function(owner, enemy)
 {
-	this.initWithDimensionsAndPlayers(100, 50, 50, owner, enemy);
+	this.initWithDimensionsAndPlayers(20, 10, 10, owner, enemy);
 
 	owner.setInactionableFrames(50);
 
