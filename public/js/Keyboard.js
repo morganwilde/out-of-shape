@@ -1,7 +1,5 @@
 function Keyboard()
-{
-<<<<<<< HEAD
-	
+{	
   this.keyValues;
 
   /** @property {object} keyStates A key-value stored for character actions and a boolean indicating if they're currently active. Keeping track of a key state (up or down) is important when considering long key presses that exhaust the key buffer. */
@@ -13,112 +11,87 @@ function Keyboard()
   this.keyBufferTime;
 
 // User actions
-  window.addEventListener('keydown', this.setKeyPress, false);
-  window.addEventListener('keyup', this.setKeyRelease, false);
+  window.addEventListener( 'keydown', function(event){this.setKeyPress(event)}.bind(this), false );
+  window.addEventListener( 'keyup', function(event){this.setKeyRelease(event)}.bind(this), false );
 
-=======
+
 	// Frame window for button Press
 	this.buffertime;
 	
 	this.keyvalue;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
 }
 
 // Initialisers
 
 Keyboard.prototype.initEmpty = function()
 {
-<<<<<<< HEAD
   this.keyValues = {};
   this.keyStates = {};
   this.keyBuffers = {};
-  this.keyBufferTime = null;
-
-    
-=======
-    // Size
-    this.width = null;
-    this.height = null;
-    this.depth = null;
-    // Root
-    this.node = null;
-
-    //Movement properties
-    this.walkspeed = 4; //speed of horizontal movement
-    this.runspeed = 10; // additional horizontal speed when the run button is held
-    this.jumpspeed = 30;
-    this.yvelocity = 0;
-    this.gravity = 2;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
+  this.keyBufferTime = 10;
 
   return this;
 };
 
-<<<<<<< HEAD
-Keyboard.prototype.initWithKeys = function(jump, crouch, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, grab, block)
+Keyboard.prototype.setKeys = function(player, jump, duck, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, grab, block)
 {
-  this.initEmpty();
+  player.keyboard = this;
 
-  this.keyValues['jump'] = jump;
-  this.keyValues['crouch'] = crouch;
-  this.keyValues['left'] = left;
-  this.keyValues['right'] = right;
-  this.keyValues['lightpunch'] = lightpunch;
-  this.keyValues['heavypunch'] = heavypunch;
-  this.keyValues['lightkick'] = lightkick;
-  this.keyValues['heavykick'] = heavykick;
-  this.keyValues['dash'] = dash;
-  this.keyValues['block'] = block;
-  this.keyValues['grab'] = grab;
+  var playerNumber = player.playerNumber;
+  this.keyValues['jump'+playerNumber] = jump;
+  this.keyValues['duck'+playerNumber] = duck;
+  this.keyValues['left'+playerNumber] = left;
+  this.keyValues['right'+playerNumber] = right;
+  this.keyValues['lightpunch'+playerNumber] = lightpunch;
+  this.keyValues['heavypunch'+playerNumber] = heavypunch;
+  this.keyValues['lightkick'+playerNumber] = lightkick;
+  this.keyValues['heavykick'+playerNumber] = heavykick;
+  this.keyValues['dash'+playerNumber] = dash;
+  this.keyValues['block'+playerNumber] = block;
+  this.keyValues['grab'+playerNumber] = grab;
 
-  this.keyStates['jump'] = false;
-  this.keyStates['crouch'] = false;
-  this.keyStates['left'] = false;
-  this.keyStates['right'] = false;
-  this.keyStates['lightpunch'] = false;
-  this.keyStates['heavypunch'] = false;
-  this.keyStates['lightkick'] = false;
-  this.keyStates['heavykick'] = false;
-  this.keyStates['dash'] = false;
-  this.keyStates['block'] = false;
-  this.keyStates['grab'] = false;
+  this.keyStates['jump'+playerNumber] = false;
+  this.keyStates['duck'+playerNumber] = false;
+  this.keyStates['left'+playerNumber] = false;
+  this.keyStates['right'+playerNumber] = false;
+  this.keyStates['lightpunch'+playerNumber] = false;
+  this.keyStates['heavypunch'+playerNumber] = false;
+  this.keyStates['lightkick'+playerNumber] = false;
+  this.keyStates['heavykick'+playerNumber] = false;
+  this.keyStates['dash'+playerNumber] = false;
+  this.keyStates['block'+playerNumber] = false;
+  this.keyStates['grab'+playerNumber] = false;
 
-  this.keyBuffers['jump'] = 0;
-  this.keyBuffers['crouch'] = 0;
-  this.keyBuffers['left'] = 0;
-  this.keyBuffers['right'] = 0;
-  this.keyBuffers['lightpunch'] = 0;
-  this.keyBuffers['heavypunch'] = 0;
-  this.keyBuffers['lightkick'] = 0;
-  this.keyBuffers['heavykick'] = 0;
-  this.keyBuffers['dash'] = 0;
-  this.keyBuffers['block'] = 0;
-  this.keyBuffers['grab'] = 0;
+  this.keyBuffers['jump'+playerNumber] = 0;
+  this.keyBuffers['duck'+playerNumber] = 0;
+  this.keyBuffers['left'+playerNumber] = 0;
+  this.keyBuffers['right'+playerNumber] = 0;
+  this.keyBuffers['lightpunch'+playerNumber] = 0;
+  this.keyBuffers['heavypunch'+playerNumber] = 0;
+  this.keyBuffers['lightkick'+playerNumber] = 0;
+  this.keyBuffers['heavykick'+playerNumber] = 0;
+  this.keyBuffers['dash'+playerNumber] = 0;
+  this.keyBuffers['block'+playerNumber] = 0;
+  this.keyBuffers['grab'+playerNumber] = 0;
 
   return this;
-=======
-Keyboard.prototype.initWithKeys = function(width, height, depth)
-{
-   this.initEmpty();
-
-   this.width = width;
-   this.height = height;
-   this.depth = depth;
-
-   // Starting shape
-   var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
-   var material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-   this.node = new THREE.Mesh(geometry, material);
-   
-   return this;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
-};
+}
 
 // Getters
+Keyboard.prototype.getKeyState = function(keyIndex)
+{
+  return this.keyStates[keyIndex];
+};
 
-<<<<<<< HEAD
+Keyboard.prototype.getKeyBuffer = function(keyIndex)
+{
+  return this.keyBuffers[keyIndex];
+};
+
+// Methods
 Keyboard.prototype.updateKeyBuffers = function()
 {
+
     for (var i in this.keyBuffers) {
         if (this.keyBuffers[i] > 0) {
             this.keyBuffers[i] -= 1;
@@ -126,11 +99,12 @@ Keyboard.prototype.updateKeyBuffers = function()
     }
 };
 
+// Setters
 Keyboard.prototype.setKeyPress = function(event)
 {
-  event.preventDefault();
+  // event.preventDefault();
     for (var i in this.keyValues) {
-        if (event.keycode == this.keyValues[i]) {
+        if (event.keyCode == this.keyValues[i]) {
             if (this.keyBuffers[i] == 0 && this.keyStates[i] == false) {
               // on initial press
                 this.keyBuffers[i] = this.keyBufferTime;
@@ -146,15 +120,15 @@ Keyboard.prototype.setKeyPress = function(event)
  */
 Keyboard.prototype.setKeyRelease = function(event)
 {
-  event.preventDefault();
+  // event.preventDefault();
     for (var i in this.keyValues) {
-        if (event.keycode == this.keyValues[i]) {
+        if (event.keyCode == this.keyValues[i]) {
             this.keyStates[i] = false;
         }
     }
-=======
-PlayerCharacter.prototype.getNode = function()
+}
+
+Keyboard.prototype.press = function(keyIndex)
 {
-   return this.node;
->>>>>>> 4e800954da9d2af517f229ac4cd7b43dc59e20d3
+    return this.keyBuffers[keyIndex] == this.keyBufferTime;
 };

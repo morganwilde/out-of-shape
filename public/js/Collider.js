@@ -44,6 +44,8 @@ function Collider()
 
 	/** @property {boolean} isPlayer - The behavioural state of the Collider, either for a PlayerCharacter or a HitBox.*/
 	this.isPlayer;
+
+	this.arena;
 }
 
 // Initialisers
@@ -77,6 +79,7 @@ Collider.prototype.initEmpty = function()
 	
 	// Behaviour Sentinel
 	this.isPlayer = null;
+	this.arena = null;
 
 	return this;
 };
@@ -92,7 +95,7 @@ Collider.prototype.initEmpty = function()
  * 
  * @return {Collider} A Collider instance.
  */
-Collider.prototype.initWithSettings = function(width, height, depth, owner, isPlayer)
+Collider.prototype.initWithSettings = function(width, height, depth, owner, isPlayer, arena)
 {
 	this.initEmpty();
 
@@ -116,8 +119,7 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 
 	this.node = new THREE.Mesh(geometry, material);
 
-	if(this.isPlayer == false)
-	{
+	if (this.isPlayer == false) {
 		material.color.setHex(0x00afaf);
 
 		//prevent scale of player from affecting scale of hitboxes. Collision detection works fine based on internal scale, but not with inherited scaling.
@@ -125,6 +127,8 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 		this.node.scale.y = 1/this.owner.getOwner().getCollider().getNode().scale.y;
 		this.node.scale.z = 1/this.owner.getOwner().getCollider().getNode().scale.z;
 	}
+
+	this.arena = arena;
 
 	return this;
 };
@@ -350,21 +354,21 @@ Collider.prototype.enforcePlayerBounds = function()
 Collider.prototype.enforceLevelBounds = function()
 {
 	// right bound
-	if(this.node.position.x > gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2 * this.node.scale.x)
+	if(this.node.position.x > this.arena.getObject3D().geometry.parameters.width/2-this.width/2 * this.node.scale.x)
 	{
-		this.node.position.x = gameEngine.arena.getRootObject().geometry.parameters.width/2-this.width/2 * this.node.scale.x;
+		this.node.position.x = this.arena.getObject3D().geometry.parameters.width/2-this.width/2 * this.node.scale.x;
 	}
 
 	// left bound
-	if(this.node.position.x < -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2 * this.node.scale.x)
+	if(this.node.position.x < -this.arena.getObject3D().geometry.parameters.width/2+this.width/2 * this.node.scale.x)
 	{
-		this.node.position.x = -gameEngine.arena.getRootObject().geometry.parameters.width/2+this.width/2 * this.node.scale.x;
+		this.node.position.x = -this.arena.getObject3D().geometry.parameters.width/2+this.width/2 * this.node.scale.x;
 	}
 
 	// floor bounds falling
-	if(this.node.position.y <= gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2 * this.node.scale.y)
+	if(this.node.position.y <= this.arena.getObject3D().geometry.parameters.height/2+this.height/2 * this.node.scale.y)
 	{
-		this.node.position.y = gameEngine.arena.getRootObject().geometry.parameters.height/2+this.height/2 * this.node.scale.y;
+		this.node.position.y = this.arena.getObject3D().geometry.parameters.height/2+this.height/2 * this.node.scale.y;
 		
 		if(this.yVelocity < 0)
 		{

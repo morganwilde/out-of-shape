@@ -134,3 +134,10 @@ ConsoleDelegate.prototype.unrender = function()
 {
   this.consoleContainer.removeChild(this.consoleContainer.querySelector('.container-fluid'));
 };
+
+// Game
+
+ConsoleDelegate.prototype.startFight = function()
+{
+  this.engine.startFight();
+};

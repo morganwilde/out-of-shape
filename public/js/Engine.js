@@ -1,4 +1,5 @@
-function Engine() {
+function Engine()
+{
   // Canvas container
   this.canvasContainer;
   this.canvasContainerFrame;
@@ -14,16 +15,29 @@ function Engine() {
   this.arena;
   // Mode
   this.mode;
+  this.gameState;
   // Arena placeholder
   this.arenaPlaceholder;
+  // UI
+  this.engineOverlayElement;
+  this.fightButton;
+  this.keyboard;
+  // Animation
+  this.arenaLiftAnimation;
+  this.arenaRotationAnimation;
 }
 
 Engine.cameraFieldOfViewAngle = 45; // degrees
 // Positioning
 Engine.arenaPlaceholderPaddingHorizontal = 50; // px
 Engine.arenaPlaceholderPaddingBottom = 50; // px
+Engine.healthBarPlaceholderPaddingTop = 50; // px
+Engine.healthBarPlaceholderPaddingLeft = 50; // px
+Engine.healthBarPlaceholderHorizontalSpacing = 50; // px
 // Sizing
 Engine.arenaPlaceholderHeight = 50; // px
+Engine.healthBarPlaceholderWidthRelativeToArena = 0.5; // percent
+Engine.healthBarPlaceholderHeight = 50; // px
 // Relative sizing = Arena placeholder width/depth
 Engine.relativeSizingBase = 100; // 3D length
 Engine.relativeFarCameraDistance = 50; // number of times greater than Engine.relativeSizingBase
@@ -32,6 +46,9 @@ Engine.relativeHorizontalPlaneSize = 100; // number of times greater than Engine
 Engine.shadowCameraDistance = 3 * Engine.relativeSizingBase;
 Engine.shadowCameraLevelOfDetail = 10; // Higher is more detailed, 1 is the base value
 Engine.shadowDarness = 0.5; // 0 - completely transparent, 1 - completely opaque
+// User Interface
+Engine.userPromptFrameWidth = 200; // px
+Engine.userPromptFrameHeight = 100; // px
 
 // Initialisers
 
@@ -51,8 +68,16 @@ Engine.prototype.initEmpty = function()
   this.arena = null;
   // Mode
   this.mode = Engine.modeRegular;
+  this.gameState = null;
   // Arena placeholder
   this.arenaPlaceholder = null;
+  // UI
+  this.engineOverlayElement = null;
+  this.fightButton = null;
+  this.keyboard = null;
+  // Animation
+  this.arenaLiftAnimation = null;
+  this.arenaRotationAnimation = null;
 
   return this;
 };
@@ -102,18 +127,9 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
 
   var ground = new THREE.Mesh(groundGeo, groundMat);
   ground.rotation.x = -Math.PI/2; // 90 degrees
-  ground.position.y = -Engine.relativeSizingBase;
-  this.scene.add( ground );
-
-<<<<<<< HEAD
-  var button = new Button().initWithDimensions(0, 700, 300, 300, "Fight!", "Fight", this);
-  this.addButton(button);
-
-  this.bgMusic = new Audio();
-  this.playMusic('IntroMusic.ogg');
-  this.bgMusic.addEventListener('ended', function() {this.play(); }, false);
-=======
+  ground.position.y = this.arenaPlaceholder.position.y - Engine.relativeSizingBase * 0.05;
   ground.receiveShadow = true;
+  this.scene.add(ground);
 
   // Hemisphere Light
   this.hemisphereLight = new THREE.HemisphereLight(0x34495e, 0xffffff, 0.6);
@@ -121,13 +137,57 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
   this.scene.add(this.hemisphereLight);
 
   // Directional Light
-  this.directionalLight = this.createDirectionalLightWithRelativePosition(0, 2, 2.5);
+  this.directionalLight = this.createDirectionalLightWithRelativePosition(0, 5, -5);
   this.scene.add(this.directionalLight);
 
-  // Button
-  var button = new Button().initWithDimensions(0, 700, 300, 300, "Fight!", "Fight");
-  this.addButton(button);
->>>>>>> origin/master
+  // this.scene.add(this.createDirectionalLightWithRelativePosition(0, 3, -2));
+
+  // Game
+  this.gameState = "Intro";
+
+  // Health Bars
+  var arenaScreenWidth = this.canvasContainerFrame.width - 2 * Engine.arenaPlaceholderPaddingHorizontal;
+  var healtBarWidth = arenaScreenWidth * Engine.healthBarPlaceholderWidthRelativeToArena - Engine.healthBarPlaceholderHorizontalSpacing / 2;
+  var healthBarLeft = new UIHealthBar().initWithSizeAndPosition(
+    healtBarWidth,
+    Engine.healthBarPlaceholderHeight,
+    Engine.healthBarPlaceholderPaddingLeft,
+    Engine.healthBarPlaceholderPaddingTop,
+    'Bilbo',
+    1
+  );
+  var healthBarRight = new UIHealthBar().initWithSizeAndPosition(
+    healtBarWidth,
+    Engine.healthBarPlaceholderHeight,
+    Engine.healthBarPlaceholderPaddingLeft + healtBarWidth + Engine.healthBarPlaceholderHorizontalSpacing,
+    Engine.healthBarPlaceholderPaddingTop,
+    'Sauron',
+    0.5
+  );
+
+  this.canvasContainer.appendChild(healthBarLeft.getElement());
+  this.canvasContainer.appendChild(healthBarRight.getElement());
+
+  // User Interface for starting a fight
+  this.engineOverlayElement = new UIEngineOverlay().initWithSizeAndPosition(
+    this.canvasContainerFrame.width,
+    this.canvasContainerFrame.height,
+    0,
+    0
+  );
+  this.fightButton = new UIButton().initWithSizePositionAndText(
+    Engine.userPromptFrameWidth,
+    Engine.userPromptFrameHeight,
+    this.canvasContainerFrame.width/2 - Engine.userPromptFrameWidth/2,
+    this.canvasContainerFrame.height/2 - Engine.userPromptFrameHeight/2,
+    'Fight',
+    this.startFight.bind(this)
+  );
+
+  this.canvasContainer.appendChild(this.engineOverlayElement.getElement());
+  this.canvasContainer.appendChild(this.fightButton.getElement());
+
+  this.keyboard = new Keyboard().initEmpty();
   
   return this;
 };
@@ -189,11 +249,23 @@ Engine.prototype.render = function()
     if (window.consoleDelegate instanceof ConsoleDelegate) {
       window.consoleDelegate.debug();
     }
+    if (this.arenaRotationAnimation > 0) {
+      this.arenaRotationAnimation -= this.arenaRotationAnimationIncrement;
+      this.arenaLiftAnimation -= this.arenaLiftAnimationIncrement;
+      this.arena.getObject3D().position.y = this.arenaLiftAnimation;
+      this.arena.getObject3D().rotation.y = (this.arenaRotationAnimation / 180) * Math.PI;
+    }
     // Regular
     this.render();
   }.bind(this));
 
   this.renderer.render(this.scene, this.camera);
+
+  if (this.gameState == "Fight") {
+    this.arena.update();
+  }
+
+  
 };
 
 // Relative sizing
@@ -288,4 +360,51 @@ Engine.prototype.createArena = function()
 Engine.prototype.getArena = function()
 {
   return this.arena;
+};
+
+// Game
+
+Engine.prototype.startFight = function()
+{
+  // Destroy the UI
+  this.engineOverlayElement.destroy();
+  this.fightButton.destroy();
+
+  this.animateArenaIntoView();
+
+  // Add players
+  var playerWidth = 20;
+  var playerHeight = 25;
+  var playerDepth = 20;
+  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena()));
+  // this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
+
+  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena()));
+  // this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
+  
+  // Keyboard controls
+  this.keyboard.setKeys(this.arena.player1, 38, 40, 37, 39, "P".charCodeAt(0),  "J".charCodeAt(0),  "O".charCodeAt(0),  "U".charCodeAt(0),  "I".charCodeAt(0),  "L".charCodeAt(0),  "K".charCodeAt(0));
+  this.keyboard.setKeys(this.arena.player2, "W".charCodeAt(0),  "S".charCodeAt(0), "A".charCodeAt(0),  "D".charCodeAt(0),  "E".charCodeAt(0),  "R".charCodeAt(0),  "F".charCodeAt(0),  "G".charCodeAt(0),  "T".charCodeAt(0),  "C".charCodeAt(0),  "V".charCodeAt(0));
+
+  this.gameState = "Fight";
+};
+Engine.prototype.getGameState = function()
+{
+  return this.gameState;
+};
+
+Engine.prototype.setGameState = function(state)
+{
+  this.gameState = state;
+};
+
+// Animations
+
+Engine.prototype.animateArenaIntoView = function()
+{
+  this.arenaRotationAnimation = 180;
+  this.arenaLiftAnimation = Engine.relativeSizingBase;
+
+  this.arenaRotationAnimationIncrement = 3.5;
+  this.arenaLiftAnimationIncrement = this.arenaRotationAnimationIncrement * (this.arenaLiftAnimation - this.getArena().getObject3D().position.y) / this.arenaRotationAnimation;
 };

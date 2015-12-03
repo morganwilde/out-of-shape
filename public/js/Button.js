@@ -46,9 +46,6 @@ Button.prototype.initWithDimensions = function(x, y, width, height, text, button
 	this.node.position.y = y;
 
 	return this;
-
-	//http://stackoverflow.com/questions/15248872/dynamically-create-2d-text-in-three-js
-	
 };
 
 Button.prototype.toXYCoords = function  (pos)

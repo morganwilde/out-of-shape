@@ -8,7 +8,7 @@
     <!-- Console -->
     <link rel="stylesheet" type="text/css" href="stylesheets/console.css" />
     <!-- External libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+    <script src="js/three.min.js"></script>
     <script src="js/console/react.js"></script>
     <script src="js/console/react-dom.js"></script>
     <!-- Console -->
@@ -17,6 +17,11 @@
     <script src="js/console/ConsoleToggle.js"></script>
     <script src="js/console/ConsoleDelegate.js"></script>
     <!-- Game -->
+    <script src="js/UIEngineOverlay.js"></script>
+    <script src="js/UIButton.js"></script>
+    <script src="js/UIHealthBar.js"></script>
+    <script src="js/Keyboard.js"></script>
+
     <script src="js/Engine.js"></script>
     <script src="js/Arena.js"></script>
     <script src="js/PlayerCharacter.js"></script>
@@ -43,6 +48,7 @@
         var consoleDelegate = ConsoleDelegate.createWithContainerIdAndEngine('console-container', engine);
         consoleDelegate.setDebugTarget(engine.getArena());
         consoleDelegate.activate();
+        consoleDelegate.startFight();
       };
     </script>
     <div class="page">

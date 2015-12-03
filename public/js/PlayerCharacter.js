@@ -5,6 +5,8 @@
  */
 function PlayerCharacter()
 {
+    this.arena;
+
     /** @property {object} keyValues A key-value stored for PlayerCharacter actions and their associated keyboard keys. */
     this.keyValues;
 
@@ -50,6 +52,9 @@ function PlayerCharacter()
     this.comboCount;
 
     this.bodyColor;
+
+    this.playerNumber;
+    this.keyboard;
 }
 
 // Initialisers
@@ -60,6 +65,7 @@ function PlayerCharacter()
  */
 PlayerCharacter.prototype.initEmpty = function()
 {
+    this.arena = null;
     this.keyValues = {};
     this.keyStates = {};
     this.keyBuffers = {};
@@ -77,6 +83,8 @@ PlayerCharacter.prototype.initEmpty = function()
     this.duckState = null;
     this.comboCount = null;
     this.bodyColor = null;
+    this.playerNumber = null;
+    this.keyboard = null;
 	return this;
 };
 /**
@@ -88,21 +96,21 @@ PlayerCharacter.prototype.initEmpty = function()
  * @param  {Strings} Character currently there's only one Character class - 'SuperStar'.
  * @return {PlayerCharacter}
  */
-PlayerCharacter.prototype.initWithDimensions = function(width, height, depth)
+PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, depth, arena)
 {
 	// Something
     this.initEmpty();
 
-    this.collider = new Collider().initWithSettings(width, height, depth, this, true);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
+    this.arena = arena;
+    this.collider = new Collider().initWithSettings(width, height, depth, this, true, arena);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
 
-    if (gameEngine.arena.player1 != null) {
+    if (this.arena.player1 != null) {
     	this.collider.getNode().rotation.y = Math.PI;
-        this.bodyColor = 0x0f0f0f;
-        
-    }
-    else
-    {
-        this.bodyColor = 0x0000ff;
+        this.playerNumber = 2;
+        this.bodyColor = 0x2980b9;
+    } else {
+        this.playerNumber = 1;
+        this.bodyColor = 0x9b59b6;
     }
 
     this.collider.getNode().material.color.setHex(this.bodyColor);
@@ -166,89 +174,7 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
     this.enemy = enemy;
     this.collider.setEnemy(enemy);
 };
-/**
- * Associates keyboard keys with specific PlayerCharacter actions.
- * 
- * @param {Character} jump Numerical key code for the Jump command.
- * @param {Character} duck Numerical key code for the duck command.
- * @param {Character} left Numerical key code for the Left command.
- * @param {Character} right Numerical key code for the Right command.
- * @param {Character} lightpunch Numerical key code for the Lightpunch command.
- * @param {Character} heavypunch Numerical key code for the Heavypunch command.
- * @param {Character} lightkick Numerical key code for the Lightkick command.
- * @param {Character} heavykick Numerical key code for the Heavykick command.
- * @param {Character} dash Numerical key code for the Dash command.
- * @param {Character} block Numerical key code for the Block command.
- * @param {Character} grab Numerical key code for the Grab command.
- */
-PlayerCharacter.prototype.setKeys = function(jump, duck, left, right, lightpunch, heavypunch, lightkick, heavykick, dash, block, grab)
-{
-    this.keyValues['jump'] = jump;
-    this.keyValues['duck'] = duck;
-    this.keyValues['left'] = left;
-    this.keyValues['right'] = right;
-    this.keyValues['lightpunch'] = lightpunch;
-    this.keyValues['heavypunch'] = heavypunch;
-    this.keyValues['lightkick'] = lightkick;
-    this.keyValues['heavykick'] = heavykick;
-    this.keyValues['dash'] = dash;
-    this.keyValues['block'] = block;
-    this.keyValues['grab'] = grab;
-    
-    this.keyStates['jump'] = false;
-    this.keyStates['duck'] = false;
-    this.keyStates['left'] = false;
-    this.keyStates['right'] = false;
-    this.keyStates['lightpunch'] = false;
-    this.keyStates['heavypunch'] = false;
-    this.keyStates['lightkick'] = false;
-    this.keyStates['heavykick'] = false;
-    this.keyStates['dash'] = false;
-    this.keyStates['block'] = false;
-    this.keyStates['grab'] = false;
-    
-    this.keyBuffers['jump'] = 0;
-    this.keyBuffers['duck'] = 0;
-    this.keyBuffers['left'] = 0;
-    this.keyBuffers['right'] = 0;
-    this.keyBuffers['lightpunch'] = 0;
-    this.keyBuffers['heavypunch'] = 0;
-    this.keyBuffers['lightkick'] = 0;
-    this.keyBuffers['heavykick'] = 0;
-    this.keyBuffers['dash'] = 0;
-    this.keyBuffers['block'] = 0;
-    this.keyBuffers['grab'] = 0;
-};
-/**
- * Changes the state of a specific key to an active state.
- * 
- * @param {Character} keycode Numerical key code.
- */
-PlayerCharacter.prototype.setKeyPress = function(keycode)
-{
-    for (var i in this.keyValues) {
-        if (keycode == this.keyValues[i]) {
-            if (this.keyBuffers[i] == 0 && this.keyStates[i] == false) {
-            	// on initial press
-                this.keyBuffers[i] = this.keyBufferTime;
-            }
-            this.keyStates[i] = true;
-        }
-    }
-};
-/**
- * Changes the state of a specific key to an inactive state.
- * 
- * @param {Character} keycode Numerical key code.
- */
-PlayerCharacter.prototype.setKeyRelease = function(keycode)
-{
-    for (var i in this.keyValues) {
-        if (keycode == this.keyValues[i]) {
-            this.keyStates[i] = false;
-        }
-    }
-};
+
 /**
  * Associates a HealthBar object with this PlayerCharacter.
  * 
@@ -316,134 +242,131 @@ PlayerCharacter.prototype.update = function()
 
     // update all hitboxes beloning to this character
     this.updateHitBoxes();
-    
-    // update keybuffer times
-    this.updateKeyBuffers();
 
     return this.healthBar.getHealth();
 };
 /**
  * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
  */
-PlayerCharacter.prototype.resolveInput = function()
-{
-    if(this.keyStates['block'] == false)
-    {
-        if (this.press('lightpunch')) {
-            if(this.duckState == true)
-            {
-               this.createAttack(this.attacks['lowlightpunch']);
+ PlayerCharacter.prototype.resolveInput = function()
+ {
+     if(this.keyboard.getKeyState('block'+this.playerNumber) == false)
+     {
+         if (this.keyboard.press('lightpunch'+this.playerNumber)) {
+             if(this.duckState == true)
+             {
+                this.createAttack(this.attacks['lowlightpunch']);
+             }
+             else
+             {
+                 this.createAttack(this.attacks['lightpunch']);
+             };
+             return;
+         }
+
+          if (this.keyboard.press('heavypunch'+this.playerNumber)){
+             if(this.duckState == true)
+             {
+                this.createAttack(this.attacks['lowheavypunch']);
+             }
+             else
+             {
+                 this.createAttack(this.attacks['heavypunch']);
+             }
+             return;
+         }
+
+         if (this.keyboard.press('lightkick'+this.playerNumber)) {
+             if(this.duckState == true)
+             {
+                this.createAttack(this.attacks['lowlightkick']);
+             }
+             else
+             {
+                 this.createAttack(this.attacks['lightkick']);
+             }
+             return;
+         }
+
+          if (this.keyboard.press('heavykick'+this.playerNumber)){
+             if(this.duckState == true)
+             {
+                this.createAttack(this.attacks['lowheavykick']);
+             }
+             else
+             {
+                 this.createAttack(this.attacks['heavykick']);
+             }
+             return;
+         }
+
+         if (this.keyboard.press('grab'+this.playerNumber)) {
+             this.createAttack(this.attacks['grab']);
+             return;
+         }
+     }
+
+     if (this.characterState != 'jumping') // ducking
+     {
+         if (this.keyboard.getKeyState('duck'+this.playerNumber) == true){
+             this.duck();
+             this.duckState = true;
+             this.movementEnd();
+         }
+
+         if (this.keyboard.getKeyState('duck'+this.playerNumber) == false && this.duckState == true){
+             this.standUp();
+             this.duckState = false;
+         }
+     }
+
+     if (this.keyboard.getKeyState('block'+this.playerNumber) == true) {
+         if (this.characterState == 'standing' || this.characterState == 'jumping') {
+             if (this.characterState == 'standing') {
+                 this.collider.setXVelocity(0);
+             }
+             this.inactionableFrames = 10;
+             this.characterState = 'initBlocking';
+         } else {
+             this.characterState  = 'blocking';
+         }
+         return;
+     }
+
+     if (this.keyboard.getKeyState('block'+this.playerNumber) == false && this.characterState  == 'blocking') {
+        // end blocking
+         this.inactionableFrames = 30;
+
+         this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
+         
+         var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
+         if (this.collider.getNode().position.y <= initialVerticalPosition) {
+             this.characterState = 'standing';
+         } else {
+             this.characterState = 'jumping';
+         }
+         return;
+     }
+
+     if (this.characterState  == 'standing') {
+
+        if(this.duckState == false){
+
+            if (this.keyboard.press('jump'+this.playerNumber)) {
+                this.jump();
+                this.characterState  = 'jumping';
             }
-            else
-            {
-                this.createAttack(this.attacks['lightpunch']);
-            };
-            return;
-        }
 
-         if (this.press('heavypunch')){
-            if(this.duckState == true)
-            {
-               this.createAttack(this.attacks['lowheavypunch']);
+            if (this.keyboard.getKeyState('left'+this.playerNumber) == true) {
+                this.left();
+            } else if (this.keyboard.getKeyState('right'+this.playerNumber) == true) {
+                this.right();
+            } else {
+                this.movementEnd();
             }
-            else
-            {
-                this.createAttack(this.attacks['heavypunch']);
-            }
-            return;
         }
-
-        if (this.press('lightkick')) {
-            if(this.duckState == true)
-            {
-               this.createAttack(this.attacks['lowlightkick']);
-            }
-            else
-            {
-                this.createAttack(this.attacks['lightkick']);
-            }
-            return;
-        }
-
-         if (this.press('heavykick')){
-            if(this.duckState == true)
-            {
-               this.createAttack(this.attacks['lowheavykick']);
-            }
-            else
-            {
-                this.createAttack(this.attacks['heavykick']);
-            }
-            return;
-        }
-
-        if (this.press('grab')) {
-            this.createAttack(this.attacks['grab']);
-            return;
-        }
-    }
-
-    if (this.characterState != 'jumping') // ducking
-    {
-        if (this.keyStates['duck'] == true){
-            this.duck();
-            this.duckState = true;
-            this.movementEnd();
-        }
-
-        if (this.keyStates['duck'] == false && this.duckState == true){
-            this.standUp();
-            this.duckState = false;
-        }
-    }
-
-    if (this.keyStates['block'] == true) {
-        if (this.characterState == 'standing' || this.characterState == 'jumping') {
-            if (this.characterState == 'standing') {
-                this.collider.setXVelocity(0);
-            }
-            this.inactionableFrames = 10;
-            this.characterState = 'initBlocking';
-        } else {
-            this.characterState  = 'blocking';
-        }
-        return;
-    }
-
-    if (this.keyStates['block'] == false && this.characterState  == 'blocking') {
-    	// end blocking
-        this.inactionableFrames = 30;
-
-        this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
-        
-        var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
-        if (this.collider.getNode().position.y <= initialVerticalPosition) {
-            this.characterState = 'standing';
-        } else {
-            this.characterState = 'jumping';
-        }
-        return;
-    }
-
-    if (this.characterState  == 'standing') {
-
-    	if(this.duckState == false){
-
-	        if (this.press('jump')) {
-	            this.jump();
-	            this.characterState  = 'jumping';
-	        }
-
-	        if (this.keyStates['left'] == true) {
-	            this.left();
-	        } else if (this.keyStates['right'] == true) {
-	            this.right();
-	        } else {
-	            this.movementEnd();
-	        }
-	    }
-    }
-};
+     }
+ };
 
 PlayerCharacter.prototype.duck = function()
 {
@@ -467,7 +390,7 @@ PlayerCharacter.prototype.jump = function()
 PlayerCharacter.prototype.left = function()
 {
     this.collider.getNode().rotation.y = Math.PI;
-    this.collider.setXVelocity(this.keyStates['dash'] ? -this.dashSpeed : -this.walkSpeed);
+    this.collider.setXVelocity(this.keyboard.getKeyState('dash'+this.playerNumber) ? -this.dashSpeed : -this.walkSpeed);
 };
 /**
  * Rotates the PlayerCharacter and changes it's X velocity to display right movement.
@@ -475,7 +398,7 @@ PlayerCharacter.prototype.left = function()
 PlayerCharacter.prototype.right = function()
 {
     this.collider.getNode().rotation.y = 0;
-    this.collider.setXVelocity(this.keyStates['dash'] ? this.dashSpeed : this.walkSpeed);
+    this.collider.setXVelocity(this.keyboard.getKeyState('dash'+this.playerNumber) ? this.dashSpeed : this.walkSpeed);
 };
 /**
  * Resets X velocity to stop all lateral movement.
@@ -484,17 +407,7 @@ PlayerCharacter.prototype.movementEnd = function()
 {
     this.collider.setXVelocity(0);
 };
-/**
- * Iterates over all key buffers and reduces their count if there's any commands left in the buffer.
- */
-PlayerCharacter.prototype.updateKeyBuffers = function()
-{
-    for (var i in this.keyBuffers) {
-        if (this.keyBuffers[i] > 0) {
-            this.keyBuffers[i] -= 1;
-        }
-    }
-};
+
 /**
  * Iterates over all active HitBoxes and calls their update() method.
  */
@@ -512,7 +425,7 @@ PlayerCharacter.prototype.updateHitBoxes = function()
 PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 {
     this.collider.getNode().remove(hitbox.getCollider().getNode());
-    gameEngine.arena.getRootObject().remove(hitbox.getCollider().getNode());
+    this.arena.getObject3D().remove(hitbox.getCollider().getNode());
     
     var targetHitBox = this.hitBoxes.indexOf(hitbox);
     
@@ -542,7 +455,7 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
         }
     }
 
-    var initialVerticalPosition = gameEngine.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+    var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
     if (this.collider.getNode().position.y <= initialVerticalPosition) {
     	// cancel initBlocking and blocking states
         this.characterState = 'standing';
