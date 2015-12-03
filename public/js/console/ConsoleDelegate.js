@@ -57,6 +57,17 @@ ConsoleDelegate.createWithContainerIdAndEngine = function(consoleContainerId, ca
   return window.consoleDelegate = new ConsoleDelegate().initWithContainerIdAndEngine(consoleContainerId, canvasContainerId, engine);
 };
 
+// Getters
+
+ConsoleDelegate.prototype.getTarget = function()
+{
+  return this.target;
+};
+ConsoleDelegate.prototype.hasTarget = function()
+{
+  return this.getTarget() != null;
+};
+
 // Methods
 
 ConsoleDelegate.prototype.setMode = function(mode)

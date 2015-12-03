@@ -11,6 +11,12 @@ var Console = React.createClass({
       positionZ: window.consoleDelegate.positionZ,
     };
   },
+  // Event Listeners
+  targetHasChanged: function() {
+
+  },
+  // Component Lifecycle
+  
   // Helpers
   incrementFor: function(event, purpose) {
     if (purpose == 'rotation') {
@@ -51,8 +57,9 @@ var Console = React.createClass({
     var positionXElement = makeConsolePositionAttribute('Position X', this.state.positionX, -5000, 3000, this.onAttributeChange);
     var positionYElement = makeConsolePositionAttribute('Position Y', this.state.positionY, -5000, 3000, this.onAttributeChange);
     var positionZElement = makeConsolePositionAttribute('Position Z', this.state.positionZ, -5000, 3000, this.onAttributeChange);
-    return (
-      React.createElement('div', {className: 'container-fluid'},
+
+    if (window.consoleDelegate.hasTarget()) {
+      var consoleElement = React.createElement('div', null,
         React.createElement('h3', null, 'Rotation'),
         rotationXAngleElement,
         rotationYAngleElement,
@@ -65,6 +72,16 @@ var Console = React.createClass({
         React.createElement(ConsoleToggle, {attributeName: 'Vertex Collection', onAttributeChange: this.onAttributeChange}),
         React.createElement(ConsoleToggle, {attributeName: 'Vertex DOM', onAttributeChange: this.onAttributeChange}),
         React.createElement(ConsoleToggle, {attributeName: 'Bounding Box DOM', onAttributeChange: this.onAttributeChange})
+      );
+    } else {
+      var consoleElement = React.createElement('div', {style: {textAlign: 'center'}},
+        'No target selected'
+      )
+    }
+
+    return (
+      React.createElement('div', {className: 'container-fluid'},
+        consoleElement
       )
     );
   }

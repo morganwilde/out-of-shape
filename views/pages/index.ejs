@@ -43,15 +43,16 @@
         var engine = new Engine();
         // Console
         var consoleDelegate = ConsoleDelegate.createWithContainerIdAndEngine('console-container', 'canvas-container', engine);
-        consoleDelegate.hide();
+        // consoleDelegate.hide();
 
         engine.initWithCanvasContainerId('canvas-container');
         engine.createArena();
         engine.render();
         
-        consoleDelegate.setDebugTarget(engine.getArena());
-        consoleDelegate.activate();
+        // Console
         consoleDelegate.startFight();
+        consoleDelegate.activate();
+        consoleDelegate.setDebugTarget(engine.getArena());
       };
     </script>
     <div class="page">
