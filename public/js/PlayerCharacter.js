@@ -322,7 +322,7 @@ PlayerCharacter.prototype.update = function()
          }
          return;
      }
-
+console.log(this.keyboard.getKeyBuffer('jump'+this.playerNumber));
      if (this.characterState  == 'standing') {
 
         if(this.duckState == false){
@@ -330,7 +330,7 @@ PlayerCharacter.prototype.update = function()
             if (this.keyboard.press('jump'+this.playerNumber)) {
                 this.jump();
                 this.characterState  = 'jumping';
-                console.log("jump press");
+                
             }
 
             if (this.keyboard.getKeyState('left'+this.playerNumber) == true) {
