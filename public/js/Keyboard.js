@@ -91,7 +91,7 @@ Keyboard.prototype.getKeyBuffer = function(keyIndex)
 // Methods
 Keyboard.prototype.updateKeyBuffers = function()
 {
-
+console.log(this.keyStates['jump'+1]);
     for (var i in this.keyBuffers) {
         if (this.keyBuffers[i] > 0) {
             this.keyBuffers[i] -= 1;

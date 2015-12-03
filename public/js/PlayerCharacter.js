@@ -5,8 +5,6 @@
  */
 function PlayerCharacter()
 {
-    this.arena;
-
     /** @property {Collider} collider Colliders are physics bodies that allow for collision detection. We use it to determine when PlayerCharacters hit each other or for any other object with an associated Collider. */
     this.collider;
     
@@ -26,7 +24,7 @@ function PlayerCharacter()
     this.healthBar;
 
     // Character attributes
-   	/** @property {Integer} walkSpeed How much horizontal distance is covered in one frame while walking. Currently it's 4 units. */
+    /** @property {Integer} walkSpeed How much horizontal distance is covered in one frame while walking. Currently it's 4 units. */
     this.walkSpeed;
     /** @property {Integer} dashSpeed How much horizontal distance is covered in one frame while dashing. Currently it's 10 units. */
     this.dashSpeed;
@@ -44,6 +42,7 @@ function PlayerCharacter()
 
     this.playerNumber;
     this.keyboard;
+    this.arena;
 }
 
 // Initialisers
@@ -54,7 +53,10 @@ function PlayerCharacter()
  */
 PlayerCharacter.prototype.initEmpty = function()
 {
-    this.arena = null;
+    this.keyValues = {};
+    this.keyStates = {};
+    this.keyBuffers = {};
+    this.keyBufferTime = null;
     this.collider = null;
     this.enemy;
     this.hitBoxes = new Array();
@@ -70,7 +72,8 @@ PlayerCharacter.prototype.initEmpty = function()
     this.bodyColor = null;
     this.playerNumber = null;
     this.keyboard = null;
-	return this;
+    this.arena = null;
+    return this;
 };
 /**
  * Initializes a PlayerCharacter object with designated dimensions and a player character class.
@@ -83,23 +86,27 @@ PlayerCharacter.prototype.initEmpty = function()
  */
 PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, depth, arena)
 {
-	// Something
+    // Something
     this.initEmpty();
 
-    this.arena = arena;
     this.collider = new Collider().initWithSettings(width, height, depth, this, true, arena);  // the last parameter indicates whether the collider is for a PlayerCharacter or not
 
+    this.arena = arena;
     if (this.arena.player1 != null) {
-    	this.collider.getNode().rotation.y = Math.PI;
         this.playerNumber = 2;
-        this.bodyColor = 0x2980b9;
-    } else {
+        this.collider.getNode().rotation.y = Math.PI;
+        this.bodyColor = 0x0f0f0f;
+        
+    }
+    else
+    {
         this.playerNumber = 1;
-        this.bodyColor = 0x9b59b6;
+        this.bodyColor = 0x0000ff;
     }
 
     this.collider.getNode().material.color.setHex(this.bodyColor);
 
+    this.keyBufferTime = 2;
     this.characterState = 'standing';
     this.duckState = false;
     this.inactionableFrames = 0;
@@ -109,7 +116,16 @@ PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, d
 };
 
 // Getters
-
+/**
+ * Answers whether a specific key is pressed.
+ * 
+ * @param  {Character} key A numeric code for the key pressed.
+ * @return {Boolean} If the key is pressed.
+ */
+PlayerCharacter.prototype.press = function(key)
+{
+    return this.keyBuffers[key] == this.keyBufferTime;
+};
 /**
  * Gives the current state.
  * 
@@ -210,7 +226,7 @@ PlayerCharacter.prototype.update = function()
         if (this.inactionableFrames == 0) {
             this.comboCount = 0;
             if (this.characterState == 'standing' || this.characterState == 'jumping') {
-            	this.collider.getNode().material.color.setHex(this.bodyColor);
+                this.collider.getNode().material.color.setHex(this.bodyColor);
             }
         }
     }
@@ -223,114 +239,113 @@ PlayerCharacter.prototype.update = function()
 /**
  * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
  */
- PlayerCharacter.prototype.resolveInput = function()
- {
-     if(this.keyboard.getKeyState('block'+this.playerNumber) == false)
-     {
-         if (this.keyboard.press('lightpunch'+this.playerNumber)) {
-             if(this.duckState == true)
-             {
-                this.createAttack(this.attacks['lowlightpunch']);
-             }
-             else
-             {
-                 this.createAttack(this.attacks['lightpunch']);
-             };
-             return;
-         }
+PlayerCharacter.prototype.resolveInput = function()
+{
+    if(this.keyboard.getKeyState('block'+this.playerNumber) == false)
+    {
+        if (this.keyboard.press('lightpunch'+this.playerNumber)) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightpunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightpunch']);
+            };
+            return;
+        }
 
-          if (this.keyboard.press('heavypunch'+this.playerNumber)){
-             if(this.duckState == true)
-             {
-                this.createAttack(this.attacks['lowheavypunch']);
-             }
-             else
-             {
-                 this.createAttack(this.attacks['heavypunch']);
-             }
-             return;
-         }
+         if (this.keyboard.press('heavypunch'+this.playerNumber)){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavypunch']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavypunch']);
+            }
+            return;
+        }
 
-         if (this.keyboard.press('lightkick'+this.playerNumber)) {
-             if(this.duckState == true)
-             {
-                this.createAttack(this.attacks['lowlightkick']);
-             }
-             else
-             {
-                 this.createAttack(this.attacks['lightkick']);
-             }
-             return;
-         }
+        if (this.keyboard.press('lightkick'+this.playerNumber)) {
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowlightkick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['lightkick']);
+            }
+            return;
+        }
 
-          if (this.keyboard.press('heavykick'+this.playerNumber)){
-             if(this.duckState == true)
-             {
-                this.createAttack(this.attacks['lowheavykick']);
-             }
-             else
-             {
-                 this.createAttack(this.attacks['heavykick']);
-             }
-             return;
-         }
+         if (this.keyboard.press('heavykick'+this.playerNumber)){
+            if(this.duckState == true)
+            {
+               this.createAttack(this.attacks['lowheavykick']);
+            }
+            else
+            {
+                this.createAttack(this.attacks['heavykick']);
+            }
+            return;
+        }
 
-         if (this.keyboard.press('grab'+this.playerNumber)) {
-             this.createAttack(this.attacks['grab']);
-             return;
-         }
-     }
+        if (this.keyboard.press('grab'+this.playerNumber)) {
+            this.createAttack(this.attacks['grab']);
+            return;
+        }
+    }
 
-     if (this.characterState != 'jumping') // ducking
-     {
-         if (this.keyboard.getKeyState('duck'+this.playerNumber) == true){
-             this.duck();
-             this.duckState = true;
-             this.movementEnd();
-         }
+    if (this.characterState != 'jumping') // ducking
+    {
+        if (this.keyboard.getKeyState('duck'+this.playerNumber) == true){
+            this.duck();
+            this.duckState = true;
+            this.movementEnd();
+        }
 
-         if (this.keyboard.getKeyState('duck'+this.playerNumber) == false && this.duckState == true){
-             this.standUp();
-             this.duckState = false;
-         }
-     }
+        if (this.keyboard.getKeyState('duck'+this.playerNumber) == false && this.duckState == true){
+            this.standUp();
+            this.duckState = false;
+        }
+    }
 
-     if (this.keyboard.getKeyState('block'+this.playerNumber) == true) {
-         if (this.characterState == 'standing' || this.characterState == 'jumping') {
-             if (this.characterState == 'standing') {
-                 this.collider.setXVelocity(0);
-             }
-             this.inactionableFrames = 10;
-             this.characterState = 'initBlocking';
-         } else {
-             this.characterState  = 'blocking';
-         }
-         return;
-     }
+    if (this.keyboard.getKeyState('block'+this.playerNumber) == true) {
+        if (this.characterState == 'standing' || this.characterState == 'jumping') {
+            if (this.characterState == 'standing') {
+                this.collider.setXVelocity(0);
+            }
+            this.inactionableFrames = 10;
+            this.characterState = 'initBlocking';
+        } else {
+            this.characterState  = 'blocking';
+        }
+        return;
+    }
 
-     if (this.keyboard.getKeyState('block'+this.playerNumber) == false && this.characterState  == 'blocking') {
+    if (this.keyboard.getKeyState('block'+this.playerNumber) == false && this.characterState  == 'blocking') {
         // end blocking
-         this.inactionableFrames = 30;
+        this.inactionableFrames = 30;
 
-         this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
-         
-         var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
-         if (this.collider.getNode().position.y <= initialVerticalPosition) {
-             this.characterState = 'standing';
-         } else {
-             this.characterState = 'jumping';
-         }
-         return;
-     }
-console.log(this.keyboard.getKeyBuffer('jump'+this.playerNumber));
-     if (this.characterState  == 'standing') {
+        this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
+        
+        var initialVerticalPosition = this.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+        if (this.collider.getNode().position.y <= initialVerticalPosition) {
+            this.characterState = 'standing';
+        } else {
+            this.characterState = 'jumping';
+        }
+        return;
+    }
+
+    if (this.characterState  == 'standing') {
 
         if(this.duckState == false){
 
             if (this.keyboard.press('jump'+this.playerNumber)) {
                 this.jump();
                 this.characterState  = 'jumping';
-                
             }
 
             if (this.keyboard.getKeyState('left'+this.playerNumber) == true) {
@@ -341,8 +356,8 @@ console.log(this.keyboard.getKeyBuffer('jump'+this.playerNumber));
                 this.movementEnd();
             }
         }
-     }
- };
+    }
+};
 
 PlayerCharacter.prototype.duck = function()
 {
@@ -401,7 +416,7 @@ PlayerCharacter.prototype.updateHitBoxes = function()
 PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 {
     this.collider.getNode().remove(hitbox.getCollider().getNode());
-    this.arena.getObject3D().remove(hitbox.getCollider().getNode());
+    this.arena.getRootObject().remove(hitbox.getCollider().getNode());
     
     var targetHitBox = this.hitBoxes.indexOf(hitbox);
     
@@ -431,9 +446,9 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
         }
     }
 
-    var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
+    var initialVerticalPosition = this.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
     if (this.collider.getNode().position.y <= initialVerticalPosition) {
-    	// cancel initBlocking and blocking states
+        // cancel initBlocking and blocking states
         this.characterState = 'standing';
     } else {
         this.characterState = 'jumping';
@@ -442,7 +457,7 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
     this.inactionableFrames = (damage - this.comboCount) * 2;
     
     if (this.inactionableFrames < 1) {
-    	// minimum hit stun
+        // minimum hit stun
         this.inactionableFrames = 1;
     }
 

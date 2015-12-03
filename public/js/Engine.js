@@ -267,6 +267,7 @@ Engine.prototype.render = function()
 
   if (this.gameState == "Fight") {
     this.arena.update();
+    this.keyboard.updateKeyBuffers();
   }
 
   
