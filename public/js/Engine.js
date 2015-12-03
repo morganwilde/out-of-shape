@@ -181,7 +181,11 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
     this.canvasContainerFrame.width/2 - Engine.userPromptFrameWidth/2,
     this.canvasContainerFrame.height/2 - Engine.userPromptFrameHeight/2,
     'Fight',
-    this.startFight.bind(this)
+    function() {
+      this.startFight();
+      this.didStartFight();
+    }.bind(this)
+    // this.startFight.bind(this)
   );
 
   this.canvasContainer.appendChild(this.engineOverlayElement.getElement());
@@ -370,8 +374,6 @@ Engine.prototype.startFight = function()
   this.engineOverlayElement.destroy();
   this.fightButton.destroy();
 
-  this.animateArenaIntoView();
-
   // Add players
   var playerWidth = 20;
   var playerHeight = 25;
@@ -387,6 +389,10 @@ Engine.prototype.startFight = function()
   this.keyboard.setKeys(this.arena.player2, "W".charCodeAt(0),  "S".charCodeAt(0), "A".charCodeAt(0),  "D".charCodeAt(0),  "E".charCodeAt(0),  "R".charCodeAt(0),  "F".charCodeAt(0),  "G".charCodeAt(0),  "T".charCodeAt(0),  "C".charCodeAt(0),  "V".charCodeAt(0));
 
   this.gameState = "Fight";
+};
+Engine.prototype.didStartFight = function()
+{
+  this.animateArenaIntoView();
 };
 Engine.prototype.getGameState = function()
 {
@@ -405,6 +411,6 @@ Engine.prototype.animateArenaIntoView = function()
   this.arenaRotationAnimation = 180;
   this.arenaLiftAnimation = Engine.relativeSizingBase;
 
-  this.arenaRotationAnimationIncrement = 3.5;
+  this.arenaRotationAnimationIncrement = 2.5;
   this.arenaLiftAnimationIncrement = this.arenaRotationAnimationIncrement * (this.arenaLiftAnimation - this.getArena().getObject3D().position.y) / this.arenaRotationAnimation;
 };
