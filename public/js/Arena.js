@@ -91,7 +91,7 @@ Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transp
    }
    var boxGeometry = new THREE.CubeGeometry(width, height, depth);
    if (!transparent) {
-      var boxMaterial = new THREE.MeshLambertMaterial({
+      var boxMaterial = new THREE.MeshPhongMaterial({
          color: color, 
          specular: color, 
          shininess: 0, 
@@ -100,7 +100,7 @@ Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transp
          shading: THREE.FlatShading
       });
    } else {
-      var boxMaterial = new THREE.MeshPhongMaterial({
+      var boxMaterial = new THREE.MeshLambertMaterial({
          color: color, 
          morphTargets: true, 
          vertexColors: THREE.FaceColors,

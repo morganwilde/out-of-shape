@@ -100,6 +100,9 @@ ConsoleDelegate.prototype.setDebugTarget = function(target)
     this.positionZ = object3D.position.z;
 
     this.target = object3D;
+
+    // Inform the console of the change
+    window.dispatchEvent(new Event('consoleTargetChanged'));
   }
 };
 ConsoleDelegate.prototype.debug = function()

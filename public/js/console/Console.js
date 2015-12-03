@@ -13,10 +13,15 @@ var Console = React.createClass({
   },
   // Event Listeners
   targetHasChanged: function() {
-
+    console.log('targetHasChanged');
   },
   // Component Lifecycle
-  
+  componentDidMount: function() {
+    window.addEventListener('consoleTargetChanged', this.targetHasChanged);
+  },
+  componentWillUnmount: function() {
+    window.removeEventListener('consoleTargetChanged', this.targetHasChanged);
+  },
   // Helpers
   incrementFor: function(event, purpose) {
     if (purpose == 'rotation') {
