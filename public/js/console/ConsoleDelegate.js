@@ -1,6 +1,7 @@
 ConsoleDelegate = function()
 {
   this.consoleContainer;
+  this.canvasContainer;
   this.mode;
   this.engine
   this.target;
@@ -23,6 +24,7 @@ ConsoleDelegate.modeActive = 1;
 ConsoleDelegate.prototype.initEmpty = function()
 {
   this.consoleContainer = null;
+  this.canvasContainer = null;
   this.mode = ConsoleDelegate.modeInactive;
   this.engine = null;
   this.target = null;
@@ -39,19 +41,20 @@ ConsoleDelegate.prototype.initEmpty = function()
 
   return this;
 };
-ConsoleDelegate.prototype.initWithContainerIdAndEngine = function(containerId, engine)
+ConsoleDelegate.prototype.initWithContainerIdAndEngine = function(consoleContainerId, canvasContainerId, engine)
 {
   this.initEmpty();
 
-  this.consoleContainer = document.querySelector('#' + containerId);
+  this.consoleContainer = document.querySelector('#' + consoleContainerId);
+  this.canvasContainer = document.querySelector('#' + canvasContainerId);
   this.engine = engine;
 
   return this;
 };
 
-ConsoleDelegate.createWithContainerIdAndEngine = function(containerId, engine)
+ConsoleDelegate.createWithContainerIdAndEngine = function(consoleContainerId, canvasContainerId, engine)
 {
-  return window.consoleDelegate = new ConsoleDelegate().initWithContainerIdAndEngine(containerId, engine);
+  return window.consoleDelegate = new ConsoleDelegate().initWithContainerIdAndEngine(consoleContainerId, canvasContainerId, engine);
 };
 
 // Methods
@@ -133,6 +136,12 @@ ConsoleDelegate.prototype.render = function()
 ConsoleDelegate.prototype.unrender = function()
 {
   this.consoleContainer.removeChild(this.consoleContainer.querySelector('.container-fluid'));
+};
+
+ConsoleDelegate.prototype.hide = function()
+{
+  this.consoleContainer.style.display = 'none';
+  this.canvasContainer.style.marginLeft = 0 + 'px';
 };
 
 // Game
