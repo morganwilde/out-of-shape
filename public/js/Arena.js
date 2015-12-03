@@ -59,17 +59,21 @@ Arena.prototype.initWithDimensions = function(width, height, depth, position)
    // Ropes
    var ropeThickness = 1;
    // Left
-   this.addThing(left + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
-   this.addThing(left + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
-   this.addThing(left + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(left, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(left, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(left, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
    // Right
-   this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
-   this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
-   this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
    // Back
-   // this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
-   // this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
-   // this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
+   this.addThing(0, 2 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
+   this.addThing(0, 3 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
+   this.addThing(0, 4 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
+   // Back
+   this.addThing(0, 2 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
+   this.addThing(0, 3 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
+   this.addThing(0, 4 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
 
    return this;
 };
@@ -80,17 +84,34 @@ Arena.prototype.getObject3D = function() { return this.object3D; };
 
 // Methods
 
-Arena.prototype.addThing = function(x, y, z, width, height, depth, color) 
+Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transparent) 
 {
+   if (transparent != true) { 
+      var transparent = false 
+   }
    var boxGeometry = new THREE.CubeGeometry(width, height, depth);
-   var boxMaterial = new THREE.MeshPhongMaterial({
-      color: color, 
-      specular: color, 
-      shininess: 0, 
-      morphTargets: true, 
-      vertexColors: THREE.FaceColors, 
-      shading: THREE.FlatShading
-   });
+   if (!transparent) {
+      var boxMaterial = new THREE.MeshLambertMaterial({
+         color: color, 
+         specular: color, 
+         shininess: 0, 
+         morphTargets: true, 
+         vertexColors: THREE.FaceColors, 
+         shading: THREE.FlatShading
+      });
+   } else {
+      var boxMaterial = new THREE.MeshPhongMaterial({
+         color: color, 
+         specular: color, 
+         shininess: 0, 
+         morphTargets: true, 
+         vertexColors: THREE.FaceColors, 
+         shading: THREE.FlatShading,
+         transparent: true,
+         opacity: 0.5
+      });
+   }
+   
    var box = new THREE.Mesh(boxGeometry, boxMaterial);
    // Settings
    box.castShadow = true;
