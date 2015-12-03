@@ -1,41 +1,45 @@
-/**
- * The Engine is the main instance manager of the game. 
- *
- * @constructor
- */
-function Engine()
-{
+function Engine() {
+  // Canvas container
+  this.canvasContainer;
+  this.canvasContainerFrame;
   // Canvas size
-  /** @property {Integer} width - The base width of the screen size relative to the machine's screen size. */
   this.width;
-  /** @property {Integer} height - The base height of the screen size relative to the machine's screen size. */
   this.height;
   // THREE
-  /** @property {THREE.Scene} scene - The THREE.js object that is used for managing rendered graphics. */
   this.scene;
-  /** @property {THREE.PerspectiveCamera} camera - The THREE.js object that controls the perspective of the scene. */
   this.camera;
-  /** @property {THREE.WebGLRenderer} renderer - The THREE.js object that is used for rendering graphics. */
   this.renderer;
-  /** @property {Arena} - The platform that PlayerCharacters fight upon. */
+  this.hemisphereLight;
+  this.directionalLight;
   this.arena;
-
-  this.gameState;
-
-  this.mouse;
-  this.buttonArray;
-
-  this.bgMusic;
+  // Mode
+  this.mode;
+  // Arena placeholder
+  this.arenaPlaceholder;
 }
 
+Engine.cameraFieldOfViewAngle = 45; // degrees
+// Positioning
+Engine.arenaPlaceholderPaddingHorizontal = 50; // px
+Engine.arenaPlaceholderPaddingBottom = 50; // px
+// Sizing
+Engine.arenaPlaceholderHeight = 50; // px
+// Relative sizing = Arena placeholder width/depth
+Engine.relativeSizingBase = 100; // 3D length
+Engine.relativeFarCameraDistance = 50; // number of times greater than Engine.relativeSizingBase
+Engine.relativeHorizontalPlaneSize = 100; // number of times greater than Engine.relativeSizingBase
+// Shadow related
+Engine.shadowCameraDistance = 3 * Engine.relativeSizingBase;
+Engine.shadowCameraLevelOfDetail = 10; // Higher is more detailed, 1 is the base value
+Engine.shadowDarness = 0.5; // 0 - completely transparent, 1 - completely opaque
+
 // Initialisers
-/**
- * Initializes an Engine object with an empty state.
- * 
- * @return {Engine}
- */
+
 Engine.prototype.initEmpty = function()
 {
+  // Canvas container
+  this.canvasContainer = null;
+  this.canvasContainerFrame = null;
   // Canvas size
   this.width = null;
   this.height = null;
@@ -43,175 +47,245 @@ Engine.prototype.initEmpty = function()
   this.scene = null;
   this.camera = null;
   this.renderer = null;
+  this.lights = null;
   this.arena = null;
-  this.gameState = null;
-  this.mouse = null;
-  this.buttonArray = new Array();
-  this.bgMusic = null;
+  // Mode
+  this.mode = Engine.modeRegular;
+  // Arena placeholder
+  this.arenaPlaceholder = null;
 
   return this;
 };
-/**
- * Initializes an Engine object with specific screen dimensions.
- * 
- * @param  {Integer} width - The base width of the camera.
- * @param  {Integer} height - The base height of the camera.
- * @return {Engine}
- */
-Engine.prototype.initWithCanvasSize = function(width, height)
+
+Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
 {
   this.initEmpty();
 
-  // Canvas size
-  this.width = width;
-  this.height = height;
+  this.canvasContainer = document.querySelector('#' + canvasContainerId);
+  this.canvasContainerFrame = this.canvasContainer.getBoundingClientRect();
+
+  // Renderer
+  this.renderer = new THREE.WebGLRenderer();
+  this.renderer.setClearColor(0xeeeeee);
+  this.renderer.setSize(this.canvasContainerFrame.width, this.canvasContainerFrame.height);
+  this.renderer.gammaInput = true;
+  this.renderer.gammaOutput = true;
+  this.renderer.shadowMap.enabled = true;
+  this.renderer.shadowMap.cullFace = THREE.CullFaceBack;
+  this.canvasContainer.appendChild(this.renderer.domElement);
 
   // Scene
   this.scene = new THREE.Scene();
-
-  var light = new THREE.PointLight(0xffffff, 3, 0, 0);
-  light.position.set(0, 500, 500);
-  
-  this.scene.add(light);
   
   // Camera
-  this.camera = new THREE.PerspectiveCamera(60, this.width/this.height, 1, 2000);
-  this.camera.position.z = 1000;
-  this.camera.position.y = 800;
+  var fieldOfView = Engine.cameraFieldOfViewAngle;
+  var ratio = this.canvasContainerFrame.width/this.canvasContainerFrame.height;
+  var near = 1;
+  var far = Engine.relativeSizingBase * Engine.relativeFarCameraDistance;
+  this.camera = new THREE.PerspectiveCamera(
+    fieldOfView, 
+    ratio, 
+    near, 
+    far
+  );
+  this.adjustCameraPositionBasedOnBaseSizeAndArenaPlaceholder();
 
-  // Rendered
-  this.renderer = new THREE.WebGLRenderer();
-  this.renderer.setClearColor(0xffffff);
-  this.renderer.setSize(this.width, this.height);
-  document.body.appendChild(this.renderer.domElement);
-    
-  // User actions
-  window.addEventListener('keydown', function(event){this.keyDown(event)}.bind(this), false);
-  window.addEventListener('keyup', function(event){this.keyUp(event)}.bind(this), false);
-  
-  this.gameState = "Intro";
+  // Ground Plane
+  var groundGeo = new THREE.PlaneGeometry(
+    Engine.relativeSizingBase * Engine.relativeHorizontalPlaneSize, 
+    Engine.relativeSizingBase * Engine.relativeHorizontalPlaneSize
+  );
+  var groundMat = new THREE.MeshPhongMaterial({
+    color: 0xbdc3c7,
+    specular: 0x000000 
+  });
 
-  this.mouse = new Mouse().init(this.camera, this);
+  var ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI/2; // 90 degrees
+  ground.position.y = -Engine.relativeSizingBase;
+  this.scene.add( ground );
 
+<<<<<<< HEAD
   var button = new Button().initWithDimensions(0, 700, 300, 300, "Fight!", "Fight", this);
   this.addButton(button);
 
   this.bgMusic = new Audio();
   this.playMusic('IntroMusic.ogg');
   this.bgMusic.addEventListener('ended', function() {this.play(); }, false);
+=======
+  ground.receiveShadow = true;
+
+  // Hemisphere Light
+  this.hemisphereLight = new THREE.HemisphereLight(0x34495e, 0xffffff, 0.6);
+  this.hemisphereLight.position.set(0, Engine.relativeSizingBase, 0);
+  this.scene.add(this.hemisphereLight);
+
+  // Directional Light
+  this.directionalLight = this.createDirectionalLightWithRelativePosition(0, 2, 2.5);
+  this.scene.add(this.directionalLight);
+
+  // Button
+  var button = new Button().initWithDimensions(0, 700, 300, 300, "Fight!", "Fight");
+  this.addButton(button);
+>>>>>>> origin/master
   
   return this;
 };
 
-// Methods
-/**
- * The frame render method, which is called every time the renderer needs a new frame.
- */
+// Getters
 
-Engine.prototype.startFight = function()
+Engine.prototype.getScene = function()
 {
-  this.arena = new Arena().initWithEngine(this);
-  this.scene.add(this.arena.getRootObject());
-
-  this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
-  this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
-
-  this.arena.addPlayerCharacter(new SuperStar().init(100, 100, 100));
-  this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
-
-  this.gameState = "Fight";
-  this.playMusic('EpicMusic.ogg');
+  return this.scene;
+};
+Engine.prototype.getCamera = function()
+{
+  return this.camera;
+};
+Engine.prototype.getDirectionalLight = function()
+{
+  return this.directionalLight;
+};
+Engine.prototype.getHemisphereLight = function()
+{
+  return this.hemisphereLight;
 };
 
-/**
- * The frame render method, which is called every time the renderer needs a new frame.
- */
+// Setters
+
+Engine.prototype.createDirectionalLightWithRelativePosition = function(x, y ,z)
+{
+  var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  directionalLight.position.set(
+    x * Engine.relativeSizingBase, 
+    y * Engine.relativeSizingBase, 
+    z * Engine.relativeSizingBase
+  );
+
+  directionalLight.castShadow = true;
+  directionalLight.shadowDarkness = Engine.shadowDarness;
+  directionalLight.shadowBias = -0.01;
+  
+  // How much blur is added to the shadows
+  directionalLight.shadowMapWidth = Engine.shadowCameraLevelOfDetail * Engine.shadowCameraDistance;
+  directionalLight.shadowMapHeight = Engine.shadowCameraLevelOfDetail * Engine.shadowCameraDistance;
+  
+  directionalLight.shadowCameraLeft = -Engine.shadowCameraDistance;
+  directionalLight.shadowCameraRight = Engine.shadowCameraDistance;
+  directionalLight.shadowCameraTop = Engine.shadowCameraDistance;
+  directionalLight.shadowCameraBottom = -Engine.shadowCameraDistance;
+
+  directionalLight.shadowCameraFar = 10 * Engine.relativeSizingBase;
+
+  return directionalLight;
+};
+
+// Methods
+
 Engine.prototype.render = function()
 {
   requestAnimationFrame(function() {
+    // Debug
+    if (window.consoleDelegate instanceof ConsoleDelegate) {
+      window.consoleDelegate.debug();
+    }
+    // Regular
     this.render();
   }.bind(this));
 
   this.renderer.render(this.scene, this.camera);
+};
 
-  if(this.gameState == "Fight")
-  {
-    this.arena.update();
+// Relative sizing
+
+Engine.prototype.adjustCameraPositionBasedOnBaseSizeAndArenaPlaceholder = function()
+{
+  this.camera.position.z = Engine.relativeSizingBase;
+  var placeholder = this.calculateArenaPlaceholderSizeAndPosition();
+  this.camera.position.z = this.camera.position.z * (this.camera.position.z / placeholder.width);
+  this.arenaPlaceholder = this.calculateArenaPlaceholderSizeAndPosition();
+};
+
+// Arena
+
+Engine.prototype.calculateArenaPlaceholderSizeAndPosition = function()
+{
+  // Bounding box in screen space
+  var width = this.canvasContainerFrame.width - 2 * Engine.arenaPlaceholderPaddingHorizontal;
+  var height = Engine.arenaPlaceholderHeight;
+  var left = Engine.arenaPlaceholderPaddingHorizontal;
+  var top = this.canvasContainerFrame.height - height - Engine.arenaPlaceholderPaddingBottom;
+
+  // Debugging - no longer active, but maybe useful in the future, so keep!
+  if (false) {
+    // This draws the bounding box inside of the container div.
+    // The bounding box should equal the size and position of the front side
+    // of the arena box.
+    var boundingElement = document.createElement('div');
+    boundingElement.classList.add('bounding');
+    boundingElement.classList.add('background-red');
+    boundingElement.style.top = top + 'px';
+    boundingElement.style.left = left + 'px';
+    boundingElement.style.width = width + 'px';
+    boundingElement.style.height = height + 'px';
+    this.canvasContainer.appendChild(boundingElement);
   }
-    
+
+  // Normalize width and height
+  var widthNormalized = (width / this.canvasContainerFrame.width);
+  var heightNormalized = (height / this.canvasContainerFrame.height);
+
+  var topRightCornerVector = new THREE.Vector3(
+    widthNormalized / 2,
+    heightNormalized / 2,
+    1 / 2
+  );
+  topRightCornerVector.unproject(this.camera);
+  var topRightCornerVectorProjected = this.camera.position.clone().add(
+    topRightCornerVector.multiplyScalar(this.camera.position.z / 2)
+  );
+  
+  var placeholderWidth = topRightCornerVectorProjected.x * 2;
+  var placeholderHeight = topRightCornerVectorProjected.y * 2;
+  var placeholderDepth = placeholderWidth;
+
+  // Normalize and center top position because screen space is centered
+  // in top left corner.
+  var topNormalized = (top / this.canvasContainerFrame.height) * 2 - 1;
+
+  var positionVector = new THREE.Vector3(
+    0,
+    topNormalized / 2,
+    1 / 2
+  );
+  positionVector.unproject(this.camera);
+  var positionVectorProjected = this.camera.position.clone().add(
+    positionVector.multiplyScalar(this.camera.position.z / 2)
+  );
+
+  return {
+    width: placeholderWidth,
+    height: placeholderHeight,
+    depth: placeholderDepth,
+    position: new THREE.Vector3(
+      0,
+      -positionVectorProjected.y - topRightCornerVectorProjected.y,
+      -placeholderDepth/2
+    )
+  };
 };
-/**
- * Responds to keyDown events from the keyboard.
- * 
- * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
- */
-Engine.prototype.keyDown = function(event)
+Engine.prototype.createArena = function()
 {
-  event.preventDefault();
-
-  if(this.arena!=null)
-  {
-    this.arena.setKeyPress(event.which);
-  }
+  this.arenaPlaceholder = this.calculateArenaPlaceholderSizeAndPosition();
+  this.arena = new Arena().initWithDimensions(
+    this.arenaPlaceholder.width,
+    this.arenaPlaceholder.height,
+    this.arenaPlaceholder.depth,
+    this.arenaPlaceholder.position
+  );
+  this.scene.add(this.arena.getObject3D());
 };
-/**
- * Responds to keyUp events from the keyboard.
- * 
- * @param  {Event} event - Instance of the JavaScript Event class that stores information about the event such as which key was pressed.
- */
-Engine.prototype.keyUp = function(event)
+Engine.prototype.getArena = function()
 {
-  event.preventDefault();
-  if(this.arena!=null)
-  {
-    this.arena.setKeyRelease(event.which);
-  }
-};
-/**
- * Assigns an Arena object that will contain all the necessary visuals for the game.
- * 
- * @param {Arena} arena - The platform object which has PlayerCharacters as Children.
- */
-Engine.prototype.addArena = function(arena)
-{
-  this.arena = arena;
-  this.scene.add(arena.getRootObject());
-};
-
-Engine.prototype.addButton = function(button)
-{
-  this.scene.add(button.getNode());
-  this.buttonArray.push(button.getNode());
-};
-
-Engine.prototype.getButtonArray = function()
-{
-  return this.buttonArray;
-};
-
-Engine.prototype.getGameState = function()
-{
-  return this.gameState;
-};
-
-Engine.prototype.setGameState = function(state)
-{
-  this.gameState = state;
-};
-
-Engine.prototype.deleteButton = function(button)
-{
-  document.body.removeChild(button.getTextDiv());
-
-  this.scene.remove(button.getNode());
-
-  var targetButton = this.buttonArray.indexOf(button);
-
-  this.buttonArray.splice(targetButton, 1); // 1 is the number of instances to remove
-};
-
-Engine.prototype.playMusic = function(music)
-{
-  this.bgMusic.setAttribute('src', 'Music/'+music);
-  this.bgMusic.play();
+  return this.arena;
 };

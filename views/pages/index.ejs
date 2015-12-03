@@ -1,35 +1,53 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style type="text/css">
-      body {
-        margin: 0px;
-        background-color: #000000;
-        overflow: hidden;
-      }
-    </style>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
-      <script src="js/Engine.js"></script>
-      <script src="js/Arena.js"></script>
-      <script src="js/PlayerCharacter.js"></script>
-      <script src="js/Collider.js"></script>
-      <script src="js/HitBox.js"></script>
-      <script src="js/HealthBar.js"></script>
-      <script src="js/AttackLibrary.js"></script>
-      <script src="js/CharacterLibrary.js"></script>
-      <script src="js/Mouse.js"></script>
-      <script src="js/Button.js"></script>
+    <!-- External stylesheets -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+    <!-- Main -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
+    <!-- Console -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/console.css" />
+    <!-- External libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min.js"></script>
+    <script src="js/console/react.js"></script>
+    <script src="js/console/react-dom.js"></script>
+    <!-- Console -->
+    <script src="js/console/Console.js"></script>
+    <script src="js/console/ConsoleAttribute.js"></script>
+    <script src="js/console/ConsoleToggle.js"></script>
+    <script src="js/console/ConsoleDelegate.js"></script>
+    <!-- Game -->
+    <script src="js/Engine.js"></script>
+    <script src="js/Arena.js"></script>
+    <script src="js/PlayerCharacter.js"></script>
+    <script src="js/Collider.js"></script>
+    <script src="js/HitBox.js"></script>
+    <script src="js/HealthBar.js"></script>
+    <script src="js/AttackLibrary.js"></script>
+    <script src="js/CharacterLibrary.js"></script>
+    <script src="js/Mouse.js"></script>
+    <script src="js/Button.js"></script>
 
-
-	
+    <script src="js/console/VertexCollection.js"></script>
+  
   </head>
   <body>
     <script>
-      window.gameEngine = new Engine().initWithCanvasSize(window.innerWidth, window.innerHeight);
-	  
-      window.gameEngine.render();
+      window.onload = function() {
+        // Game
+        var engine = new Engine().initWithCanvasContainerId('canvas-container');
+        engine.createArena();
+        engine.render();
 
-      
+        // Console
+        var consoleDelegate = ConsoleDelegate.createWithContainerIdAndEngine('console-container', engine);
+        consoleDelegate.setDebugTarget(engine.getArena());
+        consoleDelegate.activate();
+      };
     </script>
+    <div class="page">
+      <div id="console-container"></div>
+      <div id="canvas-container"></div>
+    </div>
   </body>
 </html>
