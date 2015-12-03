@@ -45,15 +45,31 @@ Arena.prototype.initWithDimensions = function(width, height, depth, position)
 
    // Dummy object
    // this.addThing(0, 10, 0, 10, 10);
-   var poleThickness = 2;
+   var poleThickness = 4;
+   var poleHeight = 14;
    var back = -50 + poleThickness/2;
    var front = 50 - poleThickness/2;
    var left = -50 + poleThickness/2;
    var right = 50 - poleThickness/2;
-   this.addThing(left, 0, back, poleThickness, poleThickness);
-   this.addThing(right, 0, back, poleThickness, poleThickness);
-   this.addThing(right, 0, front, poleThickness, poleThickness);
-   this.addThing(left, 0, front, poleThickness, poleThickness);
+   this.addThing(left, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50);
+   this.addThing(right, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50);
+   this.addThing(right, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50);
+   this.addThing(left, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50);
+
+   // Ropes
+   var ropeThickness = 1;
+   // Left
+   this.addThing(left + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(left + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(left + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   // Right
+   this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100, 0xc0392b);
+   // Back
+   // this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
+   // this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
+   // this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, 100, ropeThickness, 0xc0392b);
 
    return this;
 };
@@ -64,13 +80,13 @@ Arena.prototype.getObject3D = function() { return this.object3D; };
 
 // Methods
 
-Arena.prototype.addThing = function(x, y, z, width, depth) 
+Arena.prototype.addThing = function(x, y, z, width, height, depth, color) 
 {
-   var boxGeometry = new THREE.CubeGeometry(width, 10, depth);
+   var boxGeometry = new THREE.CubeGeometry(width, height, depth);
    var boxMaterial = new THREE.MeshPhongMaterial({
-      color: 0x2c3e50, 
-      specular: 0x2c3e50, 
-      shininess: 20, 
+      color: color, 
+      specular: color, 
+      shininess: 0, 
       morphTargets: true, 
       vertexColors: THREE.FaceColors, 
       shading: THREE.FlatShading
@@ -81,7 +97,7 @@ Arena.prototype.addThing = function(x, y, z, width, depth)
    box.receiveShadow = true;
    // Position
    box.position.x = x;
-   box.position.y = this.object3D.geometry.parameters.height / 2 + 10 / 2 + y;
+   box.position.y = this.object3D.geometry.parameters.height / 2 + height / 2 + y;
    box.position.z = z;
    this.object3D.add(box);
 };
