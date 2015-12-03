@@ -202,7 +202,7 @@ PlayerCharacter.prototype.setInactionableFrames = function(frames)
  */
 PlayerCharacter.prototype.createAttack = function(command)
 {
-    var hbox = new command().init(this, this.enemy);
+    var hbox = new command().init(this, this.enemy, this.arena);
 
    this.hitBoxes.push(hbox);
 };
@@ -330,7 +330,7 @@ PlayerCharacter.prototype.resolveInput = function()
 
         this.collider.getNode().material.color.setHex (this.bodyColor); // blue is standing
         
-        var initialVerticalPosition = this.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+        var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
         if (this.collider.getNode().position.y <= initialVerticalPosition) {
             this.characterState = 'standing';
         } else {
@@ -416,7 +416,7 @@ PlayerCharacter.prototype.updateHitBoxes = function()
 PlayerCharacter.prototype.deleteHitBox = function(hitbox)
 {
     this.collider.getNode().remove(hitbox.getCollider().getNode());
-    this.arena.getRootObject().remove(hitbox.getCollider().getNode());
+    this.arena.getObject3D().remove(hitbox.getCollider().getNode());
     
     var targetHitBox = this.hitBoxes.indexOf(hitbox);
     
@@ -446,7 +446,7 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
         }
     }
 
-    var initialVerticalPosition = this.arena.getRootObject().geometry.parameters.height/2 + this.height/2;
+    var initialVerticalPosition = this.arena.getObject3D().geometry.parameters.height/2 + this.height/2;
     if (this.collider.getNode().position.y <= initialVerticalPosition) {
         // cancel initBlocking and blocking states
         this.characterState = 'standing';

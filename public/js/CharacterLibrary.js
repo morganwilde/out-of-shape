@@ -16,7 +16,7 @@ SuperStar.prototype.initWithDimensionsAndArena = function(width, height, depth, 
     this.collider.setGravity(2);
 
     // character body
-    var headSizeInRelationToBody = 0.35;
+    var headSizeInRelationToBody = 0.25;
     var geometry = new THREE.BoxGeometry(
         width * headSizeInRelationToBody, 
         height * headSizeInRelationToBody, 
@@ -35,7 +35,7 @@ SuperStar.prototype.initWithDimensionsAndArena = function(width, height, depth, 
     head.position.x = width * 0.1;
     head.castShadow = true;
     head.receiveShadow = true;
-    this.collider.getNode().add(head);
+    //this.collider.getNode().add(head);
 
     this.collider.getNode().castShadow = true;
     this.collider.getNode().receiveShadow = true;
