@@ -315,7 +315,7 @@ HayMaker.prototype.init = function(owner, enemy)
 
 	this.endTime = 40;
 	
-	this.damage = 70;
+	this.damage = 20;
 
 	return this;
 };
