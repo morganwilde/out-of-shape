@@ -432,6 +432,10 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
     if (this.characterState == 'blocking' && attackType != 'grab' && ( (highOrLow == "any") || (highOrLow == "low" && this.duckState == true) || (highOrLow == "high" && this.duckState == false) ) ) {
         damage = Math.round(damage / 10);
     }
+    this.collider.setRotation(0, 0, 0);
+    this.collider.setXRotationSpeed(0);
+    this.collider.setYRotationSpeed(0);
+    this.collider.setZRotationSpeed(0);
 
     this.collider.getNode().material.color.setHex(0xffff00); // collider turns yellow during hit stun
     this.collider.setRotation(0, this.collider.getNode().rotation.y, 0);
