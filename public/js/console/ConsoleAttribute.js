@@ -36,6 +36,12 @@ var ConsoleAttribute = React.createClass({
         return 0;
     }
   },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      attributeValue: nextProps.attributeValue,
+      attributeValueInitial: nextProps.attributeValue
+    });
+  },
   // Actions
   onAttributeChange: function(event) {
     var attributeValue;
@@ -129,6 +135,7 @@ var ConsoleAttribute = React.createClass({
 function makeConsoleAttribute(name, value, rangeFrom, rangeTo, wrapsAround, unit, smallIncrement, largeIncrement, callback)
 {
   return React.createElement(ConsoleAttribute, {
+    ref: name,
     attributeName: name,
     attributeValue: value,
     attributeRange: {from: rangeFrom, to: rangeTo},

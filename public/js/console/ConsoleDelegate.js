@@ -5,6 +5,7 @@ ConsoleDelegate = function()
   this.mode;
   this.engine
   this.target;
+  this.objectSelectorFrame;
   // Rotation
   this.rotationX;
   this.rotationY;
@@ -28,6 +29,7 @@ ConsoleDelegate.prototype.initEmpty = function()
   this.mode = ConsoleDelegate.modeInactive;
   this.engine = null;
   this.target = null;
+  this.objectSelectorFrame = null;
   // Rotation
   this.rotationX = 0;
   this.rotationY = 0;
@@ -88,7 +90,7 @@ ConsoleDelegate.prototype.deactivate = function()
 };
 ConsoleDelegate.prototype.setDebugTarget = function(target)
 {
-  if (this.mode == ConsoleDelegate.modeActive || true) {
+  if (target) {
     var object3D = target instanceof THREE.Object3D ? target : target.getObject3D();
     // Rotation
     this.rotationX = object3D.rotation.x;
@@ -100,7 +102,41 @@ ConsoleDelegate.prototype.setDebugTarget = function(target)
     this.positionZ = object3D.position.z;
 
     this.target = object3D;
+
+    // Inform the console of the change
+    window.dispatchEvent(new Event('consoleTargetChanged'));
   }
+};
+ConsoleDelegate.prototype.showObjectSelector = function(targets, mouseX, mouseY)
+{
+  var selectorWidth = 100;
+  var selectorHeightPerItem = 25;
+  var selectorHeight = selectorHeightPerItem * targets.length - 1;
+  var frameElement = document.createElement('div');
+  frameElement.classList.add('console-object-selector-frame');
+  frameElement.style.left = mouseX - selectorWidth/2 + 'px';
+  frameElement.style.top = mouseY - selectorHeight/2 + 'px';
+  frameElement.style.width = selectorWidth + 'px';
+  frameElement.style.height = selectorHeight + 'px';
+
+  function onObjectSelection(objectNumber) {
+    this.setDebugTarget(targets[objectNumber].object);
+  }
+
+  for (var i = targets.length - 1; i >= 0; i--) {
+    var targetObject = targets[i].object;
+    var targetObjectId = targetObject.name.length > 0 ? targetObject.name : targetObject.uuid;
+
+    var buttonElement = document.createElement('div');
+    buttonElement.classList.add('console-object-selector-item');
+    buttonElement.appendChild(document.createTextNode(targetObjectId));
+    buttonElement.addEventListener('click', onObjectSelection.bind(this, i))
+
+    frameElement.appendChild(buttonElement);
+  };
+  this.canvasContainer.appendChild(frameElement);
+
+  this.objectSelectorFrame = frameElement;
 };
 ConsoleDelegate.prototype.debug = function()
 {
@@ -153,6 +189,34 @@ ConsoleDelegate.prototype.hide = function()
 {
   this.consoleContainer.style.display = 'none';
   this.canvasContainer.style.marginLeft = 0 + 'px';
+};
+
+ConsoleDelegate.prototype.observeMouse = function()
+{
+  this.canvasContainer.addEventListener('click', this.onMouseClick.bind(this));
+};
+ConsoleDelegate.prototype.onMouseClick = function(event)
+{
+  if (this.objectSelectorFrame == null) {
+    var mouseX = (event.offsetX / this.engine.canvasContainerFrame.width) * 2 - 1;
+    var mouseY = -(event.offsetY / this.engine.canvasContainerFrame.height) * 2 + 1;
+    
+    var vector = new THREE.Vector3(mouseX, mouseY, this.engine.camera.near);
+    vector.unproject(this.engine.camera);
+
+    var raycaster = new THREE.Raycaster(this.engine.camera.position, vector.sub(this.engine.camera.position).normalize());
+    var object3DArray = raycaster.intersectObjects(this.engine.scene.children, true);
+
+    if (object3DArray.length == 1) {
+      this.setDebugTarget(object3DArray[0].object);
+    } else {
+      // Give the user the ability to select which object he wants as a target
+      this.showObjectSelector(object3DArray, event.offsetX, event.offsetY);
+    }
+  } else {
+    this.objectSelectorFrame.parentElement.removeChild(this.objectSelectorFrame);
+    this.objectSelectorFrame = null;
+  }
 };
 
 // Game

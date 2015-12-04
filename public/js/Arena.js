@@ -38,6 +38,7 @@ Arena.prototype.initWithDimensions = function(width, height, depth, position)
    // Settings
    this.object3D.castShadow = true;
    this.object3D.receiveShadow = true;
+   this.object3D.name = "Arena base";
    // Position
    this.object3D.position.x = position.x;
    this.object3D.position.y = position.y;
@@ -51,29 +52,29 @@ Arena.prototype.initWithDimensions = function(width, height, depth, position)
    var front = 50 - poleThickness/2;
    var left = -50 + poleThickness/2;
    var right = 50 - poleThickness/2;
-   this.addThing(left, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50);
-   this.addThing(right, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50);
-   this.addThing(right, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50);
-   this.addThing(left, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50);
+   this.addThing(left, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50, "Left back pole");
+   this.addThing(right, 0, back, poleThickness, poleHeight, poleThickness, 0x2c3e50, "Right back pole");
+   this.addThing(right, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50, "Right front pole");
+   this.addThing(left, 0, front, poleThickness, poleHeight, poleThickness, 0x2c3e50, "Left front pole");
 
    // Ropes
    var ropeThickness = 1;
    // Left
-   this.addThing(left, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
-   this.addThing(left, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
-   this.addThing(left, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(left, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Left bottom rope");
+   this.addThing(left, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Left middle rope");
+   this.addThing(left, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Left top rope");
    // Right
-   this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
-   this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
-   this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b);
+   this.addThing(right + 0, 2 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Right bottom rope");
+   this.addThing(right + 0, 3 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Right middle rope");
+   this.addThing(right + 0, 4 * poleHeight/5, 0, ropeThickness, ropeThickness, 100 - 0.1, 0xc0392b, "Right top rope");
    // Back
-   this.addThing(0, 2 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
-   this.addThing(0, 3 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
-   this.addThing(0, 4 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b);
+   this.addThing(0, 2 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Back top rope");
+   this.addThing(0, 3 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Back top rope");
+   this.addThing(0, 4 * poleHeight/5, back, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Back top rope");
    // Back
-   this.addThing(0, 2 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
-   this.addThing(0, 3 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
-   this.addThing(0, 4 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, true);
+   this.addThing(0, 2 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Front top rope", true);
+   this.addThing(0, 3 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Front top rope", true);
+   this.addThing(0, 4 * poleHeight/5, front, 100 - 0.1, ropeThickness, ropeThickness, 0xc0392b, "Front top rope", true);
 
    return this;
 };
@@ -84,14 +85,14 @@ Arena.prototype.getObject3D = function() { return this.object3D; };
 
 // Methods
 
-Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transparent) 
+Arena.prototype.addThing = function(x, y, z, width, height, depth, color, name, transparent) 
 {
    if (transparent != true) { 
       var transparent = false 
    }
    var boxGeometry = new THREE.CubeGeometry(width, height, depth);
    if (!transparent) {
-      var boxMaterial = new THREE.MeshLambertMaterial({
+      var boxMaterial = new THREE.MeshPhongMaterial({
          color: color, 
          specular: color, 
          shininess: 0, 
@@ -100,7 +101,7 @@ Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transp
          shading: THREE.FlatShading
       });
    } else {
-      var boxMaterial = new THREE.MeshPhongMaterial({
+      var boxMaterial = new THREE.MeshLambertMaterial({
          color: color, 
          morphTargets: true, 
          vertexColors: THREE.FaceColors,
@@ -113,6 +114,7 @@ Arena.prototype.addThing = function(x, y, z, width, height, depth, color, transp
    // Settings
    box.castShadow = true;
    box.receiveShadow = true;
+   box.name = (typeof name == "undefined" ? "" : name);
    // Position
    box.position.x = x;
    box.position.y = this.object3D.geometry.parameters.height / 2 + height / 2 + y;
