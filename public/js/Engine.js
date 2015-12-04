@@ -387,10 +387,10 @@ Engine.prototype.startFight = function(shouldRestart)
   var playerWidth = 10;
   var playerHeight = 18;
   var playerDepth = 10;
-  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
+  this.arena.addPlayerCharacter(new Player1Class().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
   // this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
 
-  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
+  this.arena.addPlayerCharacter(new Player2Class().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
   // this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
   
   // Keyboard controls

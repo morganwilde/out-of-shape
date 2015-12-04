@@ -114,7 +114,9 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 		wireframe: false,
 		specular: 0x000000, 
 		shininess: 0, 
-		shading: THREE.FlatShading
+		shading: THREE.FlatShading,
+		transparent: true,
+		opacity: 0
 	});
 
 	this.node = new THREE.Mesh(geometry, material);
