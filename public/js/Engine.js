@@ -158,7 +158,7 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
     Engine.healthBarPlaceholderHeight,
     Engine.healthBarPlaceholderPaddingLeft,
     Engine.healthBarPlaceholderPaddingTop,
-    'Bilbo',
+    'The Bouncer',
     1
   );
 
@@ -167,7 +167,7 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
     Engine.healthBarPlaceholderHeight,
     Engine.healthBarPlaceholderPaddingLeft + healtBarWidth + Engine.healthBarPlaceholderHorizontalSpacing,
     Engine.healthBarPlaceholderPaddingTop,
-    'Sauron',
+    'Horned Demon',
     1
   );
 

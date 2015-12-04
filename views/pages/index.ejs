@@ -46,14 +46,14 @@
         var engine = new Engine();
         // Console
         var consoleDelegate = ConsoleDelegate.createWithContainerIdAndEngine('console-container', 'canvas-container', engine);
-        // consoleDelegate.hide();
+        consoleDelegate.hide();
 
         engine.initWithCanvasContainerId('canvas-container');
         engine.createArena();
         engine.render();
         
         // Console
-        consoleDelegate.startFight();
+        //consoleDelegate.startFight();
         consoleDelegate.activate();
         consoleDelegate.observeMouse();
       };
