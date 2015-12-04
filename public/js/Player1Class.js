@@ -15,6 +15,7 @@ Player1Class.prototype.initWithDimensionsAndArena = function(width, height, dept
    this.jumpSpeed = 15;
 
     this.collider.setGravity(2);
+    this.collider.getNode().name = "P1 Collider";
 
     // character body
     var headSizeInRelationToBody = 0.25;
@@ -32,6 +33,7 @@ Player1Class.prototype.initWithDimensionsAndArena = function(width, height, dept
     });
 
     var head = new THREE.Mesh(geometry, material);
+    head.name = "P1 Body";
     head.position.x = 0;
     head.position.y = 0;
     head.position.z = 0;
