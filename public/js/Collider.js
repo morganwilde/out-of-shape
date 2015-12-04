@@ -115,7 +115,7 @@ Collider.prototype.initWithSettings = function(width, height, depth, owner, isPl
 		specular: 0x000000, 
 		shininess: 0, 
 		shading: THREE.FlatShading,
-		transparent: true,
+		transparent: isPlayer,
 		opacity: 0
 	});
 
