@@ -308,7 +308,7 @@ Collider.prototype.update = function()
 */
 Collider.prototype.bump = function(hitPosition)
 {
-	var bumpDistance = 15;
+	var bumpDistance = 3;
 
 	if(this.node.position.x > hitPosition.x)
 	{
@@ -325,7 +325,7 @@ Collider.prototype.bump = function(hitPosition)
 */
 Collider.prototype.enforcePlayerBounds = function()
 {
-	var slidespeed = 10;
+	var slidespeed = 1;
 
 	if((this.xVelocity>0 && this.node.position.x > this.enemy.getCollider().getNode().position.x) || (this.xVelocity < 0 && this.node.position.x < this.enemy.getCollider().getNode().position.x)) // removing  this.xVelocity < 0  allows passing through
 		{

@@ -5,13 +5,13 @@ function SuperStar()
 SuperStar.prototype = Object.create(PlayerCharacter.prototype);
 SuperStar.prototype.constructor = SuperStar;
 
-SuperStar.prototype.initWithDimensionsAndArena = function(width, height, depth, arena)
+SuperStar.prototype.initWithDimensionsAndArena = function(width, height, depth, arena, healthChangeFunction, playerDeathFunction)
 {
-    PlayerCharacter.prototype.initWithDimensionsAndArena.call(this, width, height, depth, arena);
+    PlayerCharacter.prototype.initWithDimensionsAndArena.call(this, width, height, depth, arena, healthChangeFunction, playerDeathFunction);
 
-	this.walkSpeed = 4;
-	this.dashSpeed = 10;
-	this.jumpSpeed = 30;
+	this.walkSpeed = 1;
+	this.dashSpeed = 2;
+	this.jumpSpeed = 15;
 
     this.collider.setGravity(2);
 
@@ -44,7 +44,7 @@ SuperStar.prototype.initWithDimensionsAndArena = function(width, height, depth, 
     this.attacks['lightpunch'] = UpperCut;
     this.attacks['lowlightpunch'] = Jab;
 
-    this.attacks['lightkick'] = UpperCut;
+    this.attacks['lightkick'] = ShootingStar;
     this.attacks['lowlightkick'] = UpperCut;
 
     this.attacks['heavypunch'] = HayMaker;

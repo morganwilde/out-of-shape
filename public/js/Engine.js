@@ -25,6 +25,8 @@ function Engine()
   // Animation
   this.arenaLiftAnimation;
   this.arenaRotationAnimation;
+  this.healthBarLeft;
+  this.healthBarRight;
 }
 
 Engine.cameraFieldOfViewAngle = 45; // degrees
@@ -78,6 +80,8 @@ Engine.prototype.initEmpty = function()
   // Animation
   this.arenaLiftAnimation = null;
   this.arenaRotationAnimation = null;
+  this.healthBarLeft = null;
+  this.healthBarRight = null;
 
   return this;
 };
@@ -148,7 +152,7 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
   // Health Bars
   var arenaScreenWidth = this.canvasContainerFrame.width - 2 * Engine.arenaPlaceholderPaddingHorizontal;
   var healtBarWidth = arenaScreenWidth * Engine.healthBarPlaceholderWidthRelativeToArena - Engine.healthBarPlaceholderHorizontalSpacing / 2;
-  var healthBarLeft = new UIHealthBar().initWithSizeAndPosition(
+  this.healthBarLeft = new UIHealthBar().initWithSizeAndPosition(
     healtBarWidth,
     Engine.healthBarPlaceholderHeight,
     Engine.healthBarPlaceholderPaddingLeft,
@@ -156,17 +160,18 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
     'Bilbo',
     1
   );
-  var healthBarRight = new UIHealthBar().initWithSizeAndPosition(
+
+  this.healthBarRight = new UIHealthBar().initWithSizeAndPosition(
     healtBarWidth,
     Engine.healthBarPlaceholderHeight,
     Engine.healthBarPlaceholderPaddingLeft + healtBarWidth + Engine.healthBarPlaceholderHorizontalSpacing,
     Engine.healthBarPlaceholderPaddingTop,
     'Sauron',
-    0.5
+    1
   );
 
-  this.canvasContainer.appendChild(healthBarLeft.getElement());
-  this.canvasContainer.appendChild(healthBarRight.getElement());
+  this.canvasContainer.appendChild(this.healthBarLeft.getElement());
+  this.canvasContainer.appendChild(this.healthBarRight.getElement());
 
   // User Interface for starting a fight
   this.engineOverlayElement = new UIEngineOverlay().initWithSizeAndPosition(
@@ -369,20 +374,22 @@ Engine.prototype.getArena = function()
 
 // Game
 
-Engine.prototype.startFight = function()
+Engine.prototype.startFight = function(shouldRestart)
 {
   // Destroy the UI
-  this.engineOverlayElement.destroy();
-  this.fightButton.destroy();
+  if (typeof shouldRestart == 'undefined') {
+    this.engineOverlayElement.destroy();
+    this.fightButton.destroy();
+  }
 
   // Add players
   var playerWidth = 10;
   var playerHeight = 18;
   var playerDepth = 10;
-  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena()));
+  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
   // this.arena.player1.setKeys(38, 40, 37, 39, 80, 219, 73, 221, 79, 76, 77);
 
-  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena()));
+  this.arena.addPlayerCharacter(new SuperStar().initWithDimensionsAndArena(playerWidth, playerHeight, playerDepth, this.getArena(), this.onHealthChange.bind(this), this.onPlayerDeath.bind(this)));
   // this.arena.player2.setKeys(87, 83, 65, 68, 82, 84, 85, 89, 90, 71, 72);
   
   // Keyboard controls
@@ -395,6 +402,32 @@ Engine.prototype.didStartFight = function()
 {
   this.animateArenaIntoView();
 };
+
+Engine.prototype.onHealthChange = function(player)
+{
+  if (player.playerNumber==1) {
+    this.healthBarLeft.updateBar(player.health / player.maxHealth);
+  }
+  else {
+    this.healthBarRight.updateBar(player.health / player.maxHealth);
+  }
+  console.log("onHealthChange");
+};
+
+Engine.prototype.onPlayerDeath = function(player)
+{
+  this.arena.getObject3D().remove(this.arena.player1.getCollider().getNode());
+  this.arena.getObject3D().remove(this.arena.player2.getCollider().getNode());
+  this.arena.player1 = null;
+  this.arena.player2 = null;
+  this.healthBarLeft.updateBar(1);
+  this.healthBarRight.updateBar(1);
+  console.log(this.healthBarLeft == this.healthBarRight);
+  this.startFight(true);
+  console.log("onPlayerDeath");
+
+};
+
 Engine.prototype.getGameState = function()
 {
   return this.gameState;
