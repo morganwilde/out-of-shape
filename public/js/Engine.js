@@ -395,7 +395,7 @@ Engine.prototype.startFight = function(shouldRestart)
   
   // Keyboard controls
   this.keyboard.setKeys(this.arena.player1, 38, 40, 37, 39, "P".charCodeAt(0),  "J".charCodeAt(0),  "O".charCodeAt(0),  "U".charCodeAt(0),  "I".charCodeAt(0),  "L".charCodeAt(0),  "K".charCodeAt(0));
-  this.keyboard.setKeys(this.arena.player2, "W".charCodeAt(0),  "S".charCodeAt(0), "A".charCodeAt(0),  "D".charCodeAt(0),  "E".charCodeAt(0),  "R".charCodeAt(0),  "F".charCodeAt(0),  "G".charCodeAt(0),  "T".charCodeAt(0),  "C".charCodeAt(0),  "V".charCodeAt(0));
+  this.keyboard.setKeys(this.arena.player2, "Q".charCodeAt(0),  "A".charCodeAt(0), "A".charCodeAt(0),  "D".charCodeAt(0),  "E".charCodeAt(0),  "R".charCodeAt(0),  "F".charCodeAt(0),  "G".charCodeAt(0),  "T".charCodeAt(0),  "C".charCodeAt(0),  "V".charCodeAt(0));
 
   this.gameState = "Fight";
 };
