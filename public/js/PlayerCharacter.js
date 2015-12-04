@@ -20,9 +20,6 @@ function PlayerCharacter()
     /** @property {Integer} inactionableFrames An integer that stores how many frames are remaining in the 'inactive' state, where the PlayerCharacter can't take any actions. */
     this.inactionableFrames;
 
-    /** @property {HealthBar} healthBar A reference to the HealthBar object that indicates a PlayerCharacter's remaining health. */
-    this.healthBar;
-
     // Character attributes
     /** @property {Integer} walkSpeed How much horizontal distance is covered in one frame while walking. Currently it's 4 units. */
     this.walkSpeed;
@@ -43,6 +40,10 @@ function PlayerCharacter()
     this.playerNumber;
     this.keyboard;
     this.arena;
+    this.healthBarCallBack;
+    this.health;
+    this.maxHealth;
+    this.engineDeathCallBack;
 }
 
 // Initialisers
@@ -62,7 +63,6 @@ PlayerCharacter.prototype.initEmpty = function()
     this.hitBoxes = new Array();
     this.attacks = {};
     this.inactionableFrames = null;
-    this.healthBar = null;
     this.walkSpeed = null;
     this.dashSpeed = null;
     this.jumpSpeed = null;
@@ -73,6 +73,10 @@ PlayerCharacter.prototype.initEmpty = function()
     this.playerNumber = null;
     this.keyboard = null;
     this.arena = null;
+    this.healthBarCallBack = null;
+    this.health = null;
+    this.maxHealth = null;
+    this.engineDeathCallBack = null;
     return this;
 };
 /**
@@ -84,7 +88,7 @@ PlayerCharacter.prototype.initEmpty = function()
  * @param  {Strings} Character currently there's only one Character class - 'SuperStar'.
  * @return {PlayerCharacter}
  */
-PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, depth, arena)
+PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, depth, arena, healthBarCallBack, engineDeathCallBack)
 {
     // Something
     this.initEmpty();
@@ -111,6 +115,11 @@ PlayerCharacter.prototype.initWithDimensionsAndArena = function(width, height, d
     this.duckState = false;
     this.inactionableFrames = 0;
     this.comboCount = 0;
+    this.healthBarCallBack = healthBarCallBack;
+    this.health = 100;
+    this.maxHealth = 100;
+
+    this.engineDeathCallBack = engineDeathCallBack;
 
     return this;
 };
@@ -166,15 +175,6 @@ PlayerCharacter.prototype.setEnemy = function(enemy)
     this.collider.setEnemy(enemy);
 };
 
-/**
- * Associates a HealthBar object with this PlayerCharacter.
- * 
- * @param {HealthBar} healthBar Reference to a HealthBar object.
- */
-PlayerCharacter.prototype.setHealthBar = function(healthBar)
-{
-    this.healthBar = healthBar;
-};
 /**
  * Changes the current PlayerCharacter state.
  * 
@@ -234,7 +234,6 @@ PlayerCharacter.prototype.update = function()
     // update all hitboxes beloning to this character
     this.updateHitBoxes();
 
-    return this.healthBar.getHealth();
 };
 /**
  * Analyses the current PlayerCharacter state and any active keyboard commands to determine what kind of PlayerCharacter state changes need to happen. For example, if the user presses a key associated with the heavypunch attack, this method creates an appropriate HitBox and adds it to the stack.
@@ -324,7 +323,7 @@ PlayerCharacter.prototype.resolveInput = function()
         return;
     }
 
-    if (this.keyboard.getKeyState('block'+this.playerNumber) == false && this.characterState  == 'blocking') {
+    if (this.keyboard.getKeyState('block'+this.playerNumber) == false && (this.characterState  == 'blocking' || this.characterState  == 'initBlocking')) {
         // end blocking
         this.inactionableFrames = 30;
 
@@ -465,10 +464,20 @@ PlayerCharacter.prototype.takeDamage = function(damage, hitPosition, attackType,
     this.movementEnd();
     
     if (attackType == 'grab') {
-        this.collider.setYVelocity(40);
+        this.collider.setYVelocity(4);
         this.characterState = 'jumping';
     }
 
-    this.healthBar.takeDamage(damage);
+    this.health -= damage;
+
+    if(this.health <= 0)
+    {
+        this.health = 0;
+        this.engineDeathCallBack();
+    }
+    else {
+        this.healthBarCallBack(this);
+    }
+
     this.collider.bump(hitPosition);
 };

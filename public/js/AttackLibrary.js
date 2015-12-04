@@ -58,7 +58,7 @@ StarBlast.prototype.init = function(owner, enemy, arena)
 
 	this.attackType = "projectile";
 
-	this.initialXVelocity = ownerRotation*10;
+	this.initialXVelocity = ownerRotation;
 
 	this.beginTime = 15;
 
@@ -97,7 +97,7 @@ Grab.prototype.init = function(owner, enemy)
 
 	this.endTime = 65;
 	
-	this.damage = 20;
+	this.damage = 10;
 
 	return this;
 };
@@ -126,7 +126,7 @@ ShootingStar.prototype.init = function(owner, enemy)
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
-	this.initialXVelocity = 10;
+	this.initialXVelocity = 1;
 
 	this.beginTime = 15;
 
@@ -161,8 +161,8 @@ Jab.prototype.init = function(owner, enemy)
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
-	this.initialXVelocity = 10;
-	this.endingXVelocity = -6;
+	this.initialXVelocity = 1;
+	this.endingXVelocity = -.6;
 
 	this.beginTime = 3;
 
@@ -193,13 +193,13 @@ UpperCut.prototype.init = function(owner, enemy)
 	this.attackType = "melee";
 	this.highOrLow = "high";
 	
-	var xstart = this.collider.getWidth()/2 + owner.getCollider().getWidth()/2;
+	var xstart =  owner.getCollider().getWidth()/4;
 	var ystart = -this.collider.getHeight()/2;
 	
 	this.collider.setPosition(xstart, ystart, 0);
 
-	this.initialXVelocity = 7;
-	this.initialYVelocity = 14;
+	this.initialXVelocity = .7;
+	this.initialYVelocity = 2;
 
 	this.beginTime = 3;
 
@@ -242,7 +242,7 @@ SweepKick.prototype.init = function(owner, enemy)
 
 	this.endTime = 12;
 	
-	this.damage = 20;
+	this.damage = 10;
 
 	return this;
 };
@@ -280,7 +280,7 @@ HeadKick.prototype.init = function(owner, enemy)
 
 	this.endTime = 12;
 	
-	this.damage = 20;
+	this.damage = 10;
 
 	return this;
 };
@@ -315,7 +315,7 @@ HayMaker.prototype.init = function(owner, enemy)
 
 	this.endTime = 40;
 	
-	this.damage = 40;
+	this.damage = 70;
 
 	return this;
 };

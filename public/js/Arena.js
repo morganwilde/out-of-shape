@@ -138,16 +138,6 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
       /** set initial postion for player 1 */
       playerCharacterNode.position.x = -this.getObject3D().geometry.parameters.width/4;
 
-      /** create healthbar geomotry for healthbar */
-      var healthX = -this.getObject3D().geometry.parameters.width/2.5;
-
-      /** initialize and assign healthbar to healthbar2 */
-      var healthBar1 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100);
-
-      /** assign healthbar1 to player 1 */
-      this.player1.setHealthBar(healthBar1);
-      /** add healthbar1 to node */
-      // this.getObject3D().add(healthBar1.getNode());
    } else {
       /** set player 2 as player character */
       this.player2 = playerCharacter;
@@ -157,15 +147,6 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
       this.player1.setEnemy(this.player2);
       /** set player 1 as a enemy of player 2*/
       this.player2.setEnemy(this.player1);
-
-      /** Create a geometry for healthbar */
-      var healthX = this.getObject3D().geometry.parameters.width/2.5;
-      /** initalize and assign the heathbar to healthbar2 */
-      var healthBar2 = new HealthBar().initWithSettings(healthX, healthY, 600, 70, 100);
-      /** assign healthbar2 to player 2*/
-      this.player2.setHealthBar(healthBar2);
-      /** add healthbar2 to node */
-      // this.getObject3D().add(healthBar2.getNode());
    }
    
    this.getObject3D().add(playerCharacterNode);
@@ -177,19 +158,8 @@ Arena.prototype.addPlayerCharacter = function(playerCharacter)
 Arena.prototype.update = function()
 {
    /** update player 1 character */
-   if(this.player1.update() == 0)
-   {
-      this.player1 = null;
-      this.player2 = null;
-      // gameEngine.setGameState("P2Win");
-      // gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 2 Wins","Fight"));
-   }
-   else /** update player 2 character */
-   if(this.player2.update() == 0)
-   {
-      this.player1 = null;
-      this.player2 = null;
-      // gameEngine.setGameState("P1Win");
-      // gameEngine.addButton(new Button().initWithDimensions(0, 700, 700, 300, "Player 1 Wins","Fight"));
-   }
+   this.player1.update();
+  
+   /** update player 2 character */
+   this.player2.update();
 };
