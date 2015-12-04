@@ -69,7 +69,6 @@ var Console = React.createClass({
     }
   },
   render: function() {
-    console.log(this.state.positionX);
     // Rotation
     var rotationXAngleElement = makeConsoleAngleAttribute('Rotation X', this.state.rotationX, 0, 360, this.onAttributeChange);
     var rotationYAngleElement = makeConsoleAngleAttribute('Rotation Y', this.state.rotationY, 0, 360, this.onAttributeChange);
