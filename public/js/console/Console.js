@@ -13,7 +13,22 @@ var Console = React.createClass({
   },
   // Event Listeners
   targetHasChanged: function() {
-    console.log('targetHasChanged');
+    this.setState({
+      // Rotation
+      rotationX: window.consoleDelegate.rotationX / Math.PI * 180,
+      rotationY: window.consoleDelegate.rotationY / Math.PI * 180,
+      rotationZ: window.consoleDelegate.rotationZ / Math.PI * 180,
+      // Position
+      positionX: window.consoleDelegate.positionX,
+      positionY: window.consoleDelegate.positionY,
+      positionZ: window.consoleDelegate.positionZ,
+    }, function() {
+      var refs = Object.keys(this.refs);
+      for (var i = refs.length - 1; i >= 0; i--) {
+        var refName = refs[i];
+        this.refs[refName].forceUpdate();
+      }
+    }.bind(this));
   },
   // Component Lifecycle
   componentDidMount: function() {
@@ -54,6 +69,7 @@ var Console = React.createClass({
     }
   },
   render: function() {
+    console.log(this.state.positionX);
     // Rotation
     var rotationXAngleElement = makeConsoleAngleAttribute('Rotation X', this.state.rotationX, 0, 360, this.onAttributeChange);
     var rotationYAngleElement = makeConsoleAngleAttribute('Rotation Y', this.state.rotationY, 0, 360, this.onAttributeChange);

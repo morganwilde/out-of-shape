@@ -129,6 +129,7 @@ Engine.prototype.initWithCanvasContainerId = function(canvasContainerId)
   ground.rotation.x = -Math.PI/2; // 90 degrees
   ground.position.y = this.arenaPlaceholder.position.y - Engine.relativeSizingBase * 0.05;
   ground.receiveShadow = true;
+  ground.name = "Ground";
   this.scene.add(ground);
 
   // Hemisphere Light
